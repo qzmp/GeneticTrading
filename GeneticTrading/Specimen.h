@@ -8,13 +8,13 @@ private:
 	Tree bearTree;
 
 public:
-	Specimen(vector<shared_ptr<Indicator>> indicators, int treeHeight);
+	Specimen(vector<shared_ptr<Indicator>> * indicators, MutationChances * mutationChances, int treeHeight);
 	~Specimen();
 
 	bool bullActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 	bool bearActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 
-	int cross(Specimen & other);
+	void cross(Specimen & other);
 	int mutate();
 };
 

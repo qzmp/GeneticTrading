@@ -13,6 +13,7 @@ Controller::~Controller()
 
 int main()
 {
+	srand(time(0));
 	DataSet data;
 	vector<shared_ptr<Indicator>> indicators;
 	/*
@@ -25,7 +26,8 @@ int main()
 	//indicators.push_back(shared_ptr<Indicator>(new RateOfChange(12)));
 	indicators.push_back(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
 	data.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("01.01.2016 00:00:00"), DateTime("15.01.2016 00:00:00"), indicators);
-	Specimen spec(indicators, 2);
+	MutationChances * mc = new MutationChances(0.2, 0.2, 0.2, 0.2, 0.2 ,0.2, 0.2);
+	Specimen spec(&indicators, mc, 2);
 	Backtester bt;
 	Backtester::TransactionData td = bt.backtest(data, spec);
 	

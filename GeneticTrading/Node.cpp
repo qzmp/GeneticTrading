@@ -2,10 +2,9 @@
 
 
 
-Node::Node()
+Node::Node(Tree * ownerTree) : ownerTree(ownerTree)
 {
 }
-
 
 Node::~Node()
 {

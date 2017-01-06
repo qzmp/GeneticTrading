@@ -27,6 +27,7 @@
     <ClInclude Include="Indicator.h" />
     <ClInclude Include="LeafNode.h" />
     <ClInclude Include="InternalNode.h" />
+    <ClInclude Include="MutationChances.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Population.h" />
     <ClInclude Include="RateOfChange.h" />
@@ -44,6 +45,7 @@
     <ClCompile Include="Indicator.cpp" />
     <ClCompile Include="LeafNode.cpp" />
     <ClCompile Include="InternalNode.cpp" />
+    <ClCompile Include="MutationChances.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Population.cpp" />
     <ClCompile Include="RateOfChange.cpp" />

@@ -8,5 +8,7 @@ private:
 public:
 	Population();
 	~Population();
+
+	vector<Specimen> select();
 };
 
