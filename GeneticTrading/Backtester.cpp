@@ -93,3 +93,8 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, Specimen &
 	}
 	return transactionData;
 }
+
+int Backtester::TransactionData::getTotalPipGain()
+{
+	return this->totalPipGain;
+}

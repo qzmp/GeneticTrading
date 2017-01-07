@@ -15,6 +15,6 @@ public:
 	bool bearActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 
 	void cross(Specimen & other);
-	int mutate();
+	void mutate();
 };
 

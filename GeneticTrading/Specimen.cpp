@@ -33,3 +33,9 @@ void Specimen::cross(Specimen & other)
 	this->bearTree = other.bearTree;
 	other.bearTree = tempTree;
 }
+
+void Specimen::mutate()
+{
+	bullTree.mutate();
+	bearTree.mutate();
+}

@@ -23,5 +23,7 @@ public:
 	virtual bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) = 0;
 
 	virtual void mutate(InternalNode & parent, bool isLeft, int currentPos) = 0;
+
+	virtual bool isLeaf() = 0;
 };
 

@@ -21,7 +21,33 @@ bool Tree::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& ind
 
 void Tree::mutate()
 {
-	rootNode->mutate(*rootNode, false, 0); // to be changed
+	if (rand() < mutationChances->getCutChance())
+	{
+		bool cutLeft = rand() % 2 == 0;
+		if (cutLeft)
+		{
+			if (!rootNode->getRight()->isLeaf())
+			{
+				rootNode = dynamic_pointer_cast<InternalNode>(rootNode->getRight());
+			}
+			else if (!rootNode->getLeft()->isLeaf())
+			{
+				rootNode = dynamic_pointer_cast<InternalNode>(rootNode->getLeft());
+			}
+		}
+		else
+		{
+			if (!rootNode->getLeft()->isLeaf())
+			{
+				rootNode = dynamic_pointer_cast<InternalNode>(rootNode->getLeft());
+			}
+			else if (!rootNode->getRight()->isLeaf())
+			{
+				rootNode = dynamic_pointer_cast<InternalNode>(rootNode->getRight());
+			}
+		}
+	}
+	rootNode->mutate(*rootNode, false, 0);
 }
 
 MutationChances * Tree::getMutationChances()

@@ -56,3 +56,8 @@ void LeafNode::mutate(InternalNode & parent, bool isLeft, int currentPos)
 		}
 	}
 }
+
+bool LeafNode::isLeaf()
+{
+	return true;
+}

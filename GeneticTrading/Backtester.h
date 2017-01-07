@@ -19,6 +19,8 @@ public:
 	public:
 		TransactionData() : totalPipGain(0) {};
 		~TransactionData() {};
+
+		int getTotalPipGain();
 	};
 
 

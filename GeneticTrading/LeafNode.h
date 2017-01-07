@@ -25,5 +25,7 @@ public:
 	bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 
 	void mutate(InternalNode & parent, bool isLeft, int currentPos);
+
+	bool isLeaf();
 };
 

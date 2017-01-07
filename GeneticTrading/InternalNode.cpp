@@ -150,3 +150,8 @@ void InternalNode::mutate(InternalNode & parent, bool isLeft, int currentPos)
 	right->mutate(*this, false, currentPos + 1);
 }
 
+bool InternalNode::isLeaf()
+{
+	return false;
+}
+

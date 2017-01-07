@@ -33,5 +33,7 @@ public:
 	int generateRandomBranches(int currentSize);
 
 	void mutate(InternalNode & parent, bool isLeft, int currentPos);
+
+	bool isLeaf();
 };
 
