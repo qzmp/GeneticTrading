@@ -2,7 +2,7 @@
 
 double Indicator::normalizeValue(uint8_t value)
 {
-	return (double)value / numeric_limits<uint8_t>::max() * (minValue + maxValue) - minValue;
+	return (double)value / numeric_limits<uint8_t>::max() * (abs(minValue) + abs(maxValue)) - abs(minValue);
 }
 
 Indicator::Indicator(int period, string name, double min, double max)

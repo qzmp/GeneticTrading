@@ -24,6 +24,7 @@
     <ClInclude Include="DataPreprocessor.h" />
     <ClInclude Include="DataSet.h" />
     <ClInclude Include="DateTime.h" />
+    <ClInclude Include="GeneticController.h" />
     <ClInclude Include="Indicator.h" />
     <ClInclude Include="LeafNode.h" />
     <ClInclude Include="InternalNode.h" />
@@ -42,6 +43,7 @@
     <ClCompile Include="DataPreprocessor.cpp" />
     <ClCompile Include="DataSet.cpp" />
     <ClCompile Include="DateTime.cpp" />
+    <ClCompile Include="GeneticController.cpp" />
     <ClCompile Include="Indicator.cpp" />
     <ClCompile Include="LeafNode.cpp" />
     <ClCompile Include="InternalNode.cpp" />

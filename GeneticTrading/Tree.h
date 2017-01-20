@@ -8,14 +8,16 @@
 class Tree
 {
 private:
-	shared_ptr<InternalNode> rootNode;
+	unique_ptr<InternalNode> rootNode;
 
 	vector<shared_ptr<Indicator>> * indicators;
 	MutationChances * mutationChances;
 	int maxTreeHeight;
 
 public:
+	Tree();
 	Tree(vector<shared_ptr<Indicator>> * indicators, MutationChances * mutationChances, int maxTreeHeight);
+	Tree(const Tree &other);
 	~Tree();
 
 	void generateRandom();

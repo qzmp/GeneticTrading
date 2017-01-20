@@ -70,6 +70,9 @@ DataSet::~DataSet()
 
 int DataSet::loadData(string & fileName, DateTime & start, DateTime & end, vector<shared_ptr<Indicator>> & indicatorObjects)
 {
+	this->start = start;
+	this->end = end;
+
 	int startIndex = findStartIndex(fileName, start);
 	if (startIndex < 0)
 	{
@@ -200,4 +203,14 @@ map<shared_ptr<Indicator>, double> DataSet::getIndicatorValues(int index)
 		result[ind] = indicators[ind][index];
 	}
 	return result;
+}
+
+DateTime DataSet::getStart()
+{
+	return start;
+}
+
+DateTime DataSet::getEnd()
+{
+	return end;
 }

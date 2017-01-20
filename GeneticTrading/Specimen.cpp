@@ -2,15 +2,28 @@
 
 
 
+Specimen::Specimen()
+{
+}
+
 Specimen::Specimen(vector<shared_ptr<Indicator>> * indicators, MutationChances * mutationChances, int treeHeight) : bullTree(indicators, mutationChances, treeHeight), bearTree(indicators, mutationChances, treeHeight)
 {
 	bullTree.generateRandom();
 	bearTree.generateRandom();
 }
 
+Specimen::Specimen(Tree bullTree, Tree bearTree) : bullTree(bullTree), bearTree(bearTree)
+{
+}
+
+Specimen::Specimen(const Specimen & other) : bullTree(other.bullTree), bearTree(other.bearTree)
+{ 
+	
+}
 
 Specimen::~Specimen()
 {
+	//cout << "specimen destroyed" << endl;
 }
 
 bool Specimen::bullActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
@@ -23,15 +36,9 @@ bool Specimen::bearActive(double currentPrice, map<shared_ptr<Indicator>, double
 	return bearTree.isActive(currentPrice, indicatorValues);
 }
 
-void Specimen::cross(Specimen & other)
+Specimen Specimen::cross(Specimen &other)
 {
-	Tree & tempTree = this->bullTree;
-	this->bullTree = other.bullTree;
-	other.bullTree = tempTree;
-
-	tempTree = this->bearTree;
-	this->bearTree = other.bearTree;
-	other.bearTree = tempTree;
+	return Specimen(this->bullTree, other.bearTree);
 }
 
 void Specimen::mutate()

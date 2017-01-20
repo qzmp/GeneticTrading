@@ -10,7 +10,7 @@ int Backtester::priceToPips(double price)
 int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, double> indicatorValues, Specimen & strategy)
 {
 	if (!bought && !sold) {
-		if (strategy.bearActive(currentPrice, indicatorValues))
+		if (strategy.bullActive(currentPrice, indicatorValues))
 		{
 			bought = true;
 			transactionData.buyPrices.push_back(currentPrice);
@@ -25,9 +25,11 @@ int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, doub
 	{
 		if (strategy.bearActive(currentPrice, indicatorValues))
 		{
-			double gain = currentPrice - transactionData.buyPrices.back();
-			transactionData.totalPipGain += priceToPips(gain);
+			double gain = transactionData.buyPrices.back() - currentPrice;
+			transactionData.totalPipGain += priceToPips(gain) - 40;
 			transactionData.sellPrices.push_back(currentPrice);
+
+			gain > 0 ? transactionData.goodTransactionCount++ : transactionData.badTransactionCount++;
 
 			bought = false;
 			sold = true;
@@ -37,9 +39,11 @@ int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, doub
 	{
 		if (strategy.bullActive(currentPrice, indicatorValues))
 		{
-			double gain = transactionData.sellPrices.back() - currentPrice;
-			transactionData.totalPipGain += priceToPips(gain);
+			double gain =  currentPrice - transactionData.sellPrices.back();
+			transactionData.totalPipGain += priceToPips(gain) - 40;
 			transactionData.buyPrices.push_back(currentPrice);
+
+			gain > 0 ? transactionData.goodTransactionCount++ : transactionData.badTransactionCount++;
 
 			bought = true;
 			sold = false;
@@ -77,7 +81,7 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, Specimen &
 	if (bought)
 	{
 		double gain = dataSet.getClosePrice(i - 1) - transactionData.buyPrices.back();
-		transactionData.totalPipGain += priceToPips(gain);
+		transactionData.totalPipGain += priceToPips(gain) - 40;
 		
 		bought = false;
 		sold = false;
@@ -86,7 +90,7 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, Specimen &
 	else if (sold)
 	{
 		double gain = transactionData.sellPrices.back() - dataSet.getClosePrice(i - 1);
-		transactionData.totalPipGain += priceToPips(gain);
+		transactionData.totalPipGain += priceToPips(gain) - 40;
 		
 		bought = false;
 		sold = false;

@@ -1,17 +1,27 @@
 #include "Tree.h"
 
 
+Tree::Tree()
+{
+}
+
 Tree::Tree(vector<shared_ptr<Indicator>> * indicators, MutationChances * mutationChances, int maxTreeHeight) : indicators(indicators), mutationChances(mutationChances), maxTreeHeight(maxTreeHeight)
+{
+}
+
+Tree::Tree(const Tree & other)
+	: rootNode(unique_ptr<InternalNode>(new InternalNode(*other.rootNode))), indicators(other.indicators), mutationChances(other.mutationChances), maxTreeHeight(other.maxTreeHeight)
 {
 }
 
 Tree::~Tree()
 {
+	//cout << "tree destroyed" << endl;
 }
 
 void Tree::generateRandom()
 {
-	rootNode = shared_ptr<InternalNode>(new InternalNode(1, this));
+	rootNode = unique_ptr<InternalNode>(new InternalNode(1, this));
 }
 
 bool Tree::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
@@ -26,28 +36,28 @@ void Tree::mutate()
 		bool cutLeft = rand() % 2 == 0;
 		if (cutLeft)
 		{
-			if (!rootNode->getRight()->isLeaf())
+			if (!rootNode->isRightLeaf())
 			{
-				rootNode = dynamic_pointer_cast<InternalNode>(rootNode->getRight());
+				rootNode.reset((InternalNode*)rootNode->releaseRight());
 			}
-			else if (!rootNode->getLeft()->isLeaf())
+			else if (!rootNode->isLeftLeaf())
 			{
-				rootNode = dynamic_pointer_cast<InternalNode>(rootNode->getLeft());
+				rootNode.reset((InternalNode*)rootNode->releaseLeft());
 			}
 		}
 		else
 		{
-			if (!rootNode->getLeft()->isLeaf())
+			if (!rootNode->isLeftLeaf())
 			{
-				rootNode = dynamic_pointer_cast<InternalNode>(rootNode->getLeft());
+				rootNode.reset((InternalNode*)rootNode->releaseLeft());
 			}
-			else if (!rootNode->getRight()->isLeaf())
+			else if (!rootNode->isRightLeaf())
 			{
-				rootNode = dynamic_pointer_cast<InternalNode>(rootNode->getRight());
+				rootNode.reset((InternalNode*)rootNode->releaseRight());
 			}
 		}
 	}
-	rootNode->mutate(*rootNode, false, 0);
+	rootNode->mutate(*rootNode, false, 0, this);
 }
 
 MutationChances * Tree::getMutationChances()

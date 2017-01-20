@@ -11,6 +11,9 @@ using namespace std;
 
 class DataSet
 {
+	DateTime start;
+	DateTime end;
+
 	vector<DateTime> timeStamps;
 	vector<double> openPrices;
 	vector<double> closePrices;
@@ -39,6 +42,9 @@ public:
 	double getHighPrice(int index);
 	double getLowPrice(int index);
 	map<shared_ptr<Indicator>, double> getIndicatorValues(int index);
+
+	DateTime getStart();
+	DateTime getEnd();
 
 };
 

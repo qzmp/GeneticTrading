@@ -4,8 +4,6 @@
 
 class SimpleMovingAverage : public Indicator
 {
-private:
-	double normalizeValue(_int8 value);
 public:
 	SimpleMovingAverage(int period);
 	~SimpleMovingAverage();

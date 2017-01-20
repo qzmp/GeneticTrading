@@ -10,30 +10,37 @@ using namespace std;
 class InternalNode : public Node
 {
 private:
-	shared_ptr<Node> left;
-	shared_ptr<Node> right;
+	unique_ptr<Node> left;
+	unique_ptr<Node> right;
 
 	bool isAndOperator;
 
-	int generateRandomBranch(bool leftBranch, int currentSize);
+	int generateRandomBranch(bool leftBranch, int currentSize, Tree *ownerTree);
 public:
-	InternalNode(int currentSize, Tree * ownerTree);
-	InternalNode(int currentSize, Tree * ownerTree, shared_ptr<Node> subtree);
-	InternalNode(bool isAndOperator, Tree * ownerTree);
+	InternalNode(int currentSize, Tree *ownerTree);
+	InternalNode(int currentSize, Node * subtree, Tree *ownerTree);
+	InternalNode(bool isAndOperator);
+	InternalNode(const InternalNode &other);
+	Node* clone();
 	~InternalNode();
 
-	shared_ptr<Node> getLeft();
-	shared_ptr<Node> getRight();
-	void setLeft(shared_ptr<Node> & node);
-	void setRight(shared_ptr<Node> & node);
+	Node* releaseLeft();
+	Node* releaseRight();
+	void setLeft(Node * node);
+	void setRight(Node * node);
 
 	bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 	void changeOperator();
 
-	int generateRandomBranches(int currentSize);
+	int generateRandomBranches(int currentSize, Tree *ownerTree);
 
-	void mutate(InternalNode & parent, bool isLeft, int currentPos);
+	void mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree);
 
 	bool isLeaf();
+	bool isLeftLeaf();
+	bool isRightLeaf();
+
+	void splitLeft(int currentSize, Tree *ownerTree);
+	void splitRight(int currentSize, Tree *ownerTree);
 };
 

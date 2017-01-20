@@ -55,3 +55,9 @@ double MutationChances::getIndicatorChangeChance()
 {
 	return this->indicatorChangeChance;
 }
+
+string MutationChances::toString()
+{
+	return "oc;" + to_string(operatorChangeChance) + " c;" + to_string(cutChance) + " s;" + to_string(splitChance) + " sw;" + to_string(swapChance)
+		+ " vc;" + to_string(valueChangeChance) + " cc;" + to_string(comparatorChangeChance) + " ic;" + to_string(indicatorChangeChance);
+}

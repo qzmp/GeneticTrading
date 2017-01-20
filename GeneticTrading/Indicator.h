@@ -21,7 +21,7 @@ protected:
 
 public:
 	Indicator(int period, string name, double min, double max);
-	~Indicator();
+	virtual ~Indicator();
 
 	string getName();
 	int getPeriod();

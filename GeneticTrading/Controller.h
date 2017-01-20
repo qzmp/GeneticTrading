@@ -6,6 +6,7 @@
 #include "RelativeStrengthIndex.h"
 #include "Specimen.h"
 #include "Backtester.h"
+#include "GeneticController.h"
 
 class Controller
 {
@@ -13,6 +14,7 @@ public:
 	Controller();
 	~Controller();
 
+	void testParameters();
 };
 
 int main();

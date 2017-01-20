@@ -8,21 +8,31 @@ void LeafNode::randomizeValue()
 	value = rand() % numeric_limits<uint8_t>::max();
 }
 
-void LeafNode::randomizeIndicator()
+void LeafNode::randomizeIndicator(Tree *ownerTree)
 {
 	int randomIndicatorIndex = rand() % ownerTree->getIndicators()->size();
 	indicator = ownerTree->getIndicators()->operator[](randomIndicatorIndex);
 }
 
-LeafNode::LeafNode(Tree * ownerTree) : Node(ownerTree)
+LeafNode::LeafNode(Tree *ownerTree)
 {
-	randomizeIndicator();
+	randomizeIndicator(ownerTree);
 	greater = rand() % 2 == 0;
 	randomizeValue();
 }
 
+LeafNode::LeafNode(const LeafNode & other) : indicator(other.indicator), greater(other.greater), value(other.value)
+{
+}
+
+Node * LeafNode::clone()
+{
+	return new LeafNode(*this);
+}
+
 LeafNode::~LeafNode()
 {
+	//cout << "leaf destructed" << endl;;
 }
 
 bool LeafNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
@@ -30,7 +40,7 @@ bool LeafNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>&
 	return indicator->isActive(greater, value, currentPrice, indicatorValues[indicator]);
 }
 
-void LeafNode::mutate(InternalNode & parent, bool isLeft, int currentPos)
+void LeafNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree)
 {
 	if (rand() < ownerTree->getMutationChances()->getValueChangeChance())
 	{
@@ -38,21 +48,21 @@ void LeafNode::mutate(InternalNode & parent, bool isLeft, int currentPos)
 	}
 	if (rand() < ownerTree->getMutationChances()->getComparatorChangeChance())
 	{
-		greater != greater;
+		greater = !greater;
 	}
 	if (rand() < ownerTree->getMutationChances()->getIndicatorChangeChance())
 	{
-		randomizeIndicator();
+		randomizeIndicator(ownerTree);
 	}
 	if (currentPos < ownerTree->getMaxHeight() && rand() < ownerTree->getMutationChances()->getSplitChance())
 	{
 		if (isLeft)
 		{
-			parent.setLeft(shared_ptr<Node>(new InternalNode(currentPos, ownerTree, shared_ptr<Node>(this))));
+			parent.splitLeft(currentPos, ownerTree);		
 		}
 		else
 		{
-			parent.setRight(shared_ptr<Node>(new InternalNode(currentPos, ownerTree, shared_ptr<Node>(this))));
+			parent.splitRight(currentPos, ownerTree);
 		}
 	}
 }

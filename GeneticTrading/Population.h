@@ -2,6 +2,9 @@
 
 #include "Specimen.h"
 #include "Backtester.h"
+#include "MutationChances.h"
+#include <numeric>
+#include <algorithm>
 
 class Population
 {
@@ -9,7 +12,7 @@ private:
 	vector<Specimen> specimens;
 	vector<double> ratings;
 
-	DataSet * dataSet;
+	DataSet *dataSet;
 
 	Backtester backtester;
 	
@@ -17,11 +20,25 @@ private:
 	int tourney(vector<int>& tourneyGroup);
 
 public:
-	Population();
+	Population(DataSet *dataSet, int maxSize);
+	Population(const Population &other);
 	~Population();
 
-	Specimen* select();
+	void generateRandom(MutationChances &mt, vector<shared_ptr<Indicator>> &indicators, int treeHeight);
+
+	Specimen* select(int tourneySize);
 	
 	void rateAll();
+	Population* commenceCrossing(int tourneySize, double crossingChance);
+	void mutateAllSpecimen();
+
+	void insertNewSpecimen(Specimen & specimen);
+
+	Specimen getBestSpecimen();
+	double getBestRating();
+	double getAverageRating();
+
+	DataSet* getDataSet();
+	MutationChances* getMutationChances();
 };
 

@@ -1,4 +1,8 @@
 #pragma once
+
+#include <string>
+using namespace std;
+
 class MutationChances
 {
 private:
@@ -26,5 +30,7 @@ public:
 	double getValueChangeChance();
 	double getComparatorChangeChance();
 	double getIndicatorChangeChance();
+
+	string toString();
 };
 

@@ -24,6 +24,7 @@ private:
 	unsigned long getDateInt() const;
 	unsigned long getTimeInt() const;
 public:
+	DateTime();
 	DateTime(string dateTime);
 	~DateTime();
 

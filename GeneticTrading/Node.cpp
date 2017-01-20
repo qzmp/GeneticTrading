@@ -1,11 +1,11 @@
 #include "Node.h"
 
 
-
-Node::Node(Tree * ownerTree) : ownerTree(ownerTree)
+Node::Node()
 {
 }
 
 Node::~Node()
 {
+	//cout << "node destroyed" << endl;
 }

@@ -5,6 +5,7 @@
 #include "MutationChances.h"
 #include <vector>
 #include <map>
+#include <iostream>
 
 using namespace std;
 
@@ -13,16 +14,15 @@ class InternalNode;
 
 class Node
 {
-protected:
-	Tree * ownerTree;
-
 public:
-	Node(Tree * ownerTree);
-	~Node();
+	Node();
+	virtual ~Node();
+
+	virtual Node* clone() = 0;
 
 	virtual bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) = 0;
 
-	virtual void mutate(InternalNode & parent, bool isLeft, int currentPos) = 0;
+	virtual void mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree) = 0;
 
 	virtual bool isLeaf() = 0;
 };

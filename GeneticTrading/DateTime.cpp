@@ -54,6 +54,11 @@ unsigned long DateTime::getTimeInt() const
 	return second + minute * 100 + hour * 10000;
 }
 
+DateTime::DateTime()
+	: day(0), month(0), year(0), hour(0), minute(0), second(0)
+{
+}
+
 DateTime::DateTime(string DateTime)
 {
 	convertDateTime(DateTime);

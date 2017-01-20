@@ -3,78 +3,90 @@
 
 
 
-int InternalNode::generateRandomBranch(bool leftBranch, int currentSize)
+int InternalNode::generateRandomBranch(bool leftBranch, int currentSize, Tree *ownerTree)
 {
-	shared_ptr<Node> randomNode;
+	unique_ptr<Node> randomNode;
 	if (rand() % 2 == 0)
 	{
-		randomNode = shared_ptr<Node>(new InternalNode(currentSize + 1, this->ownerTree));
+		randomNode = unique_ptr<Node>(new InternalNode(currentSize + 1, ownerTree));
 	}
 	else
 	{
-		randomNode = shared_ptr<Node>(new LeafNode(this->ownerTree));
+		randomNode = unique_ptr<Node>(new LeafNode(ownerTree));
 	}
 
 	if (leftBranch)
 	{
-		left = randomNode;
+		left = move(randomNode);
 	}
 	else
 	{
-		right = randomNode;
+		right = move(randomNode);
 	}
 	return 0;
 }
 
-InternalNode::InternalNode(int currentSize, Tree * ownerTree) : Node(ownerTree)
+InternalNode::InternalNode(int currentSize, Tree *ownerTree)
 {
 	this->isAndOperator = rand() % 2 == 0;
-	generateRandomBranches(currentSize);
+	generateRandomBranches(currentSize, ownerTree);
 }
 
-InternalNode::InternalNode(int currentSize, Tree * ownerTree, shared_ptr<Node> subtree) : Node(ownerTree)
+InternalNode::InternalNode(int currentSize, Node * subtree, Tree *ownerTree)
 {
 	this->isAndOperator = rand() % 2 == 0;
 	if (rand() % 2 == 0)
 	{
-		this->left = subtree;
-		generateRandomBranch(false, currentSize);
+		this->left.reset(subtree);
+		generateRandomBranch(false, currentSize, ownerTree);
 	}
 	else
 	{
-		this->right = subtree;
-		generateRandomBranch(true, currentSize);
+		this->right.reset(subtree);
+		generateRandomBranch(true, currentSize, ownerTree);
 	}
 }
 
-InternalNode::InternalNode(bool isAndOperator, Tree * ownerTree) : Node(ownerTree)
+InternalNode::InternalNode(bool isAndOperator)
 {
 	this->isAndOperator = isAndOperator;
+}
+
+InternalNode::InternalNode(const InternalNode & other) : isAndOperator(other.isAndOperator)
+{
+	left = unique_ptr<Node>(other.left->clone());
+	right = unique_ptr<Node>(other.right->clone());
+}
+
+Node * InternalNode::clone()
+{
+	return new InternalNode(*this);
 }
 
 
 InternalNode::~InternalNode()
 {
+	//cout << "internal destroyed" << endl;
 }
 
-shared_ptr<Node> InternalNode::getLeft()
+Node* InternalNode::releaseLeft()
 {
-	return left;
+	return left.release();
 }
 
-shared_ptr<Node> InternalNode::getRight()
+Node* InternalNode::releaseRight()
 {
-	return right;
+	return right.release();
 }
 
-void InternalNode::setLeft(shared_ptr<Node> & node)
+void InternalNode::setLeft(Node * node)
 {
-	left = node;
+	left = unique_ptr<Node>(node);
 }
 
-void InternalNode::setRight(shared_ptr<Node>& node)
+void InternalNode::setRight(Node * node)
 {
-	right = node;
+	right = unique_ptr<Node>(node);
 }
 
 bool InternalNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
@@ -90,29 +102,24 @@ void InternalNode::changeOperator()
 	this->isAndOperator = !isAndOperator;
 }
 
-int InternalNode::generateRandomBranches(int currentSize)
+int InternalNode::generateRandomBranches(int currentSize, Tree *ownerTree)
 {
 	if (currentSize + 1 == ownerTree->getMaxHeight())
 	{
-		left = shared_ptr<Node>(new LeafNode(ownerTree));
-		right = shared_ptr<Node>(new LeafNode(ownerTree));
+		left = unique_ptr<Node>(new LeafNode(ownerTree));
+		right = unique_ptr<Node>(new LeafNode(ownerTree));
 	}
 	else
 	{
-		generateRandomBranch(true, currentSize);
-		generateRandomBranch(false, currentSize);
+		generateRandomBranch(true, currentSize, ownerTree);
+		generateRandomBranch(false, currentSize, ownerTree);
 	}
 	return 0;
 }
 
 
-void InternalNode::mutate(InternalNode & parent, bool isLeft, int currentPos)
+void InternalNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree)
 {
-	if (rand() < ownerTree->getMutationChances()->getOperatorChangeChance())
-	{
-		this->isAndOperator = !this->isAndOperator;
-	}
-
 	if (currentPos != 0 && rand() < ownerTree->getMutationChances()->getCutChance())
 	{
 		bool cutLeft = rand() % 2 == 0;
@@ -120,38 +127,61 @@ void InternalNode::mutate(InternalNode & parent, bool isLeft, int currentPos)
 		{
 			if (isLeft)
 			{
-				parent.setLeft(this->getRight());
+				parent.setLeft(this->releaseRight());
 			}
 			else
 			{
-				parent.setRight(this->getLeft());
+				parent.setRight(this->releaseLeft());
 			}
 		}
 		else
 		{
 			if (isLeft)
 			{
-				parent.setLeft(this->getLeft());
+				parent.setLeft(this->releaseLeft());
 			}
 			else
 			{
-				parent.setRight(this->getRight());
+				parent.setRight(this->releaseRight());
 			}
 		}
+		return;
+	}
+	if (rand() < ownerTree->getMutationChances()->getOperatorChangeChance())
+	{
+		this->isAndOperator = !this->isAndOperator;
 	}
 	if (rand() < ownerTree->getMutationChances()->getSwapChance())
 	{
-		shared_ptr<Node> & temp = this->left;
-		this->left = this->right;
-		this->right = temp;
+		this->left.swap(this->right);
 	}
 
-	left->mutate(*this, true, currentPos + 1);
-	right->mutate(*this, false, currentPos + 1);
+	left->mutate(*this, true, currentPos + 1, ownerTree);
+	right->mutate(*this, false, currentPos + 1, ownerTree);
 }
 
 bool InternalNode::isLeaf()
 {
 	return false;
+}
+
+bool InternalNode::isLeftLeaf()
+{
+	return left->isLeaf();
+}
+
+bool InternalNode::isRightLeaf()
+{
+	return right->isLeaf();
+}
+
+void InternalNode::splitLeft(int currentSize, Tree *ownerTree)
+{
+	left = make_unique<InternalNode>(currentSize, left.release(), ownerTree);
+}
+
+void InternalNode::splitRight(int currentSize, Tree * ownerTree)
+{
+	right = make_unique<InternalNode>(currentSize, right.release(), ownerTree);
 }
 

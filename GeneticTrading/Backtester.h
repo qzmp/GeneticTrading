@@ -16,8 +16,11 @@ public:
 		list<double> buyPrices;
 		list<double> sellPrices;
 
+		int goodTransactionCount;
+		int badTransactionCount;
+
 	public:
-		TransactionData() : totalPipGain(0) {};
+		TransactionData() : totalPipGain(0), goodTransactionCount(0), badTransactionCount() {};
 		~TransactionData() {};
 
 		int getTotalPipGain();
