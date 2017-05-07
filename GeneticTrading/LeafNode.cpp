@@ -42,19 +42,19 @@ bool LeafNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>&
 
 void LeafNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree)
 {
-	if (rand() < ownerTree->getMutationChances()->getValueChangeChance())
+	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getValueChangeChance())
 	{
 		randomizeValue();
 	}
-	if (rand() < ownerTree->getMutationChances()->getComparatorChangeChance())
+	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getComparatorChangeChance())
 	{
 		greater = !greater;
 	}
-	if (rand() < ownerTree->getMutationChances()->getIndicatorChangeChance())
+	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getIndicatorChangeChance())
 	{
 		randomizeIndicator(ownerTree);
 	}
-	if (currentPos < ownerTree->getMaxHeight() && rand() < ownerTree->getMutationChances()->getSplitChance())
+	if (currentPos < ownerTree->getMaxHeight() && rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getSplitChance())
 	{
 		if (isLeft)
 		{

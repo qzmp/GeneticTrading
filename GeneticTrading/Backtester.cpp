@@ -7,7 +7,7 @@ int Backtester::priceToPips(double price)
 	return price * 100000;
 }
 
-int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, double> indicatorValues, Specimen & strategy)
+int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, double> &indicatorValues, Specimen & strategy)
 {
 	if (!bought && !sold) {
 		if (strategy.bullActive(currentPrice, indicatorValues))
@@ -73,8 +73,8 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, Specimen &
 	{
 		indicatorValues = dataSet.getIndicatorValues(i);
 		processTick(dataSet.getOpenPrice(i), indicatorValues, strategy);
-		processTick(dataSet.getHighPrice(i), indicatorValues, strategy);
-		processTick(dataSet.getLowPrice(i), indicatorValues, strategy);
+		//processTick(dataSet.getHighPrice(i), indicatorValues, strategy);
+		//processTick(dataSet.getLowPrice(i), indicatorValues, strategy);
 		processTick(dataSet.getClosePrice(i), indicatorValues, strategy);
 		i++;
 	}
@@ -101,4 +101,19 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, Specimen &
 int Backtester::TransactionData::getTotalPipGain()
 {
 	return this->totalPipGain;
+}
+
+int Backtester::TransactionData::getTransactionCount()
+{
+	return goodTransactionCount + badTransactionCount;
+}
+
+int Backtester::TransactionData::getGoodTransactionCount()
+{
+	return goodTransactionCount;
+}
+
+int Backtester::TransactionData::getBadTransactionCount()
+{
+	return badTransactionCount;
 }

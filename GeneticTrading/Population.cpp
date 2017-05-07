@@ -73,8 +73,7 @@ Population* Population::commenceCrossing(int tourneySize, double crossingChance)
 	for (int i = 0; i < specimens.size(); i++)
 	{
 		firstSpecimen = select(tourneySize);
-
-		if (rand() < crossingChance)
+		if (rand() / double(RAND_MAX) < crossingChance)
 		{
 			secondSpecimen = select(tourneySize);
 			newPopulation->insertNewSpecimen(firstSpecimen->cross(*secondSpecimen));

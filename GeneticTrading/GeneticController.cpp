@@ -22,7 +22,7 @@ void GeneticController::createFileStream(MutationChances &mt, DataSet &ds, int p
 		+ "," + to_string(tourneySize)
 		+ "," + to_string(popSize)
 		+ "," + to_string(generationCount) + ".csv";
-	fileStream.imbue(locale("fr"));
+	fileStream.imbue(locale());
 	fileStream.open(filename, ios::ate | ios_base::app);
 }
 
@@ -60,14 +60,18 @@ GeneticController::~GeneticController()
 {
 }
 
-Specimen GeneticController::startEvolution()
+Backtester::TransactionData GeneticController::startEvolution()
 {
 	for (int i = 0; i < generationCount; i++)
 	{
 		nextGeneration();
 	}
+	
+	population->rateAll();
+	saveCurrentRatings();
 	writeHistory();
-	return population->getBestSpecimen();
+	Backtester bt;
+	return bt.backtest(*population->getDataSet(), population->getBestSpecimen());
 }
 
 void GeneticController::nextGeneration()

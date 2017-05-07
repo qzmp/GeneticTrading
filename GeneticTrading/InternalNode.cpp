@@ -104,7 +104,7 @@ void InternalNode::changeOperator()
 
 int InternalNode::generateRandomBranches(int currentSize, Tree *ownerTree)
 {
-	if (currentSize + 1 == ownerTree->getMaxHeight())
+	if (currentSize + 1 >= ownerTree->getMaxHeight())
 	{
 		left = unique_ptr<Node>(new LeafNode(ownerTree));
 		right = unique_ptr<Node>(new LeafNode(ownerTree));
@@ -120,7 +120,7 @@ int InternalNode::generateRandomBranches(int currentSize, Tree *ownerTree)
 
 void InternalNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree)
 {
-	if (currentPos != 0 && rand() < ownerTree->getMutationChances()->getCutChance())
+	if (currentPos != 0 && rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getCutChance())
 	{
 		bool cutLeft = rand() % 2 == 0;
 		if (cutLeft)
@@ -147,11 +147,11 @@ void InternalNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tr
 		}
 		return;
 	}
-	if (rand() < ownerTree->getMutationChances()->getOperatorChangeChance())
+	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getOperatorChangeChance())
 	{
 		this->isAndOperator = !this->isAndOperator;
 	}
-	if (rand() < ownerTree->getMutationChances()->getSwapChance())
+	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getSwapChance())
 	{
 		this->left.swap(this->right);
 	}

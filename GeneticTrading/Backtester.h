@@ -24,6 +24,9 @@ public:
 		~TransactionData() {};
 
 		int getTotalPipGain();
+		int getTransactionCount();
+		int getGoodTransactionCount();
+		int getBadTransactionCount();
 	};
 
 
@@ -34,7 +37,7 @@ private:
 	bool bought;
 	bool sold;
 	int priceToPips(double price);
-	int processTick(double currentPrice, map<shared_ptr<Indicator>, double> indicatorValues, Specimen & strategy);
+	int processTick(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues, Specimen & strategy);
 
 public:
 	

@@ -14,7 +14,7 @@ public:
 	Controller();
 	~Controller();
 
-	void testParameters();
+	double testMutation(double min, double max, double step);
 };
 
 int main();

@@ -31,7 +31,7 @@ bool Tree::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& ind
 
 void Tree::mutate()
 {
-	if (rand() < mutationChances->getCutChance())
+	if (rand() / double(RAND_MAX) < mutationChances->getCutChance())
 	{
 		bool cutLeft = rand() % 2 == 0;
 		if (cutLeft)

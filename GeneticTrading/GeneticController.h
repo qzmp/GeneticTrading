@@ -29,7 +29,7 @@ public:
 	GeneticController(int tourneySize, double crossingChance, MutationChances &mt, vector<shared_ptr<Indicator>> &indicators, DataSet &dataSet, int treeHeight, int popSize, int generationCount);
 	~GeneticController();
 
-	Specimen startEvolution();
+	Backtester::TransactionData startEvolution();
 	void nextGeneration();
 };
 
