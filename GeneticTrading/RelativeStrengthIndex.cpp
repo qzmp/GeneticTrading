@@ -2,7 +2,7 @@
 
 
 
-RelativeStrengthIndex::RelativeStrengthIndex(int period) : Indicator(period, "RSI", -100, 100)
+RelativeStrengthIndex::RelativeStrengthIndex(int period) : Indicator(period, "RSI", false)
 {
 }
 
@@ -10,9 +10,9 @@ RelativeStrengthIndex::~RelativeStrengthIndex()
 {
 }
 
-bool RelativeStrengthIndex::isActive(bool greater, uint8_t value, double currentPrice, double currentIndicatorValue)
+double RelativeStrengthIndex::normalizeValue(uint8_t value)
 {
-	return greater ? currentIndicatorValue > normalizeValue(value) : currentIndicatorValue < normalizeValue(value);
+	return (value / numeric_limits<uint8_t>::max() * 100);
 }
 
 double RelativeStrengthIndex::calculate(list<double>& pastPrices)

@@ -18,7 +18,7 @@ private:
 	list<vector<double>> history;
 	ofstream fileStream;
 
-	void generateNewPopulation(MutationChances &mt, vector<shared_ptr<Indicator>> &indicators, DataSet &dataSet, int treeHeight, int size);
+	void generateNewPopulation(MutationChances &mt, IndicatorHolder &indicators, DataSet &dataSet, int treeHeight, int size);
 
 	void createFileStream(MutationChances &mt, DataSet &ds, int popSize);
 	void saveCurrentRatings();
@@ -26,7 +26,7 @@ private:
 
 public:
 	GeneticController();
-	GeneticController(int tourneySize, double crossingChance, MutationChances &mt, vector<shared_ptr<Indicator>> &indicators, DataSet &dataSet, int treeHeight, int popSize, int generationCount);
+	GeneticController(int tourneySize, double crossingChance, MutationChances &mt, IndicatorHolder &indicators, DataSet &dataSet, int treeHeight, int popSize, int generationCount);
 	~GeneticController();
 
 	Backtester::TransactionData startEvolution();

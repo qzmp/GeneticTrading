@@ -5,7 +5,7 @@
 int DataSet::getNeededLinesCount()
 {
 	int neededCount = 0;
-	for (auto& ind : indicatorObjects)
+	for (auto& ind : indicatorHolder.getAllIndicators())
 	{
 		if (ind->getNeededDataCount() > neededCount) {
 			neededCount = ind->getNeededDataCount();
@@ -23,7 +23,7 @@ void DataSet::saveLine(istringstream & ss)
 
 void DataSet::countIndicators(list<double> & lastClosePrices)
 {
-	for (auto& ind : indicatorObjects)
+	for (auto& ind : indicatorHolder.getAllIndicators())
 	{
 		if (ind->hasEnoughData(lastClosePrices.size()))
 		{
@@ -68,7 +68,7 @@ DataSet::~DataSet()
 {
 }
 
-int DataSet::loadData(string & fileName, DateTime & start, DateTime & end, vector<shared_ptr<Indicator>> & indicatorObjects)
+int DataSet::loadData(string & fileName, DateTime & start, DateTime & end, IndicatorHolder & indicatorHolder)
 {
 	this->start = start;
 	this->end = end;
@@ -82,7 +82,7 @@ int DataSet::loadData(string & fileName, DateTime & start, DateTime & end, vecto
 	ifstream inputStream;
 	inputStream.open(fileName);
 
-	this->indicatorObjects = indicatorObjects;
+	this->indicatorHolder = indicatorHolder;
 
 	int linesNeededForIndicators = getNeededLinesCount();
 	if (startIndex - linesNeededForIndicators < 0)
@@ -139,8 +139,6 @@ int DataSet::loadData(string & fileName, DateTime & start, DateTime & end, vecto
 						}
 						lastClosePrices.push_back(lastClosePrice);
 					}
-
-
 					i++;
 				}
 				if (currentLineIndex > startIndex)
@@ -198,7 +196,7 @@ double DataSet::getLowPrice(int index)
 map<shared_ptr<Indicator>, double> DataSet::getIndicatorValues(int index)
 {
 	map<shared_ptr<Indicator>, double> result;
-	for (auto& ind : indicatorObjects)
+	for (auto& ind : indicatorHolder.getAllIndicators())
 	{
 		result[ind] = indicators[ind][index];
 	}

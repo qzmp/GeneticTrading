@@ -1,7 +1,7 @@
 #include "SimpleMovingAverage.h"
 
 
-SimpleMovingAverage::SimpleMovingAverage(int period) : Indicator(period, "SMA", -0.2, 0.2)
+SimpleMovingAverage::SimpleMovingAverage(int period) : Indicator(period, "SMA", true)
 {
 }
 
@@ -9,20 +9,24 @@ SimpleMovingAverage::~SimpleMovingAverage()
 {
 }
 
-bool SimpleMovingAverage::isActive(bool greater, uint8_t value, double currentPrice, double currentIndicatorValue)
+double SimpleMovingAverage::normalizeValue(uint8_t value)
 {
-	bool result = greater ? currentPrice + (currentPrice * normalizeValue(value)) > currentIndicatorValue : currentPrice + (currentPrice * normalizeValue(value)) < currentIndicatorValue;
-	
-	return result;
+	return 0.0;
 }
 
 double SimpleMovingAverage::calculate(list<double>& pastPrices)
 {
 	double sum = 0;
 
-	for (double price : pastPrices)
+	list<double>::reverse_iterator rit;
+
+	rit = pastPrices.rbegin;
+	int i = 0;
+	while (i < period && rit != pastPrices.rend)
 	{
-		sum += price;
+		sum += *rit;
+		rit++;
+		i++;
 	}
-	return sum / pastPrices.size();
+	return sum / period;
 }

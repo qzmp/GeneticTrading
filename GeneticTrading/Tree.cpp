@@ -5,7 +5,7 @@ Tree::Tree()
 {
 }
 
-Tree::Tree(vector<shared_ptr<Indicator>> * indicators, MutationChances * mutationChances, int maxTreeHeight) : indicators(indicators), mutationChances(mutationChances), maxTreeHeight(maxTreeHeight)
+Tree::Tree(IndicatorHolder * indicators, MutationChances * mutationChances, int maxTreeHeight) : indicators(indicators), mutationChances(mutationChances), maxTreeHeight(maxTreeHeight)
 {
 }
 
@@ -65,7 +65,7 @@ MutationChances * Tree::getMutationChances()
 	return mutationChances;
 }
 
-vector<shared_ptr<Indicator>>* Tree::getIndicators()
+IndicatorHolder* Tree::getIndicators()
 {
 	return indicators;
 }

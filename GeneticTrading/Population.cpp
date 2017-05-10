@@ -41,7 +41,7 @@ Population::~Population()
 	//cout << "population destroyed" << endl;
 }
 
-void Population::generateRandom(MutationChances & mt, vector<shared_ptr<Indicator>>& indicators, int treeHeight)
+void Population::generateRandom(MutationChances & mt, IndicatorHolder& indicators, int treeHeight)
 {
 	for (int i = 0; i < specimens.capacity(); i++)
 	{

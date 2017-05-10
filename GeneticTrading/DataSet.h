@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 #include "DateTime.h"
-#include "Indicator.h"
+#include "IndicatorHolder.h"
 
 using namespace std;
 
@@ -21,7 +21,7 @@ class DataSet
 	vector<double> lowPrices;
 	map<shared_ptr<Indicator>, vector<double>> indicators;
 
-	vector<shared_ptr<Indicator>> indicatorObjects;
+	IndicatorHolder indicatorHolder;
 
 	int getNeededLinesCount();
 	void saveLine(istringstream & ss);
@@ -33,7 +33,7 @@ public:
 	DataSet();
 	~DataSet();
 
-	int loadData(string & filename, DateTime & start, DateTime & end, vector<shared_ptr<Indicator>> & indicatorObjects);
+	int loadData(string & filename, DateTime & start, DateTime & end, IndicatorHolder & indicatorObjects);
 
 	int getSize();
 

@@ -10,7 +10,7 @@ private:
 
 public:
 	Specimen();
-	Specimen(vector<shared_ptr<Indicator>> * indicators, MutationChances * mutationChances, int treeHeight);
+	Specimen(IndicatorHolder * indicators, MutationChances * mutationChances, int treeHeight);
 	Specimen(Tree bullTree, Tree bearTree);
 	Specimen(const Specimen &other);
 	~Specimen();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Indicator.h"
+#include "IndicatorHolder.h"
 #include "InternalNode.h"
 #include <list>
 
@@ -10,13 +10,13 @@ class Tree
 private:
 	unique_ptr<InternalNode> rootNode;
 
-	vector<shared_ptr<Indicator>> * indicators;
+	IndicatorHolder * indicators;
 	MutationChances * mutationChances;
 	int maxTreeHeight;
 
 public:
 	Tree();
-	Tree(vector<shared_ptr<Indicator>> * indicators, MutationChances * mutationChances, int maxTreeHeight);
+	Tree(IndicatorHolder * indicators, MutationChances * mutationChances, int maxTreeHeight);
 	Tree(const Tree &other);
 	~Tree();
 
@@ -26,7 +26,7 @@ public:
 	void mutate();
 
 	MutationChances * getMutationChances();
-	vector<shared_ptr<Indicator>> * getIndicators();
+	IndicatorHolder * getIndicators();
 	int getMaxHeight();
 
 };

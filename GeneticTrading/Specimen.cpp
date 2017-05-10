@@ -6,7 +6,7 @@ Specimen::Specimen()
 {
 }
 
-Specimen::Specimen(vector<shared_ptr<Indicator>> * indicators, MutationChances * mutationChances, int treeHeight) : bullTree(indicators, mutationChances, treeHeight), bearTree(indicators, mutationChances, treeHeight)
+Specimen::Specimen(IndicatorHolder * indicators, MutationChances * mutationChances, int treeHeight) : bullTree(indicators, mutationChances, treeHeight), bearTree(indicators, mutationChances, treeHeight)
 {
 	bullTree.generateRandom();
 	bearTree.generateRandom();

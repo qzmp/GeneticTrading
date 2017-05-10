@@ -14,16 +14,16 @@ Controller::~Controller()
 double Controller::testMutation(double min, double max, double step)
 {
 	DataSet data;
-	vector<shared_ptr<Indicator>> indicators;
+	IndicatorHolder indicators;
 
 	for (int i = 10; i < 200; i += 20)
 	{
-		indicators.push_back(shared_ptr<Indicator>(new SimpleMovingAverage(i)));
+		indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(i)));
 	}
 
-	indicators.push_back(shared_ptr<Indicator>(new RateOfChange(3)));
-	indicators.push_back(shared_ptr<Indicator>(new RateOfChange(12)));
-	indicators.push_back(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
+	indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(3)));
+	indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(12)));
+	indicators.addIndicator(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
 	data.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("01.01.2016 00:00:00"), DateTime("15.01.2016 00:00:00"), indicators);
 	
 	ofstream fileStream;
@@ -63,16 +63,16 @@ int main()
 	c.testMutation(90, 200, 20);
 
 	DataSet data;
-	vector<shared_ptr<Indicator>> indicators;
-	
+
+	IndicatorHolder indicators;
 	for (int i = 10; i < 200; i += 20)
 	{
-		indicators.push_back(shared_ptr<Indicator>(new SimpleMovingAverage(i)));
+		indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(i)));
 	}
-	
-	indicators.push_back(shared_ptr<Indicator>(new RateOfChange(3)));
-	indicators.push_back(shared_ptr<Indicator>(new RateOfChange(12)));
-	indicators.push_back(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
+
+	indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(3)));
+	indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(12)));
+	indicators.addIndicator(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
 	data.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("01.01.2016 00:00:00"), DateTime("15.01.2016 00:00:00"), indicators);
 	MutationChances *mc = new MutationChances(0.1, 0.1, 0.1, 0.1, 0.1 ,0.1, 0.1);
 	//MutationChances *mc = new MutationChances(0, 0, 0, 0, 1, 1, 1);

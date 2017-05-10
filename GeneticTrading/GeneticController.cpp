@@ -2,7 +2,7 @@
 
 
 
-void GeneticController::generateNewPopulation(MutationChances &mt, vector<shared_ptr<Indicator>>& indicators, DataSet &dataSet, int treeHeight, int size)
+void GeneticController::generateNewPopulation(MutationChances &mt, IndicatorHolder& indicators, DataSet &dataSet, int treeHeight, int size)
 {
 	population = unique_ptr<Population>(new Population(&dataSet, size));
 	population->generateRandom(mt, indicators, treeHeight);
@@ -49,7 +49,7 @@ GeneticController::GeneticController()
 {
 }
 
-GeneticController::GeneticController(int tourneySize, double crossingChance, MutationChances &mt, vector<shared_ptr<Indicator>> &indicators, DataSet &dataSet, int treeHeight, int popSize, int generationCount) 
+GeneticController::GeneticController(int tourneySize, double crossingChance, MutationChances &mt, IndicatorHolder &indicators, DataSet &dataSet, int treeHeight, int popSize, int generationCount) 
 	: tourneySize(tourneySize), crossingChance(crossingChance), generationCount(generationCount)
 {
 	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);

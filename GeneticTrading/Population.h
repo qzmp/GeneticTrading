@@ -24,7 +24,7 @@ public:
 	Population(const Population &other);
 	~Population();
 
-	void generateRandom(MutationChances &mt, vector<shared_ptr<Indicator>> &indicators, int treeHeight);
+	void generateRandom(MutationChances &mt, IndicatorHolder &indicators, int treeHeight);
 
 	Specimen* select(int tourneySize);
 	

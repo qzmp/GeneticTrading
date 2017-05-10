@@ -8,7 +8,7 @@ public:
 	SimpleMovingAverage(int period);
 	~SimpleMovingAverage();
 
-	bool isActive(bool greater, uint8_t value, double currentPrice, double currentIndicatorValue);
+	double normalizeValue(uint8_t value);
 
 	double calculate(list<double>& pastPrices);
 };

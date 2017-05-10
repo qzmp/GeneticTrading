@@ -9,18 +9,14 @@ using namespace std;
 
 class Indicator
 {
-private:
+protected:
 	string name;
 	int period;
 
-	double maxValue;
-	double minValue;
-
-protected:
-	virtual double normalizeValue(uint8_t value);
+	bool trendIndicator;
 
 public:
-	Indicator(int period, string name, double min, double max);
+	Indicator(int period, string name, bool isTrendIndicator);
 	virtual ~Indicator();
 
 	string getName();
@@ -28,7 +24,8 @@ public:
 	bool hasEnoughData(int dataCount);
 	int getNeededDataCount();
 
-	virtual bool isActive(bool greater, uint8_t value, double currentPrice, double currentIndicatorValue) = 0;
+	bool isTrendIndicator();
+	virtual double normalizeValue(uint8_t value) = 0;
 
 	virtual double calculate(list<double>& pastPrices) = 0;
 };

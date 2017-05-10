@@ -2,7 +2,7 @@
 
 
 
-RateOfChange::RateOfChange(int period) : Indicator(period, "ROC", -30, 30)
+RateOfChange::RateOfChange(int period) : Indicator(period, "ROC", false)
 {
 }
 
@@ -10,9 +10,9 @@ RateOfChange::~RateOfChange()
 {
 }
 
-bool RateOfChange::isActive(bool greater, uint8_t value, double currentPrice, double currentIndicatorValue)
+double RateOfChange::normalizeValue(uint8_t value)
 {
-	return greater ? currentIndicatorValue > normalizeValue(value) : currentIndicatorValue < normalizeValue(value);;
+	return (value / numeric_limits<uint8_t>::max() * 60) - 30;
 }
 
 double RateOfChange::calculate(list<double>& pastPrices)

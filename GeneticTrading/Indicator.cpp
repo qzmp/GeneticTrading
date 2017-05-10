@@ -1,16 +1,10 @@
 #include "Indicator.h"
 
-double Indicator::normalizeValue(uint8_t value)
-{
-	return (double)value / numeric_limits<uint8_t>::max() * (abs(minValue) + abs(maxValue)) - abs(minValue);
-}
-
-Indicator::Indicator(int period, string name, double min, double max)
+Indicator::Indicator(int period, string name, bool isTrendIndicator)
 {
 	this->period = period;
 	this->name = name;
-	this->minValue = min;
-	this->maxValue = max;
+	this->trendIndicator = isTrendIndicator;
 }
 
 Indicator::~Indicator()
@@ -35,4 +29,9 @@ bool Indicator::hasEnoughData(int dataCount)
 int Indicator::getNeededDataCount()
 {
 	return period;
+}
+
+bool Indicator::isTrendIndicator()
+{
+	return trendIndicator;
 }
