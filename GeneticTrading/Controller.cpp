@@ -53,7 +53,7 @@ double Controller::testMutation(double min, double max, double step)
 		fileStream << i << ";" << pipSum / 10<< ";" << transactionSum / 10 << endl;
 		delete mc;
 	}
-	
+	return 0;
 }
 
 int main()

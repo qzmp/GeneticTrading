@@ -45,13 +45,13 @@ void Population::generateRandom(MutationChances & mt, IndicatorHolder& indicator
 {
 	for (int i = 0; i < specimens.capacity(); i++)
 	{
-		specimens.emplace_back(&indicators, &mt, treeHeight); // Capacity is optimized
+		specimens.push_back(make_shared<OneTreeSpecimen>(&indicators, &mt, treeHeight)); // Capacity is optimized
 	}
 }
 
-Specimen * Population::select(int tourneySize)
+shared_ptr<Specimen> Population::select(int tourneySize)
 {
-	return &specimens[tourney(randomizeTourneyGroup(tourneySize))];
+	return specimens[tourney(randomizeTourneyGroup(tourneySize))];
 }
 
 void Population::rateAll()
@@ -69,18 +69,18 @@ void Population::rateAll()
 Population* Population::commenceCrossing(int tourneySize, double crossingChance)
 {
 	unique_ptr<Population> newPopulation = make_unique<Population>(dataSet, specimens.size());
-	Specimen *firstSpecimen, *secondSpecimen;
+	shared_ptr<Specimen> firstSpecimen, secondSpecimen;
 	for (int i = 0; i < specimens.size(); i++)
 	{
 		firstSpecimen = select(tourneySize);
 		if (rand() / double(RAND_MAX) < crossingChance)
 		{
 			secondSpecimen = select(tourneySize);
-			newPopulation->insertNewSpecimen(firstSpecimen->cross(*secondSpecimen));
+			newPopulation->insertNewSpecimen(firstSpecimen->cross(secondSpecimen));
 		}
 		else
 		{
-			newPopulation->insertNewSpecimen(*firstSpecimen);
+			newPopulation->insertNewSpecimen(firstSpecimen);
 		}
 	}
 	return newPopulation.release();
@@ -88,18 +88,18 @@ Population* Population::commenceCrossing(int tourneySize, double crossingChance)
 
 void Population::mutateAllSpecimen()
 {
-	for (Specimen &spec : specimens)
+	for (auto& spec : specimens)
 	{
-		spec.mutate();
+		spec->mutate();
 	}
 }
 
-void Population::insertNewSpecimen(Specimen & specimen)
+void Population::insertNewSpecimen(shared_ptr<Specimen> specimen)
 {
 	specimens.push_back(specimen);
 }
 
-Specimen Population::getBestSpecimen()
+shared_ptr<Specimen> Population::getBestSpecimen()
 {
 	int bestGrade = 0;
 	int bestIndex = 0;

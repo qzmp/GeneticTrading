@@ -37,12 +37,12 @@ private:
 	bool bought;
 	bool sold;
 	int priceToPips(double price);
-	int processTick(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues, Specimen & strategy);
+	int processTick(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues, shared_ptr<Specimen> strategy);
 
 public:
 	
 	Backtester();
 	~Backtester();
 
-	TransactionData & backtest(DataSet & dataSet, Specimen & strategy);
+	TransactionData & backtest(DataSet & dataSet, shared_ptr<Specimen> strategy);
 };

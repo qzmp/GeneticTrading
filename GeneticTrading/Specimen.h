@@ -4,21 +4,19 @@
 #include <iostream>
 class Specimen
 {
-private:
-	Tree bullTree;
-	Tree bearTree;
-
 public:
 	Specimen();
-	Specimen(IndicatorHolder * indicators, MutationChances * mutationChances, int treeHeight);
-	Specimen(Tree bullTree, Tree bearTree);
+	
 	Specimen(const Specimen &other);
 	~Specimen();
+
+	virtual bool checkBuySignal(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) = 0;
+	virtual bool checkSellSignal(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) = 0;
 
 	bool bullActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 	bool bearActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 
-	Specimen cross(Specimen & other);
-	void mutate();
+	virtual shared_ptr<Specimen> cross(shared_ptr<Specimen> other) = 0;
+	virtual void mutate() = 0;
 };
 

@@ -31,12 +31,14 @@
     <ClInclude Include="InternalNode.h" />
     <ClInclude Include="MutationChances.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="OneTreeSpecimen.h" />
     <ClInclude Include="Population.h" />
     <ClInclude Include="RateOfChange.h" />
     <ClInclude Include="RelativeStrengthIndex.h" />
     <ClInclude Include="SimpleMovingAverage.h" />
     <ClInclude Include="Specimen.h" />
     <ClInclude Include="Tree.h" />
+    <ClInclude Include="TwoTreesSpecimen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Backtester.cpp" />
@@ -51,12 +53,14 @@
     <ClCompile Include="InternalNode.cpp" />
     <ClCompile Include="MutationChances.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="OneTreeSpecimen.cpp" />
     <ClCompile Include="Population.cpp" />
     <ClCompile Include="RateOfChange.cpp" />
     <ClCompile Include="RelativeStrengthIndex.cpp" />
     <ClCompile Include="SimpleMovingAverage.cpp" />
     <ClCompile Include="Specimen.cpp" />
     <ClCompile Include="Tree.cpp" />
+    <ClCompile Include="TwoTreesSpecimen.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9420D3B6-4E44-439C-AC0B-D07CEB1C6F7D}</ProjectGuid>

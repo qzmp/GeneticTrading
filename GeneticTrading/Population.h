@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Specimen.h"
+#include "OneTreeSpecimen.h"
 #include "Backtester.h"
 #include "MutationChances.h"
 #include <numeric>
@@ -9,7 +9,7 @@
 class Population
 {
 private:
-	vector<Specimen> specimens;
+	vector<shared_ptr<Specimen>> specimens;
 	vector<double> ratings;
 
 	DataSet *dataSet;
@@ -26,15 +26,15 @@ public:
 
 	void generateRandom(MutationChances &mt, IndicatorHolder &indicators, int treeHeight);
 
-	Specimen* select(int tourneySize);
+	shared_ptr<Specimen> select(int tourneySize);
 	
 	void rateAll();
 	Population* commenceCrossing(int tourneySize, double crossingChance);
 	void mutateAllSpecimen();
 
-	void insertNewSpecimen(Specimen & specimen);
+	void insertNewSpecimen(shared_ptr<Specimen> specimen);
 
-	Specimen getBestSpecimen();
+	shared_ptr<Specimen> getBestSpecimen();
 	double getBestRating();
 	double getAverageRating();
 
