@@ -60,7 +60,7 @@ int main()
 {
 	srand(time(0));
 	Controller c;
-	c.testMutation(90, 200, 20);
+	//c.testMutation(90, 200, 20);
 
 	DataSet data;
 
@@ -69,10 +69,17 @@ int main()
 	{
 		indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(i)));
 	}
+	indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(2)));
+	indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(3)));
+	indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(6)));
+	indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(12)));
+	indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(26)));
 
-	indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(3)));
-	indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(12)));
-	indicators.addIndicator(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
+
+	//indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(3)));
+	//indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(12)));
+	//indicators.addIndicator(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
+
 	data.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("01.01.2016 00:00:00"), DateTime("15.01.2016 00:00:00"), indicators);
 	MutationChances *mc = new MutationChances(0.1, 0.1, 0.1, 0.1, 0.1 ,0.1, 0.1);
 	//MutationChances *mc = new MutationChances(0, 0, 0, 0, 1, 1, 1);
@@ -82,24 +89,26 @@ int main()
 	Backtester bt;
 	Backtester::TransactionData td = bt.backtest(data, spec);
 	*/
-	DataSet data2;
-	data2.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("15.01.2016 00:00:00"), DateTime("22.01.2016 00:00:00"), indicators);
+	//DataSet data2;
+	//data2.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("15.01.2016 00:00:00"), DateTime("22.01.2016 00:00:00"), indicators);
 
 	GeneticController gt(5, 0.1, *mc, indicators, data, 3, 200, 50);
-	//int bestScore = 0;
-	//for (int i = 0; i < 100; i++)
-	//{
-	//Backtester::TransactionData td = gt.startEvolution();
-		//Backtester bt;
-		//Backtester::TransactionData td = bt.backtest(data2, best);
-		/*if (td.getTotalPipGain() > bestScore)
+	/*int bestscore = 0;
+	for (int i = 0; i < 100; i++)
+	{
+		backtester::transactiondata td = gt.startevolution();
+		backtester bt;
+		backtester::transactiondata td = bt.backtest(data2, best);
+		if (td.gettotalpipgain() > bestscore)
 		{
-			bestScore = td.getTotalPipGain();
+			bestscore = td.gettotalpipgain();
 		}
 	}*/
 
-//	Specimen best = gt.startEvolution();
+	//Specimen best = gt.startEvolution();
 
+	Backtester bt;
+	Backtester::TransactionData td = gt.startEvolution();
 	delete mc;
 
 	return 0;

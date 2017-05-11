@@ -13,7 +13,7 @@ IndicatorHolder::~IndicatorHolder()
 
 void IndicatorHolder::addIndicator(shared_ptr<Indicator> indicator)
 {
-	if (indicator->isTrendIndicator)
+	if (indicator->isTrendIndicator())
 		trendIndicators.push_back(indicator);
 	else
 		oscillators.push_back(indicator);
@@ -42,4 +42,9 @@ shared_ptr<Indicator> IndicatorHolder::getRandom()
 vector<shared_ptr<Indicator>> IndicatorHolder::getAllIndicators()
 {
 	return allIndicators;
+}
+
+int IndicatorHolder::getTrendIndicatorCount()
+{
+	return trendIndicators.size();
 }

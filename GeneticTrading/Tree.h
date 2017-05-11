@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IndicatorHolder.h"
+//#include "IndicatorHolder.h"
 #include "InternalNode.h"
 #include <list>
 

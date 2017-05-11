@@ -22,5 +22,6 @@ public:
 	shared_ptr<Indicator> getRandom();
 
 	vector<shared_ptr<Indicator>> getAllIndicators();
+	int getTrendIndicatorCount();
 };
 

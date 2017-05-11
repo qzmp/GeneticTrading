@@ -18,6 +18,8 @@ private:
 	shared_ptr<Indicator> secondIndicator;
 	uint8_t value;
 
+	bool currentPrice;
+
 	bool doubleIndicators;
 	
 	void randomizeAll(IndicatorHolder * indicators);

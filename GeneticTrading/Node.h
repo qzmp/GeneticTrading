@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "Indicator.h"
+#include "IndicatorHolder.h"
 #include "MutationChances.h"
 #include <vector>
 #include <map>

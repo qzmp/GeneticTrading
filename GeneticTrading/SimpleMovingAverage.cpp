@@ -20,9 +20,9 @@ double SimpleMovingAverage::calculate(list<double>& pastPrices)
 
 	list<double>::reverse_iterator rit;
 
-	rit = pastPrices.rbegin;
+	rit = pastPrices.rbegin();
 	int i = 0;
-	while (i < period && rit != pastPrices.rend)
+	while (i < period && rit != pastPrices.rend())
 	{
 		sum += *rit;
 		rit++;

@@ -7,7 +7,13 @@ void LeafNode::randomizeAll(IndicatorHolder * indicators)
 	indicator = indicators->getRandom();
 	if (indicator->isTrendIndicator())
 	{
-		secondIndicator = indicators->getRandomTrendIndicator();
+		if (rand() % (indicators->getTrendIndicatorCount() + 1) == 0)
+			currentPrice = true;
+		else
+		{
+			currentPrice = false;
+			secondIndicator = indicators->getRandomTrendIndicator();
+		}
 		doubleIndicators = true;
 	}
 	else
@@ -46,7 +52,10 @@ bool LeafNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>&
 {
 	if (doubleIndicators)
 	{
-		return greater ? indicatorValues[indicator] > indicatorValues[secondIndicator] : indicatorValues[indicator] < indicatorValues[secondIndicator];
+		if(currentPrice)
+			return greater ? indicatorValues[indicator] > indicatorValues[secondIndicator] : indicatorValues[indicator] < indicatorValues[secondIndicator];
+		else
+			return greater ? indicatorValues[indicator] > currentPrice : indicatorValues[indicator] < currentPrice;
 	}
 	else
 		return greater ? indicatorValues[indicator] > indicator->normalizeValue(value) : indicatorValues[indicator] < indicator->normalizeValue(value);
@@ -54,38 +63,12 @@ bool LeafNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>&
 
 void LeafNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree)
 {
-	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getComparatorChangeChance())
+
+	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getIndicatorChangeChance())
 	{
-		greater = !greater;
+		randomizeAll(ownerTree->getIndicators());
 	}
-	if (doubleIndicators)
-	{
-		if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getIndicatorChangeChance())
-		{
-			while (indicator != secondIndicator)
-			{
-				if (rand() % 2 == 0)
-				{
-					indicator = ownerTree->getIndicators()->getRandomTrendIndicator();
-				}
-				else
-				{
-					secondIndicator = ownerTree->getIndicators()->getRandomTrendIndicator();
-				}
-			}
-		}
-	}
-	else if (!doubleIndicators)
-	{
-		if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getValueChangeChance())
-		{
-			randomizeValue();
-		}
-		if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getIndicatorChangeChance())
-		{
-			indicator = ownerTree->getIndicators()->getRandomOscillator();
-		}
-	}
+
 	if (currentPos < ownerTree->getMaxHeight() && rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getSplitChance())
 	{
 		if (isLeft)
