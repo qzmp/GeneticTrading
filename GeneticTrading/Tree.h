@@ -34,4 +34,6 @@ public:
 	unique_ptr<Tree> crossLeft(const Tree& other);
 	unique_ptr<Tree> crossRight(const Tree& other);
 
+	string drawLatex();
+
 };

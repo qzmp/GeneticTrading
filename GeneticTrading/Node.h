@@ -28,5 +28,7 @@ public:
 	virtual bool isLeaf() = 0;
 	
 	virtual int getSize() = 0;
+
+	virtual void writeLatex(stringstream& ss) = 0;
 };
 

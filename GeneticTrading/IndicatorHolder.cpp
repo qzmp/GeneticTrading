@@ -39,9 +39,19 @@ shared_ptr<Indicator> IndicatorHolder::getRandom()
 	return allIndicators[randomIndicatorIndex];
 }
 
-vector<shared_ptr<Indicator>> IndicatorHolder::getAllIndicators()
+bool IndicatorHolder::hasEnoughDataPoints(int count)
 {
-	return allIndicators;
+	bool hasEnoughData = true;
+	for (auto& i : allIndicators)
+	{
+		hasEnoughData &= (i->getNeededDataCount() <= count);
+	}
+	return hasEnoughData;
+}
+
+vector<shared_ptr<Indicator>>* IndicatorHolder::getAllIndicators()
+{
+	return &allIndicators;
 }
 
 int IndicatorHolder::getTrendIndicatorCount()

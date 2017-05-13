@@ -23,5 +23,7 @@ public:
 
 	shared_ptr<Specimen> cross(shared_ptr<Specimen> other);
 	void mutate();
+
+	string toLatex();
 };
 

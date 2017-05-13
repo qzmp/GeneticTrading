@@ -28,5 +28,7 @@ public:
 	virtual double normalizeValue(uint8_t value) = 0;
 
 	virtual double calculate(list<double>& pastPrices) = 0;
+
+	string toString();
 };
 

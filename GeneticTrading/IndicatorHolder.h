@@ -21,7 +21,9 @@ public:
 	shared_ptr<Indicator> getRandomTrendIndicator();
 	shared_ptr<Indicator> getRandom();
 
-	vector<shared_ptr<Indicator>> getAllIndicators();
+	bool hasEnoughDataPoints(int count);
+
+	vector<shared_ptr<Indicator>>* getAllIndicators();
 	int getTrendIndicatorCount();
 };
 

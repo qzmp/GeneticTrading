@@ -95,3 +95,16 @@ unique_ptr<Tree> Tree::crossRight(const Tree& other)
 	child->rootNode->setRight(other.rootNode->getRightCopy());
 	return child;
 }
+
+string Tree::drawLatex()
+{
+	stringstream ss;
+	ss << "\\begin{tikzpicture} [sibling distance=10em, every node/.style = {" << endl;
+	ss << "shape = rectangle, rounded corners, draw, align = center}]]" << endl;
+	ss << "\\";
+	rootNode->writeLatex(ss);
+	ss << ";" << endl;
+	ss << "\\end{tikzpicture}" << endl;
+
+	return ss.str();
+}

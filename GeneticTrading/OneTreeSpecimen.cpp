@@ -51,3 +51,8 @@ void OneTreeSpecimen::mutate()
 {
 	strategyTree.mutate();
 }
+
+string OneTreeSpecimen::toLatex()
+{
+	return strategyTree.drawLatex();
+}

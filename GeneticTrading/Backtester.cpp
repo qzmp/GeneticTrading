@@ -67,23 +67,23 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, shared_ptr
 	sold = false; 
 	transactionData = TransactionData();
 
-	map<shared_ptr<Indicator>, double> indicatorValues;
+	map<shared_ptr<Indicator>, double>* indicatorValues;
 	int i = 0;
 	while (i < dataSet.getSize())
 	{
 		indicatorValues = dataSet.getIndicatorValues(i);
-		processTick(dataSet.getOpenPrice(i), indicatorValues, strategy);
+		processTick(dataSet.getOpenPrice(i), *indicatorValues, strategy);
 		if (rand() % 2 == 0) {
-			processTick(dataSet.getHighPrice(i), indicatorValues, strategy);
-			processTick(dataSet.getLowPrice(i), indicatorValues, strategy);
+			processTick(dataSet.getHighPrice(i), *indicatorValues, strategy);
+			processTick(dataSet.getLowPrice(i), *indicatorValues, strategy);
 		}
 		else
 		{
-			processTick(dataSet.getLowPrice(i), indicatorValues, strategy);
-			processTick(dataSet.getHighPrice(i), indicatorValues, strategy);
+			processTick(dataSet.getLowPrice(i), *indicatorValues, strategy);
+			processTick(dataSet.getHighPrice(i), *indicatorValues, strategy);
 		}
 		
-		processTick(dataSet.getClosePrice(i), indicatorValues, strategy);
+		processTick(dataSet.getClosePrice(i), *indicatorValues, strategy);
 		i++;
 	}
 	if (bought)

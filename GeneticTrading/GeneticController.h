@@ -26,10 +26,11 @@ private:
 
 public:
 	GeneticController();
-	GeneticController(int tourneySize, double crossingChance, MutationChances &mt, IndicatorHolder &indicators, DataSet &dataSet, int treeHeight, int popSize, int generationCount);
+	GeneticController(int tourneySize, double crossingChance, MutationChances &mt, IndicatorHolder &indicators, 
+		DataSet &dataSet, int treeHeight, int popSize, int generationCount);
 	~GeneticController();
 
-	Backtester::TransactionData startEvolution();
+	shared_ptr<Specimen> startEvolution();
 	void nextGeneration();
 };
 

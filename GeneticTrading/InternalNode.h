@@ -47,5 +47,7 @@ public:
 	void splitRight(int currentSize, Tree *ownerTree);
 
 	int getSize();
+
+	void writeLatex(stringstream& ss);
 };
 

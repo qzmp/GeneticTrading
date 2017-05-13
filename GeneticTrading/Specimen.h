@@ -18,5 +18,7 @@ public:
 
 	virtual shared_ptr<Specimen> cross(shared_ptr<Specimen> other) = 0;
 	virtual void mutate() = 0;
+
+	virtual string toLatex() = 0;
 };
 

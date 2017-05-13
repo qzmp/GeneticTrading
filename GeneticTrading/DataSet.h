@@ -19,7 +19,7 @@ class DataSet
 	vector<double> closePrices;
 	vector<double> highPrices;
 	vector<double> lowPrices;
-	map<shared_ptr<Indicator>, vector<double>> indicators;
+	vector<map<shared_ptr<Indicator>, double>> indicators;
 
 	IndicatorHolder indicatorHolder;
 
@@ -41,7 +41,7 @@ public:
 	double getClosePrice(int index);
 	double getHighPrice(int index);
 	double getLowPrice(int index);
-	map<shared_ptr<Indicator>, double> getIndicatorValues(int index);
+	map<shared_ptr<Indicator>, double>* getIndicatorValues(int index);
 
 	DateTime getStart();
 	DateTime getEnd();

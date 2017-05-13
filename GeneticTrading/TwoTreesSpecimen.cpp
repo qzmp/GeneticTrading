@@ -54,3 +54,9 @@ void TwoTreesSpecimen::mutate()
 	bullTree.mutate();
 	bearTree.mutate();
 }
+
+string TwoTreesSpecimen::toLatex()
+{
+	return string();
+}
+

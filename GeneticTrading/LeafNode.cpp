@@ -93,3 +93,18 @@ int LeafNode::getSize()
 {
 	return 1;
 }
+
+void LeafNode::writeLatex(stringstream & ss)
+{
+	ss << "node {" << indicator->toString();
+	greater ? ss << " \\textgreater " : ss << " \\textless ";
+
+	if (doubleIndicators && !currentPrice)
+		ss << secondIndicator->toString();
+	else if (currentPrice)
+		ss << "price";
+	else
+		ss << indicator->normalizeValue(value);
+	ss << "}" << endl;
+
+}

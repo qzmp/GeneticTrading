@@ -35,3 +35,8 @@ bool Indicator::isTrendIndicator()
 {
 	return trendIndicator;
 }
+
+string Indicator::toString()
+{
+	return this->name + "(" + to_string(this->period) + ")";
+}

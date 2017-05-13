@@ -5,7 +5,7 @@
 int DataSet::getNeededLinesCount()
 {
 	int neededCount = 0;
-	for (auto& ind : indicatorHolder.getAllIndicators())
+	for (auto& ind : *(indicatorHolder.getAllIndicators()))
 	{
 		if (ind->getNeededDataCount() > neededCount) {
 			neededCount = ind->getNeededDataCount();
@@ -23,12 +23,14 @@ void DataSet::saveLine(istringstream & ss)
 
 void DataSet::countIndicators(list<double> & lastClosePrices)
 {
-	for (auto& ind : indicatorHolder.getAllIndicators())
+	if (indicatorHolder.hasEnoughDataPoints(lastClosePrices.size()))
 	{
-		if (ind->hasEnoughData(lastClosePrices.size()))
+		map<shared_ptr<Indicator>, double> newMap;
+		indicators.push_back(newMap);
+		for (auto& ind : *(indicatorHolder.getAllIndicators()))
 		{
-			indicators[ind].push_back(ind->calculate(lastClosePrices));
-		}		
+			indicators.back()[ind] = ind->calculate(lastClosePrices);
+		}
 	}
 }
 
@@ -193,14 +195,9 @@ double DataSet::getLowPrice(int index)
 	return lowPrices[index];
 }
 
-map<shared_ptr<Indicator>, double> DataSet::getIndicatorValues(int index)
+map<shared_ptr<Indicator>, double>* DataSet::getIndicatorValues(int index)
 {
-	map<shared_ptr<Indicator>, double> result;
-	for (auto& ind : indicatorHolder.getAllIndicators())
-	{
-		result[ind] = indicators[ind][index];
-	}
-	return result;
+	return &indicators[index];
 }
 
 DateTime DataSet::getStart()

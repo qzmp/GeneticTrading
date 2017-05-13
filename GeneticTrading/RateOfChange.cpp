@@ -27,3 +27,4 @@ double RateOfChange::calculate(list<double>& pastPrices)
 	double ROC = (lastPrice - priceNPeriodsAgo) / priceNPeriodsAgo * 100;
 	return ROC;
 }
+

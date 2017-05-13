@@ -44,10 +44,10 @@ double Controller::testMutation(double min, double max, double step)
 		for (int j = 0; j < 10; j++)
 		{
 			GeneticController gt(10, 0.2, *mc, indicators, data, 3, 200, i);
-			Backtester::TransactionData td = gt.startEvolution();
+			//Backtester::TransactionData td = gt.startEvolution();
 
-			pipSum += td.getTotalPipGain();
-			transactionSum += td.getTransactionCount();
+			//pipSum += td.getTotalPipGain();
+			//transactionSum += td.getTransactionCount();
 			
 		}
 		fileStream << i << ";" << pipSum / 10<< ";" << transactionSum / 10 << endl;
@@ -67,7 +67,7 @@ int main()
 	IndicatorHolder indicators;
 	for (int i = 10; i < 200; i += 20)
 	{
-		indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(i)));
+		//indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(i)));
 	}
 	indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(2)));
 	indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(3)));
@@ -107,9 +107,9 @@ int main()
 
 	//Specimen best = gt.startEvolution();
 
-	Backtester bt;
-	Backtester::TransactionData td = gt.startEvolution();
-	delete mc;
+	//Backtester bt;
+	shared_ptr<Specimen> best = gt.startEvolution();
+	cout << best->toLatex();
 
 	return 0;
 }

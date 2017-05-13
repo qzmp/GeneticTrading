@@ -60,7 +60,7 @@ GeneticController::~GeneticController()
 {
 }
 
-Backtester::TransactionData GeneticController::startEvolution()
+shared_ptr<Specimen> GeneticController::startEvolution()
 {
 	for (int i = 0; i < generationCount; i++)
 	{
@@ -71,7 +71,7 @@ Backtester::TransactionData GeneticController::startEvolution()
 	saveCurrentRatings();
 	writeHistory();
 	Backtester bt;
-	return bt.backtest(*population->getDataSet(), population->getBestSpecimen());
+	return population->getBestSpecimen();
 }
 
 void GeneticController::nextGeneration()

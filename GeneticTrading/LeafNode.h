@@ -39,5 +39,7 @@ public:
 	bool isLeaf();
 
 	int getSize();
+
+	void writeLatex(stringstream& ss);
 };
 
