@@ -99,11 +99,14 @@ unique_ptr<Tree> Tree::crossRight(const Tree& other)
 string Tree::drawLatex()
 {
 	stringstream ss;
-	ss << "\\begin{tikzpicture} [sibling distance=10em, every node/.style = {" << endl;
-	ss << "shape = rectangle, rounded corners, draw, align = center}]]" << endl;
-	ss << "\\";
+	ss << "\\begin{tikzpicture}[every leaf node/.style =" << endl;
+	ss << "{draw,rectangle,minimum width = {3em}}," << endl;
+	ss << "every internal node/.style = {draw, circle, child anchor=center}]" << endl;
+	ss << "\\tikzset{edge from parent/.style=" << endl;
+	ss << "{draw, edge from parent path = { (\\tikzparentnode.south)" << endl;
+	ss << "-- + (0,-4pt)- | (\\tikzchildnode) }}}" << endl;
+	ss << "\\Tree" << endl;
 	rootNode->writeLatex(ss);
-	ss << ";" << endl;
 	ss << "\\end{tikzpicture}" << endl;
 
 	return ss.str();
