@@ -202,15 +202,14 @@ int InternalNode::getSize()
 
 void InternalNode::writeLatex(stringstream & ss)
 {
-	isAndOperator ? ss << "node {AND}" : ss << "node {OR}";
+	isAndOperator ? ss << "[.AND" : ss << "[.OR";
 	ss << endl;
 
-	ss << "child {" << endl;
+	ss << "[";
 	left->writeLatex(ss);
-	ss << "}";
-
-	ss << "child {" << endl;
+	ss << " ";
 	right->writeLatex(ss);
-	ss << "}" << endl;
+	ss << " ]";
+	ss << " ]" << endl;
 }
 
