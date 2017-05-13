@@ -26,5 +26,7 @@ public:
 	virtual void mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree) = 0;
 
 	virtual bool isLeaf() = 0;
+	
+	virtual int getSize() = 0;
 };
 

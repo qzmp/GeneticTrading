@@ -12,6 +12,10 @@ OneTreeSpecimen::OneTreeSpecimen(IndicatorHolder * indicators, MutationChances *
 	strategyTree.generateRandom();
 }
 
+OneTreeSpecimen::OneTreeSpecimen(unique_ptr<Tree> tree) : strategyTree(*tree)
+{
+}
+
 OneTreeSpecimen::OneTreeSpecimen(const OneTreeSpecimen & other) : strategyTree(other.strategyTree)
 {
 }
@@ -33,7 +37,14 @@ bool OneTreeSpecimen::checkSellSignal(double currentPrice, map<shared_ptr<Indica
 
 shared_ptr<Specimen> OneTreeSpecimen::cross(shared_ptr<Specimen> other)
 {
-	return shared_ptr<Specimen>();
+	if (rand() % 2 == 0)
+	{
+		return make_shared<OneTreeSpecimen>(strategyTree.crossLeft(static_pointer_cast<OneTreeSpecimen>(other)->strategyTree));
+	}
+	else
+	{
+		return make_shared<OneTreeSpecimen>(strategyTree.crossRight(static_pointer_cast<OneTreeSpecimen>(other)->strategyTree));
+	}
 }
 
 void OneTreeSpecimen::mutate()

@@ -81,7 +81,7 @@ int main()
 	//indicators.addIndicator(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
 
 	data.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("01.01.2016 00:00:00"), DateTime("15.01.2016 00:00:00"), indicators);
-	MutationChances *mc = new MutationChances(0.1, 0.1, 0.1, 0.1, 0.1 ,0.1, 0.1);
+	MutationChances *mc = new MutationChances(0.01, 0.01, 0.01, 0.01, 0.01 ,0.01, 0.01);
 	//MutationChances *mc = new MutationChances(0, 0, 0, 0, 1, 1, 1);
 
 	/*
@@ -92,7 +92,7 @@ int main()
 	//DataSet data2;
 	//data2.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("15.01.2016 00:00:00"), DateTime("22.01.2016 00:00:00"), indicators);
 
-	GeneticController gt(5, 0.1, *mc, indicators, data, 3, 200, 50);
+	GeneticController gt(40, 0.1, *mc, indicators, data, 5, 200, 200);
 	/*int bestscore = 0;
 	for (int i = 0; i < 100; i++)
 	{

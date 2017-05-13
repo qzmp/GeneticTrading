@@ -29,6 +29,9 @@ public:
 	void setLeft(Node * node);
 	void setRight(Node * node);
 
+	Node* getLeftCopy();
+	Node* getRightCopy();
+
 	bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 	void changeOperator();
 
@@ -42,5 +45,7 @@ public:
 
 	void splitLeft(int currentSize, Tree *ownerTree);
 	void splitRight(int currentSize, Tree *ownerTree);
+
+	int getSize();
 };
 

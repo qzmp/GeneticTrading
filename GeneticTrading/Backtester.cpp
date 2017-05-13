@@ -73,8 +73,16 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, shared_ptr
 	{
 		indicatorValues = dataSet.getIndicatorValues(i);
 		processTick(dataSet.getOpenPrice(i), indicatorValues, strategy);
-		//processTick(dataSet.getHighPrice(i), indicatorValues, strategy);
-		//processTick(dataSet.getLowPrice(i), indicatorValues, strategy);
+		if (rand() % 2 == 0) {
+			processTick(dataSet.getHighPrice(i), indicatorValues, strategy);
+			processTick(dataSet.getLowPrice(i), indicatorValues, strategy);
+		}
+		else
+		{
+			processTick(dataSet.getLowPrice(i), indicatorValues, strategy);
+			processTick(dataSet.getHighPrice(i), indicatorValues, strategy);
+		}
+		
 		processTick(dataSet.getClosePrice(i), indicatorValues, strategy);
 		i++;
 	}

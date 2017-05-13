@@ -9,6 +9,7 @@ private:
 public:
 	OneTreeSpecimen();
 	OneTreeSpecimen(IndicatorHolder * indicators, MutationChances * mutationChances, int treeHeight);
+	OneTreeSpecimen(unique_ptr<Tree> tree);
 	OneTreeSpecimen(const OneTreeSpecimen &other);
 	~OneTreeSpecimen();
 

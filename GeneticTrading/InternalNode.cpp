@@ -89,6 +89,16 @@ void InternalNode::setRight(Node * node)
 	right = unique_ptr<Node>(node);
 }
 
+Node* InternalNode::getLeftCopy()
+{
+	return left->clone();
+}
+
+Node* InternalNode::getRightCopy()
+{
+	return right->clone();
+}
+
 bool InternalNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
 {
 	if (isAndOperator)
@@ -183,5 +193,10 @@ void InternalNode::splitLeft(int currentSize, Tree *ownerTree)
 void InternalNode::splitRight(int currentSize, Tree * ownerTree)
 {
 	right = make_unique<InternalNode>(currentSize, right.release(), ownerTree);
+}
+
+int InternalNode::getSize()
+{
+	return left->getSize() + right->getSize();
 }
 

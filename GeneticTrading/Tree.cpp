@@ -5,12 +5,14 @@ Tree::Tree()
 {
 }
 
-Tree::Tree(IndicatorHolder * indicators, MutationChances * mutationChances, int maxTreeHeight) : indicators(indicators), mutationChances(mutationChances), maxTreeHeight(maxTreeHeight)
+Tree::Tree(IndicatorHolder * indicators, MutationChances * mutationChances, int maxTreeHeight) 
+	: indicators(indicators), mutationChances(mutationChances), maxTreeHeight(maxTreeHeight)
 {
 }
 
 Tree::Tree(const Tree & other)
-	: rootNode(unique_ptr<InternalNode>(new InternalNode(*other.rootNode))), indicators(other.indicators), mutationChances(other.mutationChances), maxTreeHeight(other.maxTreeHeight)
+	: rootNode(unique_ptr<InternalNode>(new InternalNode(*other.rootNode))), indicators(other.indicators), 
+	mutationChances(other.mutationChances), maxTreeHeight(other.maxTreeHeight)
 {
 }
 
@@ -73,4 +75,23 @@ IndicatorHolder* Tree::getIndicators()
 int Tree::getMaxHeight()
 {
 	return maxTreeHeight;
+}
+
+int Tree::getSize()
+{
+	return rootNode->getSize();
+}
+
+unique_ptr<Tree> Tree::crossLeft(const Tree& other)
+{
+	unique_ptr<Tree> child = make_unique<Tree>(Tree(*this));
+	child->rootNode->setLeft(other.rootNode->getLeftCopy());
+	return child;
+}
+
+unique_ptr<Tree> Tree::crossRight(const Tree& other)
+{
+	unique_ptr<Tree> child = make_unique<Tree>(Tree(*this));
+	child->rootNode->setRight(other.rootNode->getRightCopy());
+	return child;
 }

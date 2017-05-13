@@ -34,7 +34,9 @@ LeafNode::LeafNode(Tree * ownerTree)
 	randomizeAll(ownerTree->getIndicators());
 }
 
-LeafNode::LeafNode(const LeafNode & other) : indicator(other.indicator), greater(other.greater)
+LeafNode::LeafNode(const LeafNode & other) 
+	: indicator(other.indicator), greater(other.greater), secondIndicator(other.secondIndicator), value(other.value), 
+	currentPrice(other.currentPrice), doubleIndicators(other.doubleIndicators)
 {
 }
 
@@ -85,4 +87,9 @@ void LeafNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *
 bool LeafNode::isLeaf()
 {
 	return true;
+}
+
+int LeafNode::getSize()
+{
+	return 1;
 }

@@ -29,4 +29,9 @@ public:
 	IndicatorHolder * getIndicators();
 	int getMaxHeight();
 
+	int getSize();
+
+	unique_ptr<Tree> crossLeft(const Tree& other);
+	unique_ptr<Tree> crossRight(const Tree& other);
+
 };

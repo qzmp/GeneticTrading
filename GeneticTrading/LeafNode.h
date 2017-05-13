@@ -37,5 +37,7 @@ public:
 	void mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree);
 
 	bool isLeaf();
+
+	int getSize();
 };
 
