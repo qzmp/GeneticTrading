@@ -23,7 +23,7 @@ int Indicator::getPeriod()
 
 bool Indicator::hasEnoughData(int dataCount)
 {
-	return this->period <= dataCount;
+	return getNeededDataCount() <= dataCount;
 }
 
 int Indicator::getNeededDataCount()

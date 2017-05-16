@@ -22,13 +22,13 @@ public:
 	string getName();
 	int getPeriod();
 	bool hasEnoughData(int dataCount);
-	int getNeededDataCount();
+	virtual int getNeededDataCount();
 
 	bool isTrendIndicator();
 	virtual double normalizeValue(uint8_t value) = 0;
 
 	virtual double calculate(list<double>& pastPrices) = 0;
 
-	string toString();
+	virtual string toString();
 };
 

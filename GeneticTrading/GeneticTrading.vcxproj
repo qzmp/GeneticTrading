@@ -29,9 +29,11 @@
     <ClInclude Include="IndicatorHolder.h" />
     <ClInclude Include="LeafNode.h" />
     <ClInclude Include="InternalNode.h" />
+    <ClInclude Include="MovingAverageResistance.h" />
     <ClInclude Include="MutationChances.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="OneTreeSpecimen.h" />
+    <ClInclude Include="PastPricesTrendLine.h" />
     <ClInclude Include="Population.h" />
     <ClInclude Include="RateOfChange.h" />
     <ClInclude Include="RelativeStrengthIndex.h" />
@@ -51,9 +53,11 @@
     <ClCompile Include="IndicatorHolder.cpp" />
     <ClCompile Include="LeafNode.cpp" />
     <ClCompile Include="InternalNode.cpp" />
+    <ClCompile Include="MovingAverageResistance.cpp" />
     <ClCompile Include="MutationChances.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="OneTreeSpecimen.cpp" />
+    <ClCompile Include="PastPricesTrendLine.cpp" />
     <ClCompile Include="Population.cpp" />
     <ClCompile Include="RateOfChange.cpp" />
     <ClCompile Include="RelativeStrengthIndex.cpp" />

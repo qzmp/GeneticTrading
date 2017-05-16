@@ -76,8 +76,19 @@ int main()
 	indicators.addIndicator(shared_ptr<Indicator>(new SimpleMovingAverage(26)));
 
 
-	//indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(3)));
-	//indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(12)));
+	indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(3)));
+	indicators.addIndicator(shared_ptr<Indicator>(new RateOfChange(12)));
+
+	indicators.addIndicator(shared_ptr<Indicator>(new MovingAverageResistance(1, 3, 12, true)));
+	indicators.addIndicator(shared_ptr<Indicator>(new MovingAverageResistance(2, 3, 12, true)));
+	indicators.addIndicator(shared_ptr<Indicator>(new MovingAverageResistance(3, 3, 12, true)));
+
+	indicators.addIndicator(shared_ptr<Indicator>(new MovingAverageResistance(1, 3, 12, false)));
+	indicators.addIndicator(shared_ptr<Indicator>(new MovingAverageResistance(1, 3, 12, false)));
+	indicators.addIndicator(shared_ptr<Indicator>(new MovingAverageResistance(1, 3, 12, false)));
+
+	indicators.addIndicator(shared_ptr<Indicator>(new PastPricesTrendLine(true)));
+	indicators.addIndicator(shared_ptr<Indicator>(new PastPricesTrendLine(false)));
 	//indicators.addIndicator(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
 
 	data.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("01.01.2016 00:00:00"), DateTime("15.01.2016 00:00:00"), indicators);

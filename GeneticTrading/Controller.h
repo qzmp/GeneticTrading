@@ -7,6 +7,8 @@
 #include "Specimen.h"
 #include "Backtester.h"
 #include "GeneticController.h"
+#include "MovingAverageResistance.h"
+#include "PastPricesTrendLine.h"
 
 class Controller
 {
