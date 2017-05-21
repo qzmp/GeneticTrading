@@ -14,6 +14,10 @@ private:
 	MutationChances * mutationChances;
 	int maxTreeHeight;
 
+	list<bool> getRandomPath();
+	unique_ptr<Node> getNodeFromPath(list<bool>& path, int index);
+	void swapSubtree(list<bool>& path, int index, unique_ptr<Node>& subtree);
+
 public:
 	Tree();
 	Tree(IndicatorHolder * indicators, MutationChances * mutationChances, int maxTreeHeight);
@@ -33,7 +37,11 @@ public:
 
 	unique_ptr<Tree> crossLeft(const Tree& other);
 	unique_ptr<Tree> crossRight(const Tree& other);
+	pair<unique_ptr<Tree>, unique_ptr<Tree>> cross(Tree& other);
 
 	string drawLatex();
+
+	shared_ptr<Node> getRandomNode();
+
 
 };

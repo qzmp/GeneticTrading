@@ -40,9 +40,9 @@ LeafNode::LeafNode(const LeafNode & other)
 {
 }
 
-Node * LeafNode::clone()
+unique_ptr<Node> LeafNode::clone()
 {
-	return new LeafNode(*this);
+	return make_unique<LeafNode>(*this);
 }
 
 LeafNode::~LeafNode()
@@ -66,7 +66,7 @@ bool LeafNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>&
 void LeafNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree)
 {
 
-	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getIndicatorChangeChance())
+	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getCycleChance())
 	{
 		randomizeAll(ownerTree->getIndicators());
 	}
@@ -107,4 +107,17 @@ void LeafNode::writeLatex(stringstream & ss)
 		ss << indicator->normalizeValue(value);
 	ss << "} ";
 
+}
+
+void LeafNode::getRandomPath(list<bool>& path)
+{
+}
+
+unique_ptr<Node> LeafNode::getNodeFromPath(list<bool>::iterator & path, int index)
+{
+	return unique_ptr<Node>();
+}
+
+void LeafNode::swapSubtree(list<bool>::iterator & pathIterator, int index, unique_ptr<Node>& subtree)
+{
 }

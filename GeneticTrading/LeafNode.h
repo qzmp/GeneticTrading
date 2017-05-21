@@ -28,7 +28,7 @@ private:
 public:
 	LeafNode(Tree * ownerTree);
 	LeafNode(const LeafNode &other);
-	Node* clone();
+	unique_ptr<Node> clone();
 	~LeafNode();
 
 
@@ -41,5 +41,9 @@ public:
 	int getSize();
 
 	void writeLatex(stringstream& ss);
+	
+	void getRandomPath(list<bool>& path);
+	unique_ptr<Node> getNodeFromPath(list<bool>::iterator& path, int index);
+	void swapSubtree(list<bool>::iterator& pathIterator, int index, unique_ptr<Node>& subtree);
 };
 

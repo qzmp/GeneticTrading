@@ -4,6 +4,7 @@
 #include "Specimen.h"
 #include "MutationChances.h"
 #include "DateTime.h"
+#include <chrono>
 #include <list>
 
 class GeneticController
@@ -11,8 +12,13 @@ class GeneticController
 private:
 	unique_ptr<Population> population;
 
-	double crossingChance;
 	int tourneySize;
+	double crossingChance;
+	MutationChances &mt;
+	IndicatorHolder &indicators;
+	DataSet &dataSet;
+	int treeHeight;
+	int popSize;
 	int generationCount;
 
 	list<vector<double>> history;
@@ -25,12 +31,24 @@ private:
 	void writeHistory();
 
 public:
-	GeneticController();
-	GeneticController(int tourneySize, double crossingChance, MutationChances &mt, IndicatorHolder &indicators, 
+
+	GeneticController(double tourneySize, double crossingChance, MutationChances &mt, IndicatorHolder &indicators, 
 		DataSet &dataSet, int treeHeight, int popSize, int generationCount);
+	GeneticController(const GeneticController& other);
 	~GeneticController();
 
 	shared_ptr<Specimen> startEvolution();
 	void nextGeneration();
+
+	void setTourneySize(double tourneySize);
+	void setCrossingChance(double crossingChance);
+	void setMutationChances(MutationChances& mt);
+	void setTreeHeight(int treeHeight);
+	void setPopSize(int popSize);
+	void setGenCount(int genCount);
+
+	DataSet* getDataSet();
+
+	void reset();
 };
 

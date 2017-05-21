@@ -8,11 +8,11 @@ int InternalNode::generateRandomBranch(bool leftBranch, int currentSize, Tree *o
 	unique_ptr<Node> randomNode;
 	if (rand() % 2 == 0)
 	{
-		randomNode = unique_ptr<Node>(new InternalNode(currentSize + 1, ownerTree));
+		randomNode = make_unique<InternalNode>(currentSize + 1, ownerTree);
 	}
 	else
 	{
-		randomNode = unique_ptr<Node>(new LeafNode(ownerTree));
+		randomNode = make_unique<LeafNode>(ownerTree);
 	}
 
 	if (leftBranch)
@@ -58,9 +58,9 @@ InternalNode::InternalNode(const InternalNode & other) : isAndOperator(other.isA
 	right = unique_ptr<Node>(other.right->clone());
 }
 
-Node * InternalNode::clone()
+unique_ptr<Node> InternalNode::clone()
 {
-	return new InternalNode(*this);
+	return make_unique<InternalNode>(*this);
 }
 
 
@@ -79,22 +79,22 @@ Node* InternalNode::releaseRight()
 	return right.release();
 }
 
-void InternalNode::setLeft(Node * node)
+void InternalNode::setLeft(unique_ptr<Node> node)
 {
-	left = unique_ptr<Node>(node);
+	left.swap(node);
 }
 
-void InternalNode::setRight(Node * node)
+void InternalNode::setRight(unique_ptr<Node> node)
 {
-	right = unique_ptr<Node>(node);
+	right.swap(node);
 }
 
-Node* InternalNode::getLeftCopy()
+unique_ptr<Node> InternalNode::getLeftCopy()
 {
 	return left->clone();
 }
 
-Node* InternalNode::getRightCopy()
+unique_ptr<Node> InternalNode::getRightCopy()
 {
 	return right->clone();
 }
@@ -132,6 +132,15 @@ void InternalNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tr
 {
 	if (currentPos != 0 && rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getCutChance())
 	{
+		if (isLeft)
+		{
+			parent.setLeft(move(make_unique<LeafNode>(ownerTree)));
+		}
+		else
+		{
+			parent.setRight(move(make_unique<LeafNode>(ownerTree)));
+		}
+		/*
 		bool cutLeft = rand() % 2 == 0;
 		if (cutLeft)
 		{
@@ -155,9 +164,10 @@ void InternalNode::mutate(InternalNode & parent, bool isLeft, int currentPos, Tr
 				parent.setRight(this->releaseRight());
 			}
 		}
+		*/
 		return;
 	}
-	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getOperatorChangeChance())
+	if (rand() / double(RAND_MAX) < ownerTree->getMutationChances()->getCycleChance())
 	{
 		this->isAndOperator = !this->isAndOperator;
 	}
@@ -197,7 +207,7 @@ void InternalNode::splitRight(int currentSize, Tree * ownerTree)
 
 int InternalNode::getSize()
 {
-	return left->getSize() + right->getSize();
+	return 1 + left->getSize() + right->getSize();
 }
 
 void InternalNode::writeLatex(stringstream & ss)
@@ -211,5 +221,43 @@ void InternalNode::writeLatex(stringstream & ss)
 	right->writeLatex(ss);
 	ss << " ]";
 	ss << " ]" << endl;
+}
+
+void InternalNode::getRandomPath(list<bool>& path)
+{
+	if (rand() % 2 == 0)
+	{
+		path.push_back(true);
+		this->left->getRandomPath(path);
+	}
+	else
+	{
+		path.push_back(false);
+		this->right->getRandomPath(path);
+	}
+}
+
+unique_ptr<Node> InternalNode::getNodeFromPath(list<bool>::iterator& pathIterator, int index)
+{
+	if (index == 0)
+	{
+		return *pathIterator ? unique_ptr<Node>(left->clone()) : unique_ptr<Node>(right->clone());
+	}
+	else
+	{
+		return *pathIterator ? left->getNodeFromPath(++pathIterator, --index) : right->getNodeFromPath(++pathIterator, --index);
+	}
+}
+
+void InternalNode::swapSubtree(list<bool>::iterator & pathIterator, int index, unique_ptr<Node>& subtree)
+{
+	if (index == 0)
+	{
+		*pathIterator ? left.swap(subtree) : right.swap(subtree);
+	}
+	else
+	{
+		*pathIterator ? left->swapSubtree(++pathIterator, --index, subtree) : right->swapSubtree(++pathIterator, --index, subtree);
+	}
 }
 

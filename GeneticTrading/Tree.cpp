@@ -1,6 +1,23 @@
 #include "Tree.h"
 
 
+list<bool> Tree::getRandomPath()
+{
+	list<bool> path;
+	rootNode->getRandomPath(path);
+	return path;
+}
+
+unique_ptr<Node> Tree::getNodeFromPath(list<bool>& path, int index)
+{
+	return rootNode->getNodeFromPath(path.begin(), index);
+}
+
+void Tree::swapSubtree(list<bool>& path, int index, unique_ptr<Node>& subtree)
+{
+	rootNode->swapSubtree(path.begin(), index, subtree);
+}
+
 Tree::Tree()
 {
 }
@@ -11,14 +28,14 @@ Tree::Tree(IndicatorHolder * indicators, MutationChances * mutationChances, int 
 }
 
 Tree::Tree(const Tree & other)
-	: rootNode(unique_ptr<InternalNode>(new InternalNode(*other.rootNode))), indicators(other.indicators), 
+	: rootNode(make_unique<InternalNode>(*other.rootNode)), indicators(other.indicators), 
 	mutationChances(other.mutationChances), maxTreeHeight(other.maxTreeHeight)
 {
 }
 
 Tree::~Tree()
 {
-	//cout << "tree destroyed" << endl;
+	cout << "tree destroyed" << endl;
 }
 
 void Tree::generateRandom()
@@ -96,6 +113,23 @@ unique_ptr<Tree> Tree::crossRight(const Tree& other)
 	return child;
 }
 
+pair<unique_ptr<Tree>, unique_ptr<Tree>> Tree::cross(Tree & other)
+{
+	unique_ptr<Tree> child1 = make_unique<Tree>(Tree(*this));
+	unique_ptr<Tree> child2 = make_unique<Tree>(Tree(other));
+
+	list<bool> firstPath = this->getRandomPath();
+	list<bool> secondPath = other.getRandomPath();
+	int firstIndex = rand() % firstPath.size();
+	int secondIndex = rand() % secondPath.size();
+	unique_ptr<Node> firstSubtree = this->getNodeFromPath(firstPath, firstIndex);
+	unique_ptr<Node> secondSubtree = other.getNodeFromPath(secondPath, secondIndex);
+	child1->rootNode->swapSubtree(firstPath.begin(), firstIndex, secondSubtree);
+	child2->rootNode->swapSubtree(secondPath.begin(), secondIndex, firstSubtree);
+
+	return pair<unique_ptr<Tree>, unique_ptr<Tree>>(move(child1), move(child2));
+}
+
 string Tree::drawLatex()
 {
 	stringstream ss;
@@ -110,4 +144,10 @@ string Tree::drawLatex()
 	ss << "\\end{tikzpicture}" << endl;
 
 	return ss.str();
+}
+
+shared_ptr<Node> Tree::getRandomNode()
+{
+	int index = 0;
+	return rootNode->getNodeFromPath(getRandomPath().begin(), index);
 }

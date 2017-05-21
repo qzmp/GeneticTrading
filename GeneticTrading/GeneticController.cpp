@@ -6,6 +6,7 @@ void GeneticController::generateNewPopulation(MutationChances &mt, IndicatorHold
 {
 	population = unique_ptr<Population>(new Population(&dataSet, size));
 	population->generateRandom(mt, indicators, treeHeight);
+	history = list<vector<double>>();
 }
 
 void GeneticController::createFileStream(MutationChances &mt, DataSet &ds, int popSize)
@@ -28,7 +29,7 @@ void GeneticController::createFileStream(MutationChances &mt, DataSet &ds, int p
 
 void GeneticController::saveCurrentRatings()
 {
-	vector<double> h = { population->getAverageRating(), population->getBestRating() };
+	vector<double> h = { population->getAverageRating(), population->getBestRating(), population->getAvgSize() };
 	history.push_back(h);
 }
 
@@ -39,18 +40,25 @@ void GeneticController::writeHistory()
 		int i = 1;
 		for (auto it = history.begin(); it != history.end(); it++)
 		{
-			fileStream << i << ";" << it->operator[](0) << ";" << it->operator[](1) << "\n";
+			fileStream << i << ";" << it->operator[](0) << ";" << it->operator[](1);
+			fileStream << ";" << it->operator[](2);
+			fileStream << "\n";
 			i++;
 		}
 	}
+	fileStream << endl;
 }
 
-GeneticController::GeneticController()
+
+GeneticController::GeneticController(double tourneySize, double crossingChance, MutationChances &mt, IndicatorHolder &indicators, DataSet &dataSet, int treeHeight, int popSize, int generationCount) 
+	: tourneySize(tourneySize * popSize), crossingChance(crossingChance), mt(mt), indicators(indicators), dataSet(dataSet), treeHeight(treeHeight), popSize(popSize), generationCount(generationCount)
 {
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
 }
 
-GeneticController::GeneticController(int tourneySize, double crossingChance, MutationChances &mt, IndicatorHolder &indicators, DataSet &dataSet, int treeHeight, int popSize, int generationCount) 
-	: tourneySize(tourneySize), crossingChance(crossingChance), generationCount(generationCount)
+GeneticController::GeneticController(const GeneticController & other) 
+	: GeneticController(other.tourneySize, other.crossingChance, other.mt, other.indicators, other.dataSet, other.treeHeight, other.popSize, other.generationCount)
 {
 	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
 	createFileStream(mt, dataSet, popSize);
@@ -71,6 +79,7 @@ shared_ptr<Specimen> GeneticController::startEvolution()
 	saveCurrentRatings();
 	writeHistory();
 	Backtester bt;
+	fileStream.close();
 	return population->getBestSpecimen();
 }
 
@@ -78,7 +87,59 @@ void GeneticController::nextGeneration()
 {
 	population->rateAll();
 	saveCurrentRatings();
-	Population * newPopulation = population->commenceCrossing(tourneySize, crossingChance);
-	population.reset(newPopulation);
+	population.swap(population->commenceCrossing(tourneySize, crossingChance));
 	population->mutateAllSpecimen();
+}
+
+void GeneticController::setTourneySize(double tourneySize)
+{
+	this->tourneySize = tourneySize * popSize;
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
+}
+
+void GeneticController::setCrossingChance(double crossingChance)
+{
+	this->crossingChance = crossingChance;
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
+}
+
+void GeneticController::setMutationChances(MutationChances & mt)
+{
+	this->mt = mt;
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
+}
+
+void GeneticController::setTreeHeight(int treeHeight)
+{
+	this->treeHeight = treeHeight;
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
+}
+
+void GeneticController::setPopSize(int popSize)
+{
+	this->popSize = popSize;
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
+}
+
+void GeneticController::setGenCount(int genCount)
+{
+	this->generationCount = genCount;
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
+}
+
+DataSet* GeneticController::getDataSet()
+{
+	return &dataSet;
+}
+
+void GeneticController::reset()
+{
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
 }

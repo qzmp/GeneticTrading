@@ -38,7 +38,7 @@ Population::Population(const Population & other)
 
 Population::~Population()
 {
-	//cout << "population destroyed" << endl;
+	cout << "population destroyed" << endl;
 }
 
 void Population::generateRandom(MutationChances & mt, IndicatorHolder& indicators, int treeHeight)
@@ -63,27 +63,32 @@ void Population::rateAll()
 		transactionData = backtester.backtest(*dataSet, specimens[i]);
 		ratings[i] = transactionData.getTotalPipGain();
 	}
-
 }
 
-Population* Population::commenceCrossing(int tourneySize, double crossingChance)
+unique_ptr<Population> Population::commenceCrossing(int tourneySize, double crossingChance)
 {
 	unique_ptr<Population> newPopulation = make_unique<Population>(dataSet, specimens.size());
 	shared_ptr<Specimen> firstSpecimen, secondSpecimen;
-	for (int i = 0; i < specimens.size(); i++)
+	for (int i = 0; i < specimens.size(); i += 2)
 	{
 		firstSpecimen = select(tourneySize);
+		secondSpecimen = select(tourneySize);
 		if (rand() / double(RAND_MAX) < crossingChance)
 		{
-			secondSpecimen = select(tourneySize);
-			newPopulation->insertNewSpecimen(firstSpecimen->cross(secondSpecimen));
+			
+			auto newSpecimens = firstSpecimen->cross2(secondSpecimen);
+			newPopulation->insertNewSpecimen(newSpecimens.first);
+			newPopulation->insertNewSpecimen(newSpecimens.second);
+
+			//newPopulation->insertNewSpecimen(firstSpecimen->cross(secondSpecimen));
 		}
 		else
 		{
-			newPopulation->insertNewSpecimen(firstSpecimen);
+			newPopulation->insertNewSpecimen(shared_ptr<Specimen>(firstSpecimen->clone()));
+			newPopulation->insertNewSpecimen(shared_ptr<Specimen>(secondSpecimen->clone()));
 		}
 	}
-	return newPopulation.release();
+	return newPopulation;
 }
 
 void Population::mutateAllSpecimen()
@@ -94,7 +99,7 @@ void Population::mutateAllSpecimen()
 	}
 }
 
-void Population::insertNewSpecimen(shared_ptr<Specimen> specimen)
+void Population::insertNewSpecimen(shared_ptr<Specimen>& specimen)
 {
 	specimens.push_back(specimen);
 }
@@ -127,4 +132,14 @@ double Population::getAverageRating()
 DataSet * Population::getDataSet()
 {
 	return dataSet;
+}
+
+double Population::getAvgSize()
+{
+	int sum = 0;
+	for (auto& spec : specimens)
+	{
+		sum += spec->getSize();
+	}
+	return sum / specimens.size();
 }

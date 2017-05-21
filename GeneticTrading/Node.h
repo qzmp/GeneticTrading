@@ -19,7 +19,7 @@ public:
 	Node();
 	virtual ~Node();
 
-	virtual Node* clone() = 0;
+	virtual unique_ptr<Node> clone() = 0;
 
 	virtual bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) = 0;
 
@@ -30,5 +30,9 @@ public:
 	virtual int getSize() = 0;
 
 	virtual void writeLatex(stringstream& ss) = 0;
+
+	virtual void getRandomPath(list<bool>& path) = 0;
+	virtual unique_ptr<Node> getNodeFromPath(list<bool>::iterator& pathIterator, int index) = 0;
+	virtual void swapSubtree(list<bool>::iterator& pathIterator, int index, unique_ptr<Node>& subtree) = 0;
 };
 

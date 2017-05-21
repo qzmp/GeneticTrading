@@ -29,10 +29,10 @@ public:
 	shared_ptr<Specimen> select(int tourneySize);
 	
 	void rateAll();
-	Population* commenceCrossing(int tourneySize, double crossingChance);
+	unique_ptr<Population> commenceCrossing(int tourneySize, double crossingChance);
 	void mutateAllSpecimen();
 
-	void insertNewSpecimen(shared_ptr<Specimen> specimen);
+	void insertNewSpecimen(shared_ptr<Specimen>& specimen);
 
 	shared_ptr<Specimen> getBestSpecimen();
 	double getBestRating();
@@ -40,5 +40,7 @@ public:
 
 	DataSet* getDataSet();
 	MutationChances* getMutationChances();
+
+	double getAvgSize();
 };
 

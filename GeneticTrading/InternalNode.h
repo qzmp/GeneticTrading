@@ -21,16 +21,16 @@ public:
 	InternalNode(int currentSize, Node * subtree, Tree *ownerTree);
 	InternalNode(bool isAndOperator);
 	InternalNode(const InternalNode &other);
-	Node* clone();
+	unique_ptr<Node> clone();
 	~InternalNode();
 
 	Node* releaseLeft();
 	Node* releaseRight();
-	void setLeft(Node * node);
-	void setRight(Node * node);
+	void setLeft(unique_ptr<Node> node);
+	void setRight(unique_ptr<Node> node);
 
-	Node* getLeftCopy();
-	Node* getRightCopy();
+	unique_ptr<Node> getLeftCopy();
+	unique_ptr<Node> getRightCopy();
 
 	bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
 	void changeOperator();
@@ -49,5 +49,9 @@ public:
 	int getSize();
 
 	void writeLatex(stringstream& ss);
+
+	void getRandomPath(list<bool>& path);
+	unique_ptr<Node> getNodeFromPath(list<bool>::iterator& pathIterator, int index);
+	void swapSubtree(list<bool>::iterator& pathIterator, int index, unique_ptr<Node>& subtree);
 };
 
