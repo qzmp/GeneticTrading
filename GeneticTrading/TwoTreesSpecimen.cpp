@@ -28,12 +28,12 @@ unique_ptr<Specimen> TwoTreesSpecimen::clone()
 	return make_unique<TwoTreesSpecimen>(*this);
 }
 
-bool TwoTreesSpecimen::checkBuySignal(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
+bool TwoTreesSpecimen::checkBuySignal(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues) const
 {
 	return bullTree.isActive(currentPrice, indicatorValues) && !bearTree.isActive(currentPrice, indicatorValues);
 }
 
-bool TwoTreesSpecimen::checkSellSignal(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
+bool TwoTreesSpecimen::checkSellSignal(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues) const
 {
 	return !bullTree.isActive(currentPrice, indicatorValues) && bearTree.isActive(currentPrice, indicatorValues);
 }
@@ -48,16 +48,17 @@ bool TwoTreesSpecimen::bearActive(double currentPrice, map<shared_ptr<Indicator>
 	return bearTree.isActive(currentPrice, indicatorValues);
 }
 
-shared_ptr<Specimen> TwoTreesSpecimen::cross(shared_ptr<Specimen> other)
+
+unique_ptr<Specimen> TwoTreesSpecimen::cross(const Specimen * other)
 {
-	// TODO
-	return make_shared<TwoTreesSpecimen>();
+	return unique_ptr<Specimen>();
 }
 
-pair<shared_ptr<Specimen>, shared_ptr<Specimen>> TwoTreesSpecimen::cross2(shared_ptr<Specimen> other)
+pair<unique_ptr<Specimen>, unique_ptr<Specimen>> TwoTreesSpecimen::cross2(const Specimen * other)
 {
-	return pair<shared_ptr<Specimen>, shared_ptr<Specimen>>();
+	return pair<unique_ptr<Specimen>, unique_ptr<Specimen>>();
 }
+
 
 void TwoTreesSpecimen::mutate()
 {

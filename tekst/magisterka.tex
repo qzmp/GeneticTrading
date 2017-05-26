@@ -146,6 +146,8 @@ Mimo że mechanizmy transakcji na Forexie są inne niż na giełdzie papierów w
 
 Historyczne dane z wielu rynków są ogólnie dostępne w internecie. Mimo, że ceny walut na rynku Forex zmieniają się ciągle, niepraktyczne byłoby analizowanie każdej transakcji. Rozważa się więc ceny o różnych interwałach - np. godzinnych. Dane są wtedy dzielone na godzinne okresy, w których zawarta jest cena otwarcia (ta, z którą rozpoczął się okres), zamknięcia, minimalna i maksymalna. Często dostępny jest także \textit{wolumen}, czyli liczba aktywów które zmieniły właścicieli w danym okresie. Może ona określać stopień zainteresowania inwestorów.
 
+
+
 \chapter{Sztuczna inteligencja w inwestycjach giełdowych}
 
 \section{Różne podejścia w literaturze}
@@ -239,11 +241,11 @@ Wygenerowano strategie wykorzystując model Allena i Karjalainena z różnymi fu
 W pracy L. Beckera i M. Seshardi \cite{Becker:2003} udało się w końcu prześcignąć buy-and-hold. Po pierwsze, obliczenia przeprowadzano na danych miesięcznych zamiast dziennych. Celem zmiany było zredukowanie liczby inwestycji i co za tym idzie potencjalnych kosztów transakcji. Następnie zdecydowanie uproszczono reprezentację strategii. W węzłach nieterminalnych drzewa mogły pojawiać się tylko operatory logiczne (and, or, not) oraz porównania ($>$ i $<$).  W liściach mogło znaleźć się kilka różnych wskaźników technicznych:
 
 \begin{itemize}
-	\item Ceny: otwarcia, zamknięcia, maksymalna i minimalna w miesiącu.
+	\item Ceny: otwarcia, zamknięcia, maksymalna i minimalna w miesiącu
 	\item Średnie kroczące: 2, 3, 4 i 10 miesięcy
 	\item Rate of Change: 3 i 12 miesięcy
-	\item Wskaźniki oporu ceny: 2 ostatnie minima i maksima 3-miesięcznej średniej kroczącej.
-	\item Wskaźniki trendu: dolna linia wyznaczona na podstawie 2 ostatnich minimów 3-miesięcznej średniej kroczącej oraz górna linia wyznaczona na podstawie 2 ostatnich maksimów 3-miesięcznej średniej kroczącej.
+	\item Wskaźniki oporu ceny: 2 ostatnie minima i maksima 3-miesięcznej średniej kroczącej
+	\item Wskaźniki trendu: dolna linia wyznaczona na podstawie 2 ostatnich minimów 3-miesięcznej średniej kroczącej oraz górna linia wyznaczona na podstawie 2 ostatnich maksimów 3-miesięcznej średniej kroczącej
 \end{itemize}
 
 Pierwszy eksperyment przeprowadzono z modyfikując funkcję oceny, aby oprócz zysku brała pod uwagę skomplikowanie drzewa. Większe drzewa były obarczone karą. To podejście okazało się znacznie polepszać generalizację wyników. Podczas gdy wielkość drzewa nie była ograniczana, powstałe strategie miały po kilkadziesiąt elementów.Były one praktycznie nie możliwe do zrozumienia przez człowieka. Drzewa ułożone wykorzystując zmienioną funkcje oceny, miały maksymalnie kilkanaście elementów i dodatkowo miały zdecydowanie lepsze wyniki na zbiorze testowym. Zyski na zbiorze treningowym były mniejsze, co oznaczało, że większe drzewa miały tendencję do nadmiernego dopasowania do danych uczących. 
@@ -272,6 +274,80 @@ Natomiast różnice pomiędzy wynikami z obu prac trudno wyjaśnić po prostu r�
 Ciekawe podejście do wyboru danych treningowych i testowych zostało zaprezentowane w \cite{GPW}. Autor przeprowadzając badania na warszawskiej Giełdzie Papierów Wartościowych, wybrał trzy stosunkowo krótkie zbiory treningowe. Każdy przejawiał inny trend: spadkowy, neutralny lub rosnący. W taki sam sposób wybrane zostały ciągi testowe, po trzy dla każdego trendu. Podejście to korzysta z wniosków otrzymanych w poprzednio opisanej pracy,  że zbiory testowe nie muszą występować po treningowych. Otrzymane wyniki sugerowały, że strategie uczone na zbiorach spadkowych, osiągały mniejsze straty w podobnych zbiorach testowych, jednocześnie osiągając mniejsze przychody w trendach wzrostowych. Dużym problemem było duże odchylenie standardowe strategii otrzymanych po uczeniu. Oznaczało to, że algorytm miał tendencję do utykania w lokalnych minimach.
 
 Podobny sposób wyboru zbiorów danych wykorzystane było przez P. Myszkowskiego i A. Bicza w pracy wykorzystującej programowanie genetyczne do znajdowania strategii inwestycyjnej na Forexie \cite{Bicz}. Zbadane zostały różne kombinacje zbiorów treningowych i testowych o różnych trendach. Znów ewidentna okazała się duża niestałość otrzymywanych strategii. Zaproponowane zostało podejście, które wykorzystywało tą różnorodność, tworząc jedną strategię z 200 innych. Transakcja była podejmowana tylko wtedy, gdy 60\% wszystkich strategii ze zbioru zgadzało się co do tego. Takie rozwiązanie było bardzo skuteczne, w każdym przypadku poprawiając średni wynik z otrzymanych strategii na danych zbiorach.
+
+\section{Podsumowanie}
+
+Wśród prac wykorzystujących programowanie genetyczne można rozróżnić dwa podejścia. Pierwsze jest skupione na ewolucji podejścia przedstawionego przez  F. Allena i R. Karjalainena\cite{Allen1999245}. Kolejne prace skupiają się głównie na uproszczeniu reprezentacji strategii, a także testowaniu potencjalnych ulepszeń. Dostępne są prace wyjaśniające niedokładnie opisane elementy algorytmu, stanowiące pewnego rodzaju poradnik do implementacji \cite{5393324}. Jednak nawet we wspomnianej pracy brakuje detali niezbędnych w odtworzeniu modelu. 
+
+Kolejne podejście, reprezentowane przez prace P. Myszkowskiego i współautorów \cite{GPW}\cite{Bicz}, Różni się głównie reprezentacją liści drzewa. Podczas gdy w pierwszym rozwiązaniu, w liściu znajduje się wskaźnik techniczny porównany do innego wskaźnika technicznego (z których oba wcześniej ustalone), to w drugim podejściu wskaźnik techniczny jest porównany do wylosowanej liczby rzeczywistej. To rozwiązanie daje więcej wolności algorytmowi genetycznemu, poszerzając przestrzeń rozwiązań. Większa przestrzeń rozwiązań oznacza jednak potencjalnie trudniejsze strojenie algorytmu, a że oba podejścia umożliwiają otrzymanie pozytywnych wyników ( dokładne porównanie nie jest możliwe, ze względu na to że różne prace korzystają z różnych zbiorów danych, mają też inne miary sukcesu) w zastosowanym podejściu skupiono się bardziej na podejściu pierwszym. Dodatkowo, pierwsze podejście jest bardziej intuicyjne, jako że lepiej odzwierciedla sposób inwestowania ludzi. Podstawowym sygnałem wykorzystywanym przez inwestorów jest przecięcie średniej kroczącej czy to przez średnią kroczącą o innym okresie czy przez aktualną cenę. Podczas gdy jest to proste do przedstawienie w pierwszym podejściu, porównanie wartości średniej kroczącej do pewnej losowej wartości liczbowej nie daje takich możliwości.
+
+
+\chapter{Zastosowane podejście}
+
+Ze względu na niewystarczająco dokładne opisanie implementacji we wspomnianych pracach, nie było możliwe dokładne odtworzenie istniejących podejść. Zastosowany algorytm jest jednak silnie inspirowany istniejącymi rozwiązaniami, głównie pracą  D. Lohpetcha i D. Corna \cite{5393324}, która jest najnowszą i najdokładniejszą poświęconą reprezentacji zapoczątkowanej przez  F. Allena i R. Karjalainena\cite{Allen1999245}. Przy konstrukcji algorytmu brano pod uwagę wyniki i problemy i wyniki opisanych podejść. Istotna też była spójność implementacji oraz logiczne i proste przedstawienie strategii.
+
+
+\section{Reprezentacja osobnika}
+
+\begin{figure}[h]
+\center
+\caption {Przykładowa strategia wygenerowana przez algorytm}
+\includegraphics{drzewo}
+\label{fig:drzewo}
+\end{figure}
+
+W podstawowej wersji algorytmu osobnik algorytmu genetycznego reprezentuje drzewo strategii. Przykład takiej strategii jest widoczny na rysunku \cite{fig:drzewo}. Zdecydowano się na ciągłe pozostawanie na rynku i strategie określa kiedy powinna być otwarta pozycja długa a kiedy krótka, w zależności od tego, czy drzewo zwraca wartość true czy false. Po początkowej inwestycji sprawdzane otwarta pozycja jest jedynie odwracana - z długiej na krótką i odwrotnie.
+
+Węzły drzewa dzielą się na terminalne i nieterminalne. W węzłach nieterminalnych mogą znajdywać się operatory logiczne OR oraz AND. Zrezygnowano z operatora NOT dlatego, że nie niesie ze sobą praktycznie żadnej informacji. Ze względu na to, że w węzłach terminalnych (liściach drzewa) znajdują się porównania, operator NOT występujący przed porównaniem jedynie odwracał operator porównania, co może być przedstawione w łatwiejszy sposób.
+Jak już zostało wspomniane, w liściach występuje porównanie wskaźników technicznych. Ich zestaw został zaczerpnięty z pracy \cite{5393324}, jako że był wykorzystywany już w poprzednich pracach traktujących o tym podejściu i dawał pozytywne wyniki. Dodatkowo, wybór odpowiednich wskaźników technicznych wymaga wiedzy ekonomicznej, posiadanej przez autorów wybranego zestawu:
+
+\begin{itemize}
+	\item Ceny: otwarcia, zamknięcia, maksymalna i minimalna w okresie
+	\item Średnie kroczące (SMA): 2, 3, 4 i 10 ostatnich okresów
+	\item Rate of Change (ROC): 3 i 12 ostatnich okresów
+	\item Wskaźniki oporu ceny: 2 ostatnie minima (MAN) i maksima (MAX) średniej kroczącej z 3 ostatnich okresów
+	\item Wskaźniki trendu: dolna linia wyznaczona na podstawie 2 ostatnich minimów średniej kroczącej z 3 ostatnich okresów (LTL) oraz górna linia wyznaczona na podstawie 2 ostatnich maksimów średniej kroczącej z 3 ostatnich okresów (UTL)
+\end{itemize}
+
+Adaptując zestaw z literatury została zmieniona jedynie długość okresu - ze względu na fakt, że transakcje na Forexie są obarczone mniejszym kosztem, można potencjalnie przeprowadzać ich więcej nie bojąc się o to, że cały zysk będzie przeznaczony na spłatę kosztów. Wybrano więc okresy 10-minutowe, chcąc wyuczyć system do podejmowania częstszych inwestycji.
+
+Większość wykorzystywanych wskaźników jest prosta w implementacji. Średnia krocząca z $x$ okresów jest obliczona jako zwykła średnia arytmetyczne z $x$ ostatnich cen zamknięcia. Bardziej skomplikowany jest wskaźnik ROC:
+
+\[ROC= \frac{P_{a} - P_{b}}{P_{a}}\]
+Gdzie:
+\begin{itemize}[label=]
+	\item $P_a$: cena zamknięcia w okresie a
+	\item $P_b$: cena zamknięcia w okresie b
+\end{itemize}
+
+ROC opisuje zmianę ceny aktywa w czasie.Jest oscylatorem, co oznacza, że jest w praktyce wykorzystywany w inny sposób niż pozostałe wskaźniki. Podczas gdy wszystkie pozostałe mogą być nałożone na wykres ceny i generować sygnały przy porównaniu ze sobą nawzajem, to oscylator przyjmuje konkretne wartości - w przypadku ROC można je ograniczyć od -1 do 1, chociaż w praktyce przedział jest zwykle mniejszy. Teoria mówi, że gdy jego wartość jest duża, może to wskazywać że cena w krótkim okresie jest zbyt duża i sugerować zmianę trendu. W wykorzystywanej literaturze nie zostało wspomniane, czy ten wskaźnik jest traktowany szczególnie. W zaimplementowanym podejściu jednak jako jedyny nie jest porównywany do pozostałych - zamiast tego, jeśli wylosowany został wskaźnik ROC jako pierwszy z porównywanej pary z liścia, to zamiast kolejnego wskaźnika losowana jest  liczba rzeczywista z zakresu -0.6 do 0.6. 
+
+\section {Wykorzystywane dane i ocena osobnika}
+
+\begin{figure}[h]
+\center
+\caption {Wykorzystywane dane}
+\includegraphics{data}
+\label{fig:data}
+\end{figure}
+
+Wszystkie badanie przeprowadzono na Forexie, ze względu na wspomniane już zalety. Dodatkową motywacją było przetestowanie wariantu sprawdzonego już modelu na zupełnie innych danych. Dane w formacie .csv zostały pobrane z portalu Dukascopy \cite{data}. Ich początek jest widoczny na rysunku \cite{fig:data}. Można zauważyć, że w tabeli znajdują się ceny otwarcia, zamknięcia a także maksymalna i minimalna w danym okresie. 
+
+Bardzo ważnym aspektem praktycznie nie poruszonym w literaturze jest sposób, w jaki otrzymywany jest zysk na historycznych danych. Ta wartość jest podstawą do właściwej oceny osobnika i jest niezbędna do zbudowania działającego algorytmu. W zastosowanej implementacji wzorowano się na sposobie testowania z programu MetaTrader 5 opisanym w artykule \cite{metatrader}. Metatrader jest uniwersalną platformą do handu na różnych rynkach i udostępnia zaawansowane opcje konstruowanie jak i testowania robotów handlowych - czyli programów podejmujących autonomiczne decyzje o transakcjach. 
+
+Podstawowym podejściem jest analiza każdej zmiany ceny, czyli tak zwanego \textit{ticku}. Takie rozwiązanie wymaga jednak bardzo dużo obliczeń, ze względu na to, że cena aktywa na forexie potrafi się zmieniać bardzo szybko. Metatrader wykorzystuje więc symulację ticków. Punktem wejścia jest zestaw cen o pewnym okresie, na przykład 10 minutowym. Następnie w kolejności analizowane są ceny otwarcia, najmniejsza, największa i ostatecznie cena zamknięcia. W każdym etapie przeprowadzana jest symulacja, sprawdzane jest, czy robot powinien otworzyć jakąś pozycję. W naszym przypadku sprawdzane jest czy strategia generuje sygnał odwrócenia pozycji. Takie podejście oferuje równowagę pomiędzy dokładnością, a wymaganą mocą obliczeniową.
+
+Konieczna była jednak jedna modyfikacja. Jeśli cena największa była za każdym razem po najmniejszej, podczas uczenia strategia była dopasowywana do tego wzorca. Dlatego kolejność ceny najmniejszej i największej była za każdym razem losowana.
+
+Zysk liczony jest w punktach zwanych pipsami częściowymi. Pips to określenie wykorzystywane na rynku Forex, określające czwartą cyfrę po przecinku. Historycznie była to najmniejsza jednostka zmiany notowań, po prostu mniejsze zmiany nie były zapisywane. Aktualnie w popularnych parach walutowych, także w EUR/USD stosuje się pipsy częściowe, odpowiadające 1/10 zwykłego pipsa. Przyjęty sposób liczenia zysku można więc łatwo zamienić na punkty procentowe. Mimo, że ta wartość nie jest od razu przekładalna na procentowy zysk zainwestowanego kapitału, który interesuje wszystkich inwestorów, to takie podejście zostało wykorzystane we wspomnianej pracy \cite{Bicz}. Umożliwia to więc porównanie wyników i jednocześnie jest proste w implementacji.
+
+Ważne w symulacji jest także wzięcie pod uwagę kosztów transakcji. W wykorzystywanych danych nie jest zapisany aktualny spread, który zależy od wybranego pośrednika, dlatego przyjęto stałą wartość równą 40 pipsom częściowym. Również wykorzystywana w w pracy \cite{Bicz}, przewyższa jego aktualną wartość wynoszącą około 12 pipsów częściowych. W literaturze wspomniane zostało jednak, że wyższe koszty transakcji podczas uczenia mogą powodować tworzenie bardziej ostrożnych strategii. 
+
+
+
+
+
+
 
 
 

@@ -50,7 +50,7 @@ LeafNode::~LeafNode()
 	//cout << "leaf destructed" << endl;;
 }
 
-bool LeafNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
+bool LeafNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues) const
 {
 	if (doubleIndicators)
 	{

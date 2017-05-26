@@ -32,7 +32,7 @@ public:
 	unique_ptr<Node> getLeftCopy();
 	unique_ptr<Node> getRightCopy();
 
-	bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
+	bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) const;
 	void changeOperator();
 
 	int generateRandomBranches(int currentSize, Tree *ownerTree);

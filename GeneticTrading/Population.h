@@ -9,7 +9,7 @@
 class Population
 {
 private:
-	vector<shared_ptr<Specimen>> specimens;
+	vector<unique_ptr<Specimen>> specimens;
 	vector<double> ratings;
 
 	DataSet *dataSet;
@@ -21,20 +21,20 @@ private:
 
 public:
 	Population(DataSet *dataSet, int maxSize);
-	Population(const Population &other);
+	//Population(const Population &other);
 	~Population();
 
 	void generateRandom(MutationChances &mt, IndicatorHolder &indicators, int treeHeight);
 
-	shared_ptr<Specimen> select(int tourneySize);
+	unique_ptr<Specimen> select(int tourneySize);
 	
 	void rateAll();
 	unique_ptr<Population> commenceCrossing(int tourneySize, double crossingChance);
 	void mutateAllSpecimen();
 
-	void insertNewSpecimen(shared_ptr<Specimen>& specimen);
+	void insertNewSpecimen(unique_ptr<Specimen> specimen);
 
-	shared_ptr<Specimen> getBestSpecimen();
+	unique_ptr<Specimen> getBestSpecimen();
 	double getBestRating();
 	double getAverageRating();
 

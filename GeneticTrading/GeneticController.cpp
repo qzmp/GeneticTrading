@@ -68,7 +68,7 @@ GeneticController::~GeneticController()
 {
 }
 
-shared_ptr<Specimen> GeneticController::startEvolution()
+unique_ptr<Specimen> GeneticController::startEvolution()
 {
 	for (int i = 0; i < generationCount; i++)
 	{

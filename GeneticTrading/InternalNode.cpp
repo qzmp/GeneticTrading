@@ -54,8 +54,8 @@ InternalNode::InternalNode(bool isAndOperator)
 
 InternalNode::InternalNode(const InternalNode & other) : isAndOperator(other.isAndOperator)
 {
-	left = unique_ptr<Node>(other.left->clone());
-	right = unique_ptr<Node>(other.right->clone());
+	left = other.left->clone();
+	right = other.right->clone();
 }
 
 unique_ptr<Node> InternalNode::clone()
@@ -99,7 +99,7 @@ unique_ptr<Node> InternalNode::getRightCopy()
 	return right->clone();
 }
 
-bool InternalNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
+bool InternalNode::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues) const
 {
 	if (isAndOperator)
 		return left->isActive(currentPrice, indicatorValues) && right->isActive(currentPrice, indicatorValues);

@@ -37,7 +37,7 @@ public:
 	GeneticController(const GeneticController& other);
 	~GeneticController();
 
-	shared_ptr<Specimen> startEvolution();
+	unique_ptr<Specimen> startEvolution();
 	void nextGeneration();
 
 	void setTourneySize(double tourneySize);

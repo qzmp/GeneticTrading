@@ -31,27 +31,27 @@ Population::Population(DataSet * dataSet, int maxSize) : dataSet(dataSet), ratin
 	specimens.reserve(maxSize);
 }
 
-Population::Population(const Population & other)
-	: specimens(other.specimens), ratings(other.ratings), dataSet(other.dataSet)
-{
-}
+//Population::Population(const Population & other)
+//	: specimens(other.specimens), ratings(other.ratings), dataSet(other.dataSet)
+//{
+//}
 
 Population::~Population()
 {
-	cout << "population destroyed" << endl;
+	//cout << "population destroyed" << endl;
 }
 
 void Population::generateRandom(MutationChances & mt, IndicatorHolder& indicators, int treeHeight)
 {
 	for (int i = 0; i < specimens.capacity(); i++)
 	{
-		specimens.push_back(make_shared<OneTreeSpecimen>(&indicators, &mt, treeHeight)); // Capacity is optimized
+		specimens.push_back(make_unique<OneTreeSpecimen>(&indicators, &mt, treeHeight)); // Capacity is optimized
 	}
 }
 
-shared_ptr<Specimen> Population::select(int tourneySize)
+unique_ptr<Specimen> Population::select(int tourneySize)
 {
-	return specimens[tourney(randomizeTourneyGroup(tourneySize))];
+	return specimens[tourney(randomizeTourneyGroup(tourneySize))]->clone();
 }
 
 void Population::rateAll()
@@ -60,7 +60,7 @@ void Population::rateAll()
 	Backtester::TransactionData transactionData;
 	for (int i = 0; i < specimens.size(); i++)
 	{
-		transactionData = backtester.backtest(*dataSet, specimens[i]);
+		transactionData = backtester.backtest(*dataSet, specimens[i].get());
 		ratings[i] = transactionData.getTotalPipGain();
 	}
 }
@@ -76,16 +76,16 @@ unique_ptr<Population> Population::commenceCrossing(int tourneySize, double cros
 		if (rand() / double(RAND_MAX) < crossingChance)
 		{
 			
-			auto newSpecimens = firstSpecimen->cross2(secondSpecimen);
-			newPopulation->insertNewSpecimen(newSpecimens.first);
-			newPopulation->insertNewSpecimen(newSpecimens.second);
+			auto newSpecimens = firstSpecimen->cross2(secondSpecimen.get());
+			newPopulation->insertNewSpecimen(move(newSpecimens.first));
+			newPopulation->insertNewSpecimen(move(newSpecimens.second));
 
 			//newPopulation->insertNewSpecimen(firstSpecimen->cross(secondSpecimen));
 		}
 		else
 		{
-			newPopulation->insertNewSpecimen(shared_ptr<Specimen>(firstSpecimen->clone()));
-			newPopulation->insertNewSpecimen(shared_ptr<Specimen>(secondSpecimen->clone()));
+			newPopulation->insertNewSpecimen(move(firstSpecimen->clone()));
+			newPopulation->insertNewSpecimen(move(secondSpecimen->clone()));
 		}
 	}
 	return newPopulation;
@@ -99,12 +99,12 @@ void Population::mutateAllSpecimen()
 	}
 }
 
-void Population::insertNewSpecimen(shared_ptr<Specimen>& specimen)
+void Population::insertNewSpecimen(unique_ptr<Specimen> specimen)
 {
-	specimens.push_back(specimen);
+	specimens.emplace_back(move(specimen));
 }
 
-shared_ptr<Specimen> Population::getBestSpecimen()
+unique_ptr<Specimen> Population::getBestSpecimen()
 {
 	int bestGrade = 0;
 	int bestIndex = 0;
@@ -116,7 +116,7 @@ shared_ptr<Specimen> Population::getBestSpecimen()
 			bestIndex = i;
 		}
 	}
-	return specimens[bestIndex];
+	return specimens[bestIndex]->clone();
 }
 
 double Population::getBestRating()

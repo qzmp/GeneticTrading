@@ -1,14 +1,14 @@
 #include "Tree.h"
 
 
-list<bool> Tree::getRandomPath()
+list<bool> Tree::getRandomPath() const
 {
 	list<bool> path;
 	rootNode->getRandomPath(path);
 	return path;
 }
 
-unique_ptr<Node> Tree::getNodeFromPath(list<bool>& path, int index)
+unique_ptr<Node> Tree::getNodeFromPath(list<bool>& path, int index) const
 {
 	return rootNode->getNodeFromPath(path.begin(), index);
 }
@@ -35,7 +35,7 @@ Tree::Tree(const Tree & other)
 
 Tree::~Tree()
 {
-	cout << "tree destroyed" << endl;
+	//cout << "tree destroyed" << endl;
 }
 
 void Tree::generateRandom()
@@ -43,7 +43,7 @@ void Tree::generateRandom()
 	rootNode = unique_ptr<InternalNode>(new InternalNode(1, this));
 }
 
-bool Tree::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
+bool Tree::isActive(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues) const
 {
 	return rootNode->isActive(currentPrice, indicatorValues);
 }
@@ -113,7 +113,7 @@ unique_ptr<Tree> Tree::crossRight(const Tree& other)
 	return child;
 }
 
-pair<unique_ptr<Tree>, unique_ptr<Tree>> Tree::cross(Tree & other)
+pair<unique_ptr<Tree>, unique_ptr<Tree>> Tree::cross(const Tree & other)
 {
 	unique_ptr<Tree> child1 = make_unique<Tree>(Tree(*this));
 	unique_ptr<Tree> child2 = make_unique<Tree>(Tree(other));

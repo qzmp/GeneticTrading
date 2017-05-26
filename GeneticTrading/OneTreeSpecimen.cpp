@@ -12,7 +12,7 @@ OneTreeSpecimen::OneTreeSpecimen(IndicatorHolder * indicators, MutationChances *
 	strategyTree.generateRandom();
 }
 
-OneTreeSpecimen::OneTreeSpecimen(unique_ptr<Tree> tree) : strategyTree(*tree)
+OneTreeSpecimen::OneTreeSpecimen(const Tree* tree) : strategyTree(*tree)
 {
 }
 
@@ -23,6 +23,7 @@ OneTreeSpecimen::OneTreeSpecimen(const OneTreeSpecimen & other) : strategyTree(o
 
 OneTreeSpecimen::~OneTreeSpecimen()
 {
+	//cout << "Specimen destroyed";
 }
 
 unique_ptr<Specimen> OneTreeSpecimen::clone()
@@ -30,32 +31,20 @@ unique_ptr<Specimen> OneTreeSpecimen::clone()
 	return make_unique<OneTreeSpecimen>(*this);
 }
 
-bool OneTreeSpecimen::checkBuySignal(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
+bool OneTreeSpecimen::checkBuySignal(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues) const
 {
 	return strategyTree.isActive(currentPrice, indicatorValues);
 }
 
-bool OneTreeSpecimen::checkSellSignal(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues)
+bool OneTreeSpecimen::checkSellSignal(double currentPrice, map<shared_ptr<Indicator>, double>& indicatorValues) const
 {
 	return !strategyTree.isActive(currentPrice, indicatorValues);
 }
 
-shared_ptr<Specimen> OneTreeSpecimen::cross(shared_ptr<Specimen> other)
+pair<unique_ptr<Specimen>, unique_ptr<Specimen>> OneTreeSpecimen::cross2(const Specimen* other)
 {
-	if (rand() % 2 == 0)
-	{
-		return make_shared<OneTreeSpecimen>(strategyTree.crossLeft(static_pointer_cast<OneTreeSpecimen>(other)->strategyTree));
-	}
-	else
-	{
-		return make_shared<OneTreeSpecimen>(strategyTree.crossRight(static_pointer_cast<OneTreeSpecimen>(other)->strategyTree));
-	}
-}
-
-pair<shared_ptr<Specimen>, shared_ptr<Specimen>> OneTreeSpecimen::cross2(shared_ptr<Specimen> other)
-{
-	auto children = this->strategyTree.cross(static_pointer_cast<OneTreeSpecimen>(other)->strategyTree);
-	return pair<shared_ptr<Specimen>, shared_ptr<Specimen>>(make_shared<OneTreeSpecimen>(move(children.first)), make_shared<OneTreeSpecimen>(move(children.second)));
+	auto children = this->strategyTree.cross(static_cast<const OneTreeSpecimen*>(other)->strategyTree);
+	return pair<unique_ptr<Specimen>, unique_ptr<Specimen>>(make_unique<OneTreeSpecimen>(children.first.get()), make_unique<OneTreeSpecimen>(children.second.get()));
 }
 
 void OneTreeSpecimen::mutate()

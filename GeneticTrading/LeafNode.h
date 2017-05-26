@@ -32,7 +32,7 @@ public:
 	~LeafNode();
 
 
-	bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
+	bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) const;
 
 	void mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree);
 

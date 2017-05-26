@@ -21,7 +21,7 @@ public:
 
 	virtual unique_ptr<Node> clone() = 0;
 
-	virtual bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) = 0;
+	virtual bool isActive(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) const = 0;
 
 	virtual void mutate(InternalNode & parent, bool isLeft, int currentPos, Tree *ownerTree) = 0;
 

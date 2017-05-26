@@ -157,7 +157,7 @@ void Controller::runXTimes(GeneticController & gt, int count, ofstream& fileStre
 	{
 		auto spec = gt.startEvolution();
 
-		Backtester::TransactionData td = bt.backtest(*gt.getDataSet(), spec);
+		Backtester::TransactionData td = bt.backtest(*gt.getDataSet(), spec.get());
 		gains.push_back(td.getTotalPipGain());
 		transactionCounts.push_back(td.getTransactionCount());
 		gt.reset();
@@ -206,14 +206,20 @@ int main()
 	//indicators.addIndicator(shared_ptr<Indicator>(new RelativeStrengthIndex(14)));
 
 	data.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("01.01.2016 00:00:00"), DateTime("15.01.2016 00:00:00"), indicators);
-	MutationChances *mc = new MutationChances(0.05, 0.02, 0.05, 0.05);
-	//MutationChances *mc = new MutationChances(0);
-	GeneticController gt(0.4, 0, *mc, indicators, data, 5, 100, 100);
+	DataSet data2;
+	data2.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("15.01.2016 00:00:00"), DateTime("30.01.2016 00:00:00"), indicators);
+	MutationChances *mc = new MutationChances(0.05, 0.1, 0.05, 0.05);
+	//MutationChances *mc = new MutationChances(0.05);
+	GeneticController gt(0.4, 0.05, *mc, indicators, data, 5, 200, 100);
 
 	Controller ct;
 	//ct.testParams(gt);
 	
+	Backtester bt;
 	shared_ptr<Specimen> best = gt.startEvolution();
+	//Backtester::TransactionData td = bt.backtest(*gt.getDataSet(), best.get());
+	Backtester::TransactionData td = bt.backtest(data2, best.get());
+	cout << td.getTransactionCount();
 	cout << best->toLatex();
 
 	return 0;

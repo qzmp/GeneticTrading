@@ -7,7 +7,7 @@ int Backtester::priceToPips(double price)
 	return price * 100000;
 }
 
-int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, double> &indicatorValues, shared_ptr<Specimen> strategy)
+int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, double> &indicatorValues, const Specimen* strategy)
 {
 	if (!bought && !sold) {
 		if (strategy->checkBuySignal(currentPrice, indicatorValues))
@@ -37,7 +37,7 @@ int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, doub
 	}
 	else if (sold)
 	{
-		if (strategy->checkSellSignal(currentPrice, indicatorValues))
+		if (strategy->checkBuySignal(currentPrice, indicatorValues))
 		{
 			double gain =  currentPrice - transactionData.sellPrices.back();
 			transactionData.totalPipGain += priceToPips(gain) - 40;
@@ -61,7 +61,7 @@ Backtester::~Backtester()
 {
 }
 
-Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, shared_ptr<Specimen> strategy)
+Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, const Specimen* strategy)
 {
 	bought = false;
 	sold = false; 

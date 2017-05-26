@@ -20,11 +20,11 @@ public:
 
 	unique_ptr<Specimen> clone();
 
-	bool checkBuySignal(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
-	bool checkSellSignal(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues);
+	bool checkBuySignal(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) const;
+	bool checkSellSignal(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues) const;
 
-	shared_ptr<Specimen> cross(shared_ptr<Specimen> other);
-	pair<shared_ptr<Specimen>, shared_ptr<Specimen>> cross2(shared_ptr<Specimen> other);
+	unique_ptr<Specimen> cross(const Specimen* other);
+	pair<unique_ptr<Specimen>, unique_ptr<Specimen>> cross2(const Specimen* other);
 	void mutate();
 
 	string toLatex();
