@@ -94,6 +94,11 @@ int LeafNode::getSize()
 	return 1;
 }
 
+int LeafNode::getHeight()
+{
+	return 1;
+}
+
 void LeafNode::writeLatex(stringstream & ss)
 {
 	ss << " {" << indicator->toString();

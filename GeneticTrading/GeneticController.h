@@ -50,5 +50,7 @@ public:
 	DataSet* getDataSet();
 
 	void reset();
+
+	void setDataSet(DataSet & dataSet);
 };
 

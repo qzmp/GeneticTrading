@@ -26,10 +26,18 @@ int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, doub
 		if (strategy->checkSellSignal(currentPrice, indicatorValues))
 		{
 			double gain = transactionData.buyPrices.back() - currentPrice;
-			transactionData.totalPipGain += priceToPips(gain) - 40;
-			transactionData.sellPrices.push_back(currentPrice);
+			if (gain > 0)
+			{
+				transactionData.gains += priceToPips(gain);
+				transactionData.goodTransactionCount++;
+			}
+			else
+			{
+				transactionData.losses += -priceToPips(gain);
+				transactionData.badTransactionCount++;
+			}
 
-			gain > 0 ? transactionData.goodTransactionCount++ : transactionData.badTransactionCount++;
+			transactionData.sellPrices.push_back(currentPrice);
 
 			bought = false;
 			sold = true;
@@ -40,10 +48,17 @@ int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, doub
 		if (strategy->checkBuySignal(currentPrice, indicatorValues))
 		{
 			double gain =  currentPrice - transactionData.sellPrices.back();
-			transactionData.totalPipGain += priceToPips(gain) - 40;
+			if (gain > 0)
+			{
+				transactionData.gains += priceToPips(gain);
+				transactionData.goodTransactionCount++;
+			}
+			else
+			{
+				transactionData.losses += -priceToPips(gain);
+				transactionData.badTransactionCount++;
+			}
 			transactionData.buyPrices.push_back(currentPrice);
-
-			gain > 0 ? transactionData.goodTransactionCount++ : transactionData.badTransactionCount++;
 
 			bought = true;
 			sold = false;
@@ -55,7 +70,6 @@ int Backtester::processTick(double currentPrice, map<shared_ptr<Indicator>, doub
 Backtester::Backtester()
 {
 }
-
 
 Backtester::~Backtester()
 {
@@ -89,7 +103,16 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, const Spec
 	if (bought)
 	{
 		double gain = dataSet.getClosePrice(i - 1) - transactionData.buyPrices.back();
-		transactionData.totalPipGain += priceToPips(gain) - 40;
+		if (gain > 0)
+		{
+			transactionData.gains += priceToPips(gain);
+			transactionData.goodTransactionCount++;
+		}
+		else
+		{
+			transactionData.losses += -priceToPips(gain);
+			transactionData.badTransactionCount++;
+		}
 		
 		bought = false;
 		sold = false;
@@ -98,7 +121,16 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, const Spec
 	else if (sold)
 	{
 		double gain = transactionData.sellPrices.back() - dataSet.getClosePrice(i - 1);
-		transactionData.totalPipGain += priceToPips(gain) - 40;
+		if (gain > 0)
+		{
+			transactionData.gains += priceToPips(gain);
+			transactionData.goodTransactionCount++;
+		}
+		else
+		{
+			transactionData.losses += -priceToPips(gain);
+			transactionData.badTransactionCount++;
+		}
 		
 		bought = false;
 		sold = false;
@@ -106,9 +138,25 @@ Backtester::TransactionData & Backtester::backtest(DataSet & dataSet, const Spec
 	return transactionData;
 }
 
+
+int Backtester::TransactionData::getPipGainWithProvision(int provision)
+{
+	return this->gains - this->losses - getTransactionCount() * provision;
+}
+
 int Backtester::TransactionData::getTotalPipGain()
 {
-	return this->totalPipGain;
+	return this->gains - this->losses;
+}
+
+int Backtester::TransactionData::getGains()
+{
+	return this->gains;
+}
+
+int Backtester::TransactionData::getLosses()
+{
+	return this->losses;
 }
 
 int Backtester::TransactionData::getTransactionCount()

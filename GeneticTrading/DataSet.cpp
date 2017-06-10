@@ -65,6 +65,11 @@ DataSet::DataSet()
 {
 }
 
+DataSet::DataSet(const DataSet & other) : start(other.start), end(other.end), timeStamps(other.timeStamps), openPrices(other.openPrices), closePrices(other.closePrices),
+highPrices(other.highPrices), lowPrices(other.lowPrices), indicators(other.indicators), indicatorHolder(other.indicatorHolder)
+{
+}
+
 
 DataSet::~DataSet()
 {
@@ -100,6 +105,7 @@ int DataSet::loadData(string & fileName, DateTime & start, DateTime & end, Indic
 		double lastHighPrice;
 		double lastLowPrice;
 		double lastClosePrice;
+		double previousLastClosePrice = 0;
 
 		string token;
 		string line;
@@ -115,7 +121,7 @@ int DataSet::loadData(string & fileName, DateTime & start, DateTime & end, Indic
 		{
 			ss = istringstream(line);
 			i = 0;
-			if (currentLineIndex >= startIndex - linesNeededForIndicators && !endReached)
+			if (currentLineIndex >= startIndex - linesNeededForIndicators + 1 && !endReached)
 			{
 				while (getline(ss, token, ';'))
 				{
@@ -135,15 +141,20 @@ int DataSet::loadData(string & fileName, DateTime & start, DateTime & end, Indic
 						break;
 					case 4:
 						lastClosePrice = stod(token);
+						
 						if (lastClosePrices.size() == linesNeededForIndicators)
 						{
 							lastClosePrices.pop_front();
 						}
-						lastClosePrices.push_back(lastClosePrice);
+						if (previousLastClosePrice != 0)
+						{
+							lastClosePrices.push_back(previousLastClosePrice);
+						}
+						previousLastClosePrice = lastClosePrice;
 					}
 					i++;
 				}
-				if (currentLineIndex > startIndex)
+				if (currentLineIndex > startIndex + 1)
 				{
 					DateTime lastDateTime(lastDateTimeString);
 					if (!(lastDateTime < end))
@@ -208,4 +219,10 @@ DateTime DataSet::getStart()
 DateTime DataSet::getEnd()
 {
 	return end;
+}
+
+string DataSet::getName()
+{
+	return to_string(start.getDay()) + "." + to_string(start.getMonth()) + "." + to_string(start.getYear()) + "_" +
+		to_string(end.getDay()) + "." + to_string(end.getMonth()) + "." + to_string(end.getYear());
 }

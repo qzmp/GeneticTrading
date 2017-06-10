@@ -25,6 +25,8 @@ private:
 	unsigned long getTimeInt() const;
 public:
 	DateTime();
+	DateTime(int day, int month, int year, int hour, int minute, int second);
+	DateTime(int day, int month, int year);
 	DateTime(string dateTime);
 	~DateTime();
 

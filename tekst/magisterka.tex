@@ -39,6 +39,13 @@
 
 \usepackage{mathtools}
 \usepackage{enumitem}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\pgfplotsset{
+        table/search path={results/},
+    }
 
 \begin{document}
 
@@ -151,9 +158,9 @@ Historyczne dane z wielu rynków są ogólnie dostępne w internecie. Mimo, że 
 \chapter{Sztuczna inteligencja w inwestycjach giełdowych}
 
 \section{Różne podejścia w literaturze}
-Ostatni przegląd metod inteligencji obliczeniowej wykorzystywanej w rynkach finansowych jest dostępny w pracy \cite{Cavalcante2016194} z 2015 roku. Zebranych jest tam wiele metod wykorzystujących głownie analizę techniczną, ale także fundamentalną. Wykorzystanie analizy technicznej sprowadza się do przetwarzania szeregów czasowych cen, czyli sekwencji cen pobranych w określonych, stałych odstępach czasu. Ze względu na to, że takie szeregi są złożone, zaszumione, dynamiczne, nieliniowe, nieparametryczne i chaotyczne \cite{Si20132581}, tradycyjne metody statystyczne nie sprawiają się zbyt dobrze, ustępując pola sztucznej inteligencji. Wykorzystywane są głównie sieci neuronowe i metaheurystyki.
+Kompletny i aktualny przegląd metod inteligencji obliczeniowej wykorzystywanej w rynkach finansowych jest dostępny w pracy \cite{Cavalcante2016194} z 2015 roku. Zebranych jest tam wiele metod wykorzystujących głownie analizę techniczną, ale także fundamentalną. Wykorzystanie analizy technicznej sprowadza się do przetwarzania szeregów czasowych cen, czyli sekwencji cen pobranych w określonych, stałych odstępach czasu. Ze względu na to, że takie szeregi są złożone, zaszumione, dynamiczne, nieliniowe, nieparametryczne i chaotyczne \cite{Si20132581}, tradycyjne metody statystyczne nie sprawiają się zbyt dobrze, ustępując pola sztucznej inteligencji. Wykorzystywane są głównie sieci neuronowe i metaheurystyki.
 
-Autorzy wspominają, że nie istnieje ustalona metodologia tworzenia systemów inwestycyjnych. Mimo, że prowadzone są nad tym badania, wyniki nie przedostają się do publiczności. Jest to spowodowane faktem, że jeśli komuś uda się stworzyć dobrze działający system, udostępnianie go publiczności oznaczałoby potencjalne ograniczenie własnych zysków. Celem wspomagania dalszego rozwoju, zostało wyodrębnione sześć kroków, która każda praca, opisująca system inwestycyjny powinna zawierać, opisane na rysunku \ref{fig:metodyka}.
+Autorzy wspominają, że nie istnieje ustalona metodologia tworzenia systemów inwestycyjnych. Mimo że prowadzone są nad tym badania, wyniki nie przedostają się do publiczności. Jest to spowodowane faktem, że jeśli komuś uda się stworzyć dobrze działający system, udostępnianie go publiczności oznaczałoby potencjalne ograniczenie własnych zysków. Celem wspomagania dalszego rozwoju, zostało wyodrębnione sześć kroków, która każda praca, opisująca system inwestycyjny powinna zawierać, opisane na rysunku \ref{fig:metodyka}.
 
 \begin{figure}[h]
 \caption{Proponowane kroki rozwoju systemu inwestycyjnego}
@@ -164,17 +171,17 @@ Autorzy wspominają, że nie istnieje ustalona metodologia tworzenia systemów i
 
 Czarne elementy można zastosować do konwencjonalnego problemu przewidywania, podczas gdy czerwone odnoszą się szczególnie do wykorzystania w rynkach finansowych. Pierwszy krok obejmuje wybór danych wejściowych i wyjściowych, pozyskanie ich i preprocessing. W przypadku analizy technicznej są to zwykle ceny lub wolumen akcji oraz różne wskaźniki techniczne, opisujące przeszłe zmiany cen. Ten krok ujawnia problem wielu metod wykorzystujących sieci neuronowe. W wielu pracach, daną wyjściową jest szansa na wzrost lub spadek ceny w kolejnym dniu. Jednak to w większości przypadków nie wystarczy do podjęcia decyzji o inwestycji.
 
-W kolejnym drugim, trzecim i czwartym kroku wybierany jest algorytm przewidywania, uczony na wcześniej wybrany danych i oceniana jest jego skuteczność za pomocą klasycznych miar, takich jak średni błąd bezwzględny.
+W kolejnym drugim, trzecim i czwartym kroku wybierany jest algorytm przewidywania, uczony jest on na wcześniej wybranych danych i oceniana jest jego skuteczność za pomocą klasycznych miar, takich jak średni błąd bezwzględny.
 
 Kolejne, ostatnie dwa kroki odnoszą się do wykorzystania nauczonego już modelu do inwestycji. Konieczne jest takie wykorzystanie danych wyjściowych, aby w dobrym momencie kupić odpowiednie aktywa. Ważny jest mechanizm kontroli ryzyka, czyli zestaw zasad mających chronić zainwestowane pieniądze przed nagłymi stratami. Określa on, kiedy opuścić pozycję, która nie zachowuje się zgodnie z przewidywaniami. Konieczne jest także system zarządzania pieniędzmi, określający ile pieniędzy zainwestować mając pod uwagą ryzyko. Na samym końcu strategia powinna być oceniana używając backtestingu. 
 
-Standardowym podejściem w przypadku korzystania z sieci neuronowych jest zastosowanie prostej sieci MLP, wykorzystując przedtem jakąś innowacyjną metodę przetwarzanie danych wejściowych. Proste podejście zostało opisane w pracy Dhara, Mukherjee i Ghoshala \cite{5738795}. Sieć MLP z jedną warstwą ukrytą została zastosowana do przewidywania ceny akcji na rynku Indyjskim. Na wejściu siec przyjmuje historyczne ceny otwarcia i zamknięcia oraz zwraca cenę zamknięcia następnego dnia. Sieć uczona została za pomocą algorytmu propagacji wstecznej. Przetestowane zostały różne rozmiary warstwy ukrytej i współczynniki uczenia, osiągając maksymalną skuteczność przewidywania na poziomie około 70\%. 
+Standardowym podejściem w przypadku korzystania z sieci neuronowych jest zastosowanie prostej sieci MLP, wykorzystując przedtem jakąś innowacyjną metodę przetwarzanie danych wejściowych. Proste podejście zostało opisane w pracy Dhara, Mukherjee i Ghoshala \cite{5738795}. Sieć MLP z jedną warstwą ukrytą została zastosowana do przewidywania ceny akcji na rynku indyjskim. Na wejściu siec przyjmuje historyczne ceny otwarcia i zamknięcia oraz zwraca cenę zamknięcia następnego dnia. Sieć uczona została za pomocą algorytmu propagacji wstecznej. Przetestowane zostały różne rozmiary warstwy ukrytej i współczynniki uczenia, osiągając maksymalną skuteczność przewidywania na poziomie około 70\%. 
 
 W innej pracy, Wang i Wang wykorzystują stochastic time strength neural network (STNN) i analizę głównych składowych. Jako dane wejściowe przyjęto dzienną cenę otwarcia, zamknięcia, minimalną i maksymalną, wolumen i dzienny obrót. Tych sześć parametrów zastało następnie przetworzone przez analizę głównych składowych, co pozwoliło zmniejszyć liczbę danych wejściowych tylko do dwóch. STNN bazuje na zwykłej MLP integrującej dodatkowo stochastyczną funkcję czasu, nadającą mniejsze wagi danym pojawiającym się dalej od teraźniejszości.
 
 Niektóre podejścia wykorzystują także założenia analizy fundamentalnej. Nassirtoussi, Aghabozorgi, Wah i Ngo w 2015 roku \cite{KhadjehNassirtoussi2015306} wykorzystują eksploracje tekstu w nagłówkach wiadomości finansowych do przewidywania zmian cen walut na rynku Forex. Przeprowadzona jest semantyczna analiza tekstu, oraz analiza sentymentu, aby ocenić nastawienie inwestorów do wiadomości. Ważna również okazała się redukcja wymiarowości otrzymanych danych.
 
-Autorzy przeglądu \cite{Cavalcante2016194} twierdzą, że duży potencjał, choć jeszcze niedokładnie zbadany ma wykorzystanie głębokich sieci neuronowych. Pierwsze prace wykorzystują DBL, uzyskując obiecujące wyniki. Mało czasu jest natomiast poświęcone metaheurystykom, które wykorzystywane są w trochę inny sposób.
+Autorzy przeglądu \cite{Cavalcante2016194} twierdzą, że duży potencjał, choć jeszcze niedokładnie zbadany, ma wykorzystanie głębokich sieci neuronowych. Pierwsze prace wykorzystują DBL, uzyskując obiecujące wyniki. Mało czasu jest natomiast poświęcone metaheurystykom, które wykorzystywane są w trochę inny sposób.
 
 
 
@@ -182,7 +189,7 @@ Autorzy przeglądu \cite{Cavalcante2016194} twierdzą, że duży potencjał, cho
 
 \section{Metaheurystyki w budowaniu strategi inwestycyjnej}
 
-Do układania strategii inwestycyjnej może być wykorzystany klasyczny algorytm ewolucyjnyi. L. Mendes, P. Godingo i J.Dias wykorzystują go w swojej pracy \cite{Mendes2012}. Mając wykształcenie ekonomiczne, skonstruowali wiele reguł, pomagając w podjęciu decyzji o inwestycji. Zmienne tych reguł, osobnych dla sygnałów kupna i sprzedaży, zostały umieszczone w wektorze, który reprezentował osobnika. Jako funkcje oceny wykorzystano \textit{współczynnik Sterlinga}. Jest to miara zwrotu z inwestycji skorygowana o ryzyko. Istnieją różne definicje tego wskaźnika ale wykorzystany został wzór:
+Do układania strategii inwestycyjnej może być wykorzystany klasyczny algorytm ewolucyjny. L. Mendes, P. Godingo i J.Dias wykorzystują go w swojej pracy \cite{Mendes2012}. Mając wykształcenie ekonomiczne, skonstruowali wiele reguł, pomagając w podjęciu decyzji o inwestycji. Zmienne tych reguł, osobnych dla sygnałów kupna i sprzedaży, zostały umieszczone w wektorze, który reprezentował osobnika. Jako funkcje oceny wykorzystano \textit{współczynnik Sterlinga}. Jest to miara zwrotu z inwestycji skorygowana o ryzyko. Istnieją różne definicje tego wskaźnika ale wykorzystany został wzór:
 
 \[\text{współczynnik Sterlinga}=\frac{\text{zysk}}{MDD}\]
 
@@ -190,21 +197,21 @@ Gdzie MDD (Maximum Drawdown) to maksymalna osiągnięta strata w danym czasie. L
 
 \[MDD=\frac{\text{maksymalna osiągnięta wartość portfela} - \text{minimalna osiągnięta wartość portfela}}{\text{maksymalna osiągnięta wartość portfela}}\]
 
-Ograniczenie się do otwierania tylko długich pozycji na Forexie byłoby zbyt dużym uproszczeniem. Forex wprowadza dodatkowo kolejny problem - brak jest strategii, która stanowiła by punkt odniesienia, tak jak buy-and hold w przypadku handlu akcjami. Na Forexie nie można liczyć na stały trend w którymś kierunku. Autorzy porównywali więc swoje strategie do sytuacji, gdy zysk jest zerowy. Testowano dane o różnym interwale: minutowe, pięciominutowe, piętnastominutowe oraz godzinne. Każdy interwał miał przydzielony inny okres treningowy, od miesiąca przy interwale minutowym do całego roku przy interwale godzinnym. Do każdego interwału zostały też wybrane okresy testowe o odpowiednich okresach. Brano pod uwagę parę EUR/USD i GBP/USD, jako największe, najbardziej płynne i o najmniejszym spreadzie. Osiągnięte wyniki na zbiorach treningowych były zdecydowanie pozytywne, jednak na zbiorze testowym jedynie 45\% było zyskownych na EUR/USD
+Autorzy testowali swoje strategie na Forexie. Ograniczenie się do otwierania tylko długich pozycji na tym rynku byłoby zbyt dużym uproszczeniem. Forex wprowadza dodatkowo kolejny problem - brak jest strategii, która stanowiła by punkt odniesienia, tak jak buy-and hold w przypadku handlu akcjami. Na Forexie nie można liczyć na stały trend w którymś kierunku. Autorzy porównywali więc swoje strategie do sytuacji, gdy zysk jest zerowy. Testowano dane o różnym interwale: minutowe, pięciominutowe, piętnastominutowe oraz godzinne. Każdy interwał miał przydzielony inny okres treningowy, od miesiąca przy interwale minutowym do całego roku przy interwale godzinnym. Do każdego interwału zostały też wybrane okresy testowe o odpowiednich okresach. Brano pod uwagę parę EUR/USD i GBP/USD, jako największe, najbardziej płynne i o najmniejszym spreadzie. Osiągnięte wyniki na zbiorach treningowych były zdecydowanie pozytywne, jednak na zbiorze testowym jedynie 45\% było zyskownych na EUR/USD
 
-Russo Vincenzo w swojej pracy magisterskiej \cite{Russo:2015} wykorzystał algorytm świetlikowy. Jest to metaheurystyka rojowa, która symuluje zachowanie robaczków świętojańskich. Optymalne wartości są znajdowane biorąc pod uwagę położenie innych świetlików, które świecą intensywniej będąc w pobliżu lepszego rozwiązania. W jego podejściu metaheurystyka miała mniejszy wpływ na strategię niż we wcześniej opisanych podejściach. Wybierała jedynie wagi pomiędzy kilkoma, wcześniej ustalonymi wskaźnikami analizy technicznej. Miała za zadanie zoptymalizować stworzony system inwestycyjny, a nie tworzyć go od podstaw. Największą zaletą takiego podejścia okazała się szybkość działania, która umożliwiała optymalizację strategii w ciągu kilku sekund, otrzymując zysku na zbiorze testowym przewyższające buy-and-hold. Sporym problemem okazały się koszty transakcji.
-
-
+Russo Vincenzo w swojej pracy magisterskiej \cite{Russo:2015} wykorzystał algorytm świetlikowy. Jest to metaheurystyka rojowa, która symuluje zachowanie robaczków świętojańskich. Optymalne wartości są znajdowane biorąc pod uwagę położenie innych świetlików, które świecą intensywniej będąc w pobliżu lepszego rozwiązania. W jego podejściu metaheurystyka miała mniejszy wpływ na strategię niż we wcześniej opisanych podejściach. Wybierała jedynie wagi pomiędzy kilkoma, wcześniej ustalonymi wskaźnikami analizy technicznej. Miała za zadanie zoptymalizować stworzony system inwestycyjny, a nie tworzyć go od podstaw. Największą zaletą takiego podejścia okazała się szybkość działania, która umożliwiała optymalizację strategii w ciągu kilku sekund, otrzymując zysku na zbiorze testowym przewyższające buy-and-hold. Sporym problemem okazały się koszty transakcji, które znacznie ograniczały potencjalne zyski.
 
 
 
-\section{Programowanie dynamiczne w budowaniu strategii inwestycyjnej}
 
-Wiele prac do układania strategii inwestycyjnej na różnych rynkach wykorzystuje programowanie dynamiczne. Ma ono tą zaletę, że nie wymaga wcześniejszej wiedzy ekonomicznej czy starannego wyboru wskaźników ekonomicznych. Te zależności są wydobywane przez sam algorytm. 
+
+\section{Programowanie genetyczne w budowaniu strategii inwestycyjnej}
+
+Wiele prac do układania strategii inwestycyjnej na różnych rynkach wykorzystuje programowanie genetyczne. Ma ono tą zaletę, że nie wymaga wcześniejszej wiedzy ekonomicznej czy starannego wyboru wskaźników ekonomicznych. Te zależności są wydobywane przez sam algorytm. 
 
 Jedną z pierwszych na ten temat jest praca F. Allena i R. Karjalainena z 1999 roku \cite{Allen1999245}. We wszystkich przeszłych pracach strategie czy reguły inwestycyjne były tworzone ad hoc, co stwarzało ryzyko nadużywania danych - kierowania się nadmierną motywacją do uzyskania pozytywnego wyniku. Strategie były tworzone poprzez dopasowanie ich do posiadanych danych. Aby uniknąć tego problemu, autorzy zaproponowali użycie programowania genetycznego do układania strategii, tak aby reguły były tworzone przed użyciem danych testowych. Badania prowadzone były na indeksie S\&P 500, do którego należy 500 największych amerykańskich spółek. 
 
-Każdy osobnik reprezentował funkcję zawartą w drzewie, każda reprezentująca osobną strategię. Drzewo jest budowane z zestawu bazowych funkcji rzeczywistych i logicznych. Każdy liść zawiera funkcję rzeczywistą, podczas gdy jego korzeniem jest funkcja logiczna. Funkcje logiczne obejmują operatory logiczne i porównania dwóch funkcji rzeczywistych. Funkcje rzeczywiste zawierają średnią kroczącą, której okres jest parametrem, oraz funkcje zwracające minimum i maksimum lokalne cen w zadanym okresie. Oprócz tego występują operatory arytmetyczne, oraz funkcja zwracająca aktualną cenę. Dodatkowo występują wartości stałe (true i false) oraz stałe wartości liczbowe. Stałe wartości logiczne są losowane na początku trenowania, tak sam jak wartości liczbowe. Podczas kolejnych generacji te wartości nie są losowane ponownie.
+Każdy osobnik reprezentował funkcję zawartą w drzewie, z których każda reprezentowała osobną strategię. Drzewo jest budowane z zestawu bazowych funkcji rzeczywistych i logicznych. Każdy liść zawiera funkcję rzeczywistą, podczas gdy jego korzeniem jest funkcja logiczna. Funkcje logiczne obejmują operatory logiczne i porównania dwóch funkcji rzeczywistych. Funkcje rzeczywiste zawierają średnią kroczącą, której okres jest parametrem, oraz funkcje zwracające minimum i maksimum lokalne cen w zadanym okresie. Oprócz tego występują operatory arytmetyczne, oraz funkcja zwracająca aktualną cenę. Dodatkowo występują wartości stałe (true i false) oraz stałe wartości liczbowe. Stałe wartości logiczne są losowane na początku trenowania, tak sam jak wartości liczbowe. Podczas kolejnych generacji te wartości nie są losowane ponownie.
 
 Ten zestaw funkcji bazowych może reprezentować strategie powszechnie wykorzystywane w inwestycjach. Przykład takich strategii jest przedstawiony na rysunku \ref{fig:allenProste}. Przy wyborze takich funkcji bazowych autorzy dodatkowo kierowali się na innych pracach, z których wynikało, że wiele skomplikowanych reguł inwestycyjnych można przedstawić korzystać z lokalnych ekstremów przeszłych cen. Średnie kroczące są wykorzystane w modelowaniu istniejących trendów cenowych. Unikano bardziej skomplikowanych reguł, przedstawianych w poprzednich badaniach, aby uniknąć ich zbytniego dopasowania do danych.
 
@@ -223,7 +230,7 @@ Aby właściwie przetestować zyskowność strategii, wprowadzono zbiór danych 
 
 Otrzymane reguły inwestycyjne nie przynosiły stałych zysków w porównaniu do strategii buy-and-hold po odliczeniu kosztów transakcji. Mają jednak pewne zdolności przewidywania, bo opóźnienie transakcji o jeden dzień zdecydowanie pogarsza zyski.
 
-Niedługo potem C. Nelly \cite{Neely200369} przetestował techniki kontroli ryzyka zaproponowane w poprzedniej pracy. W podejściu zmieniony został tylko sposób oceny osobników. Zastosowano między innymi wskaźnik Sharpe'a. Opracowany przez laureata Nobla Williama Sharpe'a, jest powszechnie wykorzystywany jako potencjalnego zysku w stosunku do poniesionego ryzyka. Im współczynnik jest wyższy, tym inwestycja jest bardziej atrakcyjna.
+Niedługo potem C. Nelly \cite{Neely200369} przetestował techniki kontroli ryzyka zaproponowane w poprzedniej pracy. W podejściu zmieniony został tylko sposób oceny osobników. Zastosowano między innymi wskaźnik Sharpe'a. Opracowany przez laureata Nobla Williama Sharpe'a, jest powszechnie wykorzystywany jako miara potencjalnego zysku w stosunku do poniesionego ryzyka. Im współczynnik jest wyższy, tym inwestycja jest bardziej atrakcyjna.
 
 \[S=\frac{r_{p} - r_{f}}{\sigma_{p}}\]
 Gdzie:
@@ -248,13 +255,13 @@ W pracy L. Beckera i M. Seshardi \cite{Becker:2003} udało się w końcu prześc
 	\item Wskaźniki trendu: dolna linia wyznaczona na podstawie 2 ostatnich minimów 3-miesięcznej średniej kroczącej oraz górna linia wyznaczona na podstawie 2 ostatnich maksimów 3-miesięcznej średniej kroczącej
 \end{itemize}
 
-Pierwszy eksperyment przeprowadzono z modyfikując funkcję oceny, aby oprócz zysku brała pod uwagę skomplikowanie drzewa. Większe drzewa były obarczone karą. To podejście okazało się znacznie polepszać generalizację wyników. Podczas gdy wielkość drzewa nie była ograniczana, powstałe strategie miały po kilkadziesiąt elementów.Były one praktycznie nie możliwe do zrozumienia przez człowieka. Drzewa ułożone wykorzystując zmienioną funkcje oceny, miały maksymalnie kilkanaście elementów i dodatkowo miały zdecydowanie lepsze wyniki na zbiorze testowym. Zyski na zbiorze treningowym były mniejsze, co oznaczało, że większe drzewa miały tendencję do nadmiernego dopasowania do danych uczących. 
+Pierwszy eksperyment przeprowadzono z modyfikując funkcję oceny, aby oprócz zysku brała pod uwagę skomplikowanie drzewa. Większe drzewa były obarczone karą. To podejście okazało się znacznie polepszać generalizację wyników. Podczas gdy wielkość drzewa nie była ograniczana, powstałe strategie miały po kilkadziesiąt elementów.Były one bardzo trudne do zrozumienia przez człowieka. Drzewa ułożone wykorzystując zmienioną funkcje oceny, miały maksymalnie kilkanaście elementów i dodatkowo miały zdecydowanie lepsze wyniki na zbiorze testowym. Zyski na zbiorze treningowym były mniejsze, co oznaczało, że większe drzewa miały tendencję do nadmiernego dopasowania do danych uczących. 
 
 W kolejnym eksperymencie znowu zmodyfikowano funkcję oceny. Tym razem zamiast zysku brana pod uwagę była liczba dochodowych okresów, modyfikowana również przez karę za wielkość drzewa. Średnie wyniki okazały się jeszcze lepsze niż w poprzednim eksperymencie, prawie w każdym przypadku lepsze od strategii buy-and-hold.
 
 Kolejne polepszenie wyników uzyskano poprzez zastosowanie ewolucji kooperatywnej. W populacji istniały dwa drzewa - jedno oznaczające sygnał kupna, drugie sygnał sprzedaży. Podczas gdy oba ewoluowały w tym samym czasie w jednej populacji, każde z nich było uważane za osobny gatunek i krzyżowało się tylko ze swoim odpowiednikiem. Wykorzystując to podejście, 99,5\% otrzymanych strategii osiągało zyski większe niż buy-and-hold.
 
-Zostały przeprowadzone dodatkowe badania nad ewolucja kooperatywną \cite{Becker03cooperativecoevolution}. Najlepsze wyniki otrzymano, gdy zamiast dwóch gatunków osobników w populacji, każdy osobnik zawierał w sobie dwa drzewa z dwoma regułami - jedną zakupu drugą sprzedaży. W tym przypadku ewaluacja osobnika jest reprezentowana przez tabelę na rysunku \ref{fig:koewolucja}. Puste pozycje oznaczają, że dana reguła nie jest brana pod uwagę w danym przypadku.
+Zostały przeprowadzone dodatkowe badania nad ewolucja kooperatywną \cite{Becker03cooperativecoevolution}. Najlepsze wyniki otrzymano, gdy zamiast dwóch gatunków osobników w populacji, każdy osobnik zawierał w sobie dwa drzewa każde z jedną regułą - jedną zakupu drugą sprzedaży. W tym przypadku ewaluacja osobnika jest reprezentowana przez tabelę na rysunku \ref{fig:koewolucja}. Puste pozycje oznaczają, że dana reguła nie jest brana pod uwagę w danym przypadku.
 
 \begin{figure}[h]
 \center
@@ -263,9 +270,9 @@ Zostały przeprowadzone dodatkowe badania nad ewolucja kooperatywną \cite{Becke
 \label{fig:koewolucja}
 \end{figure}
 
-Ważny jest fakt, że zwiększenie kary za rozmiar drzewa gdy zwiększa się ich liczbę w osobników poprawia wyniki na zbiorze testowym. Oznacza to, że konieczne jest stałe kontrolowanie wielkości drzew, które łatwo podlegają nadmiernemu dopasowaniu do danych treningowych.
+Ważny jest fakt, że zwiększenie kary za rozmiar drzewa gdy zwiększa się ich liczbę w osobnikach poprawia wyniki na zbiorze testowym. Oznacza to, że konieczne jest stałe kontrolowanie wielkości drzew, które łatwo podlegają nadmiernemu dopasowaniu do danych treningowych.
 
-Wspomniane prace nie były jednak napisane na tyle dokładnie, aby na ich podstawie odtworzyć zaprezentowane modele. Na tym problemie skupili się D. Lohpetch i D. Corne \cite{5393324}. Oprócz dokładnego opisania wszystkich operatorów programowania genetycznego, zaproponowano nowy sposób wyboru najlepszej strategii z populacji. Podstawowe podejście polegała po prostu na wybraniu tej, która po określonej liczbie generacji miała najlepsze wyniki i testowaniu jej na zbiorze testowym. Zaproponowany sposób, mimo że autorzy tak tego nie nazwali, wprowadzał kolejny zbiór - walidacyjny, rozłączny z pozostałym treningowym i testowym. Po skończeniu ewolucji na zbiorze treningowym, najpierw ewaluowane były wszystkie strategie z finalnej populacji na zbiorze walidacyjnym i z niej wybierana była najlepszą, gotowa do następującego po nim zbioru testowego. To podejście dawało lepsze i bardziej stałe wyniki, poprzez ograniczenie dopasowania do danych treningowych.
+Wspomniane prace Beckera i Seshardieg nie były jednak napisane na tyle dokładnie, aby na ich podstawie odtworzyć zaprezentowane modele. Na tym problemie skupili się D. Lohpetch i D. Corne \cite{5393324}. Oprócz dokładnego opisania wszystkich operatorów programowania genetycznego, zaproponowano nowy sposób wyboru najlepszej strategii z populacji. Podstawowe podejście polegała po prostu na wybraniu tej, która po określonej liczbie generacji miała najlepsze wyniki i testowaniu jej na zbiorze testowym. Zaproponowany sposób, mimo że autorzy tak tego nie nazwali, wprowadzał kolejny zbiór - walidacyjny, rozłączny z pozostałym treningowym i testowym. Po skończeniu ewolucji na zbiorze treningowym, najpierw ewaluowane były wszystkie strategie z finalnej populacji na zbiorze walidacyjnym i z niej wybierana była najlepszą, gotowa do następującego po nim zbioru testowego. To podejście dawało lepsze i bardziej stałe wyniki, poprzez ograniczenie dopasowania do danych treningowych.
 
 Badania nad walidacją wyników były też przeprowadzone wcześniej przez J. Thomasa i K. Sycarę \cite{Thomas1999TheIO} na Forexie.  W badanym podejściu dane również były podzielone na 3 zbiory: treningowy, walidacyjny i testowy. Przetestowane były dwa podejścia: jedno na którym finalna populacja była testowana na zbiorze walidacyjnym i wybierana była jedna najlepsze strategia, co odpowiadało podejściu z poprzedniej pracy \cite{5393324}. W drugim na zbiór testowy kwalifikowały się wszystkie strategie, przynoszące dochód ze zbioru walidacyjnego. Mimo podobnego podejścia, autorzy otrzymali zupełnie inne wyniki. Dodatkowa walidacja okazała się pogarszać działanie powstałych strategii w każdym badanym przypadku. Wyjaśnione było to brakiem korelacji pomiędzy zbiorem walidacyjnym i testowym - wybrana strategia ze zbioru walidacyjnego nie musiała najlepiej sprawować się na testowym. Innymi słowy, nie ma korelacji pomiędzy odległością od zbioru testowego a efektywnością strategii.
 
@@ -277,14 +284,16 @@ Podobny sposób wyboru zbiorów danych wykorzystane było przez P. Myszkowskiego
 
 \section{Podsumowanie}
 
-Wśród prac wykorzystujących programowanie genetyczne można rozróżnić dwa podejścia. Pierwsze jest skupione na ewolucji podejścia przedstawionego przez  F. Allena i R. Karjalainena\cite{Allen1999245}. Kolejne prace skupiają się głównie na uproszczeniu reprezentacji strategii, a także testowaniu potencjalnych ulepszeń. Dostępne są prace wyjaśniające niedokładnie opisane elementy algorytmu, stanowiące pewnego rodzaju poradnik do implementacji \cite{5393324}. Jednak nawet we wspomnianej pracy brakuje detali niezbędnych w odtworzeniu modelu. 
+Wśród prac wykorzystujących programowanie genetyczne można rozróżnić dwa podejścia. Pierwsze jest skupione na ewolucji podejścia przedstawionego przez  F. Allena i R. Karjalainena\cite{Allen1999245}. Kolejne prace skupiają się głównie na uproszczeniu reprezentacji strategii, a także testowaniu potencjalnych ulepszeń. Dostępne są prace wyjaśniające niedokładnie opisane elementy algorytmu, stanowiące pewnego rodzaju poradnik do implementacji \cite{5393324}. Jednak nawet we wspomnianej pracy brakuje niektórych detali niezbędnych w odtworzeniu modelu. 
 
-Kolejne podejście, reprezentowane przez prace P. Myszkowskiego i współautorów \cite{GPW}\cite{Bicz}, Różni się głównie reprezentacją liści drzewa. Podczas gdy w pierwszym rozwiązaniu, w liściu znajduje się wskaźnik techniczny porównany do innego wskaźnika technicznego (z których oba wcześniej ustalone), to w drugim podejściu wskaźnik techniczny jest porównany do wylosowanej liczby rzeczywistej. To rozwiązanie daje więcej wolności algorytmowi genetycznemu, poszerzając przestrzeń rozwiązań. Większa przestrzeń rozwiązań oznacza jednak potencjalnie trudniejsze strojenie algorytmu, a że oba podejścia umożliwiają otrzymanie pozytywnych wyników ( dokładne porównanie nie jest możliwe, ze względu na to że różne prace korzystają z różnych zbiorów danych, mają też inne miary sukcesu) w zastosowanym podejściu skupiono się bardziej na podejściu pierwszym. Dodatkowo, pierwsze podejście jest bardziej intuicyjne, jako że lepiej odzwierciedla sposób inwestowania ludzi. Podstawowym sygnałem wykorzystywanym przez inwestorów jest przecięcie średniej kroczącej czy to przez średnią kroczącą o innym okresie czy przez aktualną cenę. Podczas gdy jest to proste do przedstawienie w pierwszym podejściu, porównanie wartości średniej kroczącej do pewnej losowej wartości liczbowej nie daje takich możliwości.
+Kolejne podejście, reprezentowane przez prace P. Myszkowskiego i współautorów \cite{GPW}\cite{Bicz}, Różni się głównie reprezentacją liści drzewa. Podczas gdy w pierwszym rozwiązaniu, w liściu znajduje się wskaźnik techniczny porównany do innego wskaźnika technicznego (z których oba wcześniej ustalone), to w drugim podejściu wskaźnik techniczny jest porównany do wylosowanej liczby rzeczywistej. To rozwiązanie daje więcej wolności algorytmowi genetycznemu, poszerzając przestrzeń rozwiązań. Większa przestrzeń rozwiązań oznacza jednak potencjalnie trudniejsze strojenie algorytmu, a że oba podejścia umożliwiają otrzymanie pozytywnych wyników (dokładne porównanie nie jest możliwe, ze względu na to że różne prace korzystają z różnych zbiorów danych, mają też inne miary sukcesu) w zastosowanym podejściu skupiono się bardziej na podejściu pierwszym. Dodatkowo, pierwsze podejście jest bardziej intuicyjne, jako że lepiej odzwierciedla sposób inwestowania ludzi. Podstawowym sygnałem wykorzystywanym przez inwestorów jest przecięcie średniej kroczącej czy to przez średnią kroczącą o innym okresie czy przez aktualną cenę. Podczas gdy jest to proste do przedstawienie w pierwszym podejściu, porównanie wartości średniej kroczącej do pewnej losowej wartości liczbowej nie daje takich możliwości.
 
 
 \chapter{Zastosowane podejście}
 
-Ze względu na niewystarczająco dokładne opisanie implementacji we wspomnianych pracach, nie było możliwe dokładne odtworzenie istniejących podejść. Zastosowany algorytm jest jednak silnie inspirowany istniejącymi rozwiązaniami, głównie pracą  D. Lohpetcha i D. Corna \cite{5393324}, która jest najnowszą i najdokładniejszą poświęconą reprezentacji zapoczątkowanej przez  F. Allena i R. Karjalainena\cite{Allen1999245}. Przy konstrukcji algorytmu brano pod uwagę wyniki i problemy i wyniki opisanych podejść. Istotna też była spójność implementacji oraz logiczne i proste przedstawienie strategii.
+Ze względu na niewystarczająco dokładne opisanie implementacji we wspomnianych pracach, nie było możliwe dokładne odtworzenie istniejących podejść. Zastosowany algorytm jest jednak silnie inspirowany istniejącymi rozwiązaniami. Główną inspiracją była praca D. Lohpetcha i D. Corna \cite{5393324}, które jest najnowszą i najdokładniejszą poświęconą reprezentacji zapoczątkowanej przez  F. Allena i R. Karjalainena\cite{Allen1999245}. Zaczerpnięte z niej zostały szczegóły implementacji algorytmu. Podczas testowania wzorowano się jednak bardziej na pracy A. Bicza i P. Myszkowskiego \cite{Bicz}. W dalszym opisie znajduje się wyjaśnienie opis każdego elementu implementacji z argumentacją użycia. Poszczególne podejścia będą referowane jako ``AiK'' (  podejście F. Allena i R. Karjalainena\cite{Allen1999245}) oraz ``BiM'' (A. Bicz i P. Myszkowski \cite{Bicz}).
+
+Przy konstrukcji algorytmu brano pod uwagę wyniki i problemy i wyniki opisanych podejść. Istotna też była spójność implementacji oraz logiczne i proste przedstawienie strategii.
 
 
 \section{Reprezentacja osobnika}
@@ -292,14 +301,14 @@ Ze względu na niewystarczająco dokładne opisanie implementacji we wspomnianyc
 \begin{figure}[h]
 \center
 \caption {Przykładowa strategia wygenerowana przez algorytm}
-\includegraphics{drzewo}
+\includegraphics[scale = 0.7]{drzewo}
 \label{fig:drzewo}
 \end{figure}
 
-W podstawowej wersji algorytmu osobnik algorytmu genetycznego reprezentuje drzewo strategii. Przykład takiej strategii jest widoczny na rysunku \cite{fig:drzewo}. Zdecydowano się na ciągłe pozostawanie na rynku i strategie określa kiedy powinna być otwarta pozycja długa a kiedy krótka, w zależności od tego, czy drzewo zwraca wartość true czy false. Po początkowej inwestycji sprawdzane otwarta pozycja jest jedynie odwracana - z długiej na krótką i odwrotnie.
+Osobnik algorytmu genetycznego reprezentuje drzewo strategii. Przykład takiej strategii jest widoczny na rysunku \ref{fig:drzewo}. Zdecydowano się na ciągłe pozostawanie na rynku i strategie określa kiedy powinna być otwarta pozycja długa a kiedy krótka, w zależności od tego, czy drzewo zwraca wartość true czy false. Po początkowej inwestycji sprawdzane otwarta pozycja jest jedynie odwracana - z długiej na krótką i odwrotnie.
 
 Węzły drzewa dzielą się na terminalne i nieterminalne. W węzłach nieterminalnych mogą znajdywać się operatory logiczne OR oraz AND. Zrezygnowano z operatora NOT dlatego, że nie niesie ze sobą praktycznie żadnej informacji. Ze względu na to, że w węzłach terminalnych (liściach drzewa) znajdują się porównania, operator NOT występujący przed porównaniem jedynie odwracał operator porównania, co może być przedstawione w łatwiejszy sposób.
-Jak już zostało wspomniane, w liściach występuje porównanie wskaźników technicznych. Ich zestaw został zaczerpnięty z pracy \cite{5393324}, jako że był wykorzystywany już w poprzednich pracach traktujących o tym podejściu i dawał pozytywne wyniki. Dodatkowo, wybór odpowiednich wskaźników technicznych wymaga wiedzy ekonomicznej, posiadanej przez autorów wybranego zestawu:
+Jak już zostało wspomniane, w liściach występuje porównanie wskaźników technicznych. Ich zestaw został zaczerpnięty z pracy AiK, jako że był wykorzystywany już w poprzednich pracach traktujących o tym podejściu i dawał pozytywne wyniki. Dodatkowo, wybór odpowiednich wskaźników technicznych wymaga wiedzy ekonomicznej, posiadanej przez autorów wybranego zestawu:
 
 \begin{itemize}
 	\item Ceny: otwarcia, zamknięcia, maksymalna i minimalna w okresie
@@ -320,7 +329,7 @@ Gdzie:
 	\item $P_b$: cena zamknięcia w okresie b
 \end{itemize}
 
-ROC opisuje zmianę ceny aktywa w czasie.Jest oscylatorem, co oznacza, że jest w praktyce wykorzystywany w inny sposób niż pozostałe wskaźniki. Podczas gdy wszystkie pozostałe mogą być nałożone na wykres ceny i generować sygnały przy porównaniu ze sobą nawzajem, to oscylator przyjmuje konkretne wartości - w przypadku ROC można je ograniczyć od -1 do 1, chociaż w praktyce przedział jest zwykle mniejszy. Teoria mówi, że gdy jego wartość jest duża, może to wskazywać że cena w krótkim okresie jest zbyt duża i sugerować zmianę trendu. W wykorzystywanej literaturze nie zostało wspomniane, czy ten wskaźnik jest traktowany szczególnie. W zaimplementowanym podejściu jednak jako jedyny nie jest porównywany do pozostałych - zamiast tego, jeśli wylosowany został wskaźnik ROC jako pierwszy z porównywanej pary z liścia, to zamiast kolejnego wskaźnika losowana jest  liczba rzeczywista z zakresu -0.6 do 0.6. 
+ROC opisuje zmianę ceny aktywa w czasie. Jest oscylatorem, co oznacza, że jest w praktyce wykorzystywany w inny sposób niż pozostałe wskaźniki. Podczas gdy wszystkie pozostałe mogą być nałożone na wykres ceny i generować sygnały przy porównaniu ze sobą nawzajem, to oscylator przyjmuje konkretne wartości - w przypadku ROC można je ograniczyć od -1 do 1, chociaż w praktyce przedział jest zwykle mniejszy. Teoria mówi, że gdy jego wartość jest duża, może to wskazywać że cena w krótkim okresie jest zbyt duża i sugerować zmianę trendu. W wykorzystywanej literaturze nie zostało wspomniane, czy ten wskaźnik jest traktowany szczególnie. W zaimplementowanym podejściu jednak jako jedyny nie jest porównywany do pozostałych - zamiast tego, jeśli wylosowany został wskaźnik ROC jako pierwszy z porównywanej pary z liścia, to zamiast kolejnego wskaźnika losowana jest  liczba rzeczywista z zakresu -0.6 do 0.6. 
 
 \section {Wykorzystywane dane i ocena osobnika}
 
@@ -331,33 +340,240 @@ ROC opisuje zmianę ceny aktywa w czasie.Jest oscylatorem, co oznacza, że jest 
 \label{fig:data}
 \end{figure}
 
-Wszystkie badanie przeprowadzono na Forexie, ze względu na wspomniane już zalety. Dodatkową motywacją było przetestowanie wariantu sprawdzonego już modelu na zupełnie innych danych. Dane w formacie .csv zostały pobrane z portalu Dukascopy \cite{data}. Ich początek jest widoczny na rysunku \cite{fig:data}. Można zauważyć, że w tabeli znajdują się ceny otwarcia, zamknięcia a także maksymalna i minimalna w danym okresie. 
+Wszystkie badanie przeprowadzono na Forexie, ze względu na wspomniane już zalety. Dodatkową motywacją było przetestowanie wariantu sprawdzonego już modelu na zupełnie innych danych. Dane w formacie .csv zostały pobrane z portalu Dukascopy \cite{data}. Ich początek jest widoczny na rysunku \ref{fig:data}. Można zauważyć, że w tabeli znajdują się ceny otwarcia, zamknięcia a także maksymalna i minimalna w danym okresie. 
 
 Bardzo ważnym aspektem praktycznie nie poruszonym w literaturze jest sposób, w jaki otrzymywany jest zysk na historycznych danych. Ta wartość jest podstawą do właściwej oceny osobnika i jest niezbędna do zbudowania działającego algorytmu. W zastosowanej implementacji wzorowano się na sposobie testowania z programu MetaTrader 5 opisanym w artykule \cite{metatrader}. Metatrader jest uniwersalną platformą do handu na różnych rynkach i udostępnia zaawansowane opcje konstruowanie jak i testowania robotów handlowych - czyli programów podejmujących autonomiczne decyzje o transakcjach. 
 
-Podstawowym podejściem jest analiza każdej zmiany ceny, czyli tak zwanego \textit{ticku}. Takie rozwiązanie wymaga jednak bardzo dużo obliczeń, ze względu na to, że cena aktywa na forexie potrafi się zmieniać bardzo szybko. Metatrader wykorzystuje więc symulację ticków. Punktem wejścia jest zestaw cen o pewnym okresie, na przykład 10 minutowym. Następnie w kolejności analizowane są ceny otwarcia, najmniejsza, największa i ostatecznie cena zamknięcia. W każdym etapie przeprowadzana jest symulacja, sprawdzane jest, czy robot powinien otworzyć jakąś pozycję. W naszym przypadku sprawdzane jest czy strategia generuje sygnał odwrócenia pozycji. Takie podejście oferuje równowagę pomiędzy dokładnością, a wymaganą mocą obliczeniową.
+Podstawowym podejściem jest analiza każdej zmiany ceny, czyli tak zwanego \textit{ticku}. Takie rozwiązanie wymaga jednak bardzo dużo obliczeń, ze względu na to, że cena aktywa na forexie potrafi się zmieniać bardzo często. Metatrader wykorzystuje więc symulację ticków. Punktem wejścia jest zestaw cen o pewnym okresie, na przykład 10 minutowym. Następnie w kolejności analizowane są ceny otwarcia, najmniejsza, największa i ostatecznie cena zamknięcia. W każdym etapie przeprowadzana jest symulacja, sprawdzane jest, czy robot powinien otworzyć jakąś pozycję. W naszym przypadku sprawdzane jest czy strategia generuje sygnał odwrócenia pozycji. Takie podejście oferuje równowagę pomiędzy dokładnością, a wymaganą mocą obliczeniową.
 
 Konieczna była jednak jedna modyfikacja. Jeśli cena największa była za każdym razem po najmniejszej, podczas uczenia strategia była dopasowywana do tego wzorca. Dlatego kolejność ceny najmniejszej i największej była za każdym razem losowana.
 
-Zysk liczony jest w punktach zwanych pipsami częściowymi. Pips to określenie wykorzystywane na rynku Forex, określające czwartą cyfrę po przecinku. Historycznie była to najmniejsza jednostka zmiany notowań, po prostu mniejsze zmiany nie były zapisywane. Aktualnie w popularnych parach walutowych, także w EUR/USD stosuje się pipsy częściowe, odpowiadające 1/10 zwykłego pipsa. Przyjęty sposób liczenia zysku można więc łatwo zamienić na punkty procentowe. Mimo, że ta wartość nie jest od razu przekładalna na procentowy zysk zainwestowanego kapitału, który interesuje wszystkich inwestorów, to takie podejście zostało wykorzystane we wspomnianej pracy \cite{Bicz}. Umożliwia to więc porównanie wyników i jednocześnie jest proste w implementacji.
+Zysk liczony jest w punktach zwanych pipsami częściowymi. Pips to określenie wykorzystywane na rynku Forex, określające czwartą cyfrę po przecinku. Historycznie była to najmniejsza jednostka zmiany notowań, po prostu mniejsze zmiany nie były zapisywane. Aktualnie w popularnych parach walutowych, także w EUR/USD stosuje się pipsy częściowe, odpowiadające 1/10 zwykłego pipsa. Przyjęty sposób liczenia zysku można więc łatwo zamienić na punkty procentowe. Mimo, że ta wartość nie jest od razu przekładalna na procentowy zysk zainwestowanego kapitału, który interesuje wszystkich inwestorów, to takie podejście zostało wykorzystane we wspomnianej pracy BiM. Umożliwia to więc porównanie wyników i jednocześnie jest proste w implementacji.
 
-Ważne w symulacji jest także wzięcie pod uwagę kosztów transakcji. W wykorzystywanych danych nie jest zapisany aktualny spread, który zależy od wybranego pośrednika, dlatego przyjęto stałą wartość równą 40 pipsom częściowym. Również wykorzystywana w w pracy \cite{Bicz}, przewyższa jego aktualną wartość wynoszącą około 12 pipsów częściowych. W literaturze wspomniane zostało jednak, że wyższe koszty transakcji podczas uczenia mogą powodować tworzenie bardziej ostrożnych strategii. 
+Ważne w symulacji jest także wzięcie pod uwagę kosztów transakcji. W wykorzystywanych danych nie jest zapisany aktualny spread, który zależy od wybranego pośrednika, dlatego przyjęto stałą wartość równą 40 pipsom częściowym. Również wykorzystywana w w pracy BiM, przewyższa jego aktualną wartość wynoszącą około 12 pipsów częściowych. W literaturze wspomniane zostało jednak, że wyższe koszty transakcji podczas uczenia mogą powodować tworzenie bardziej ostrożnych strategii. 
+
+W ocenie osobnika uwzględnia się także aktualną wysokość drzewa. Poprzednie badania twierdziły, że nagradzanie prostrzych startagii, czyli takich reprezentowanych przez mniejsze drzewa poprawia ostateczne wyniki. Oczywiście jest wiele sposobów na branie pod uwagę tego czynniki. Zastosowano rozwiązanie z literatury:
+
+\[P = \frac{H * Gain}{max(H, H_r)}\]
+Gdzie:
+\begin{itemize}[label=]
+	\item $P$: ocena osobnika
+	\item $H$: wysokość drzewa ustalona na początku działania algorytmu
+	\item $Gain$: zysk w pipsach częściowych na zbiorze treningowym
+	\item $H_r$: aktualna wysokość drzewa strategii
+\end{itemize}
+
+\section {Krzyżowanie}
+
+Do krzyżowania drzew wykorzystano metodę zaproponowaną przez J. Kozę, użytą także we wspominanej już literaturze. Jej przykład można zaobserwować na rysunku \ref{fig:cross}. Krzyżowane są dwa osobniki, wybierane na zasadzie turnieju. Po każdym krzyżowaniu powstają dwa osobniki, będące rekombinacją swoich rodziców. Takie podejście jest podstawowe w programowaniu genetycznym. Punkt przecięcia wybierany jest w dwóch krokach: w pierwszym wybierana jest losowa ścieżka w drzewie, a w drugim losowane jest miejsce przecięcia na tej ścieżce. 
+
+\begin{figure}[h]
+\center
+\caption {Przykład krzyżowania drzewa poprzez wymianę poddrzew \cite{egp}}
+\includegraphics[scale = 0.7]{subtree_co.jpg}
+\label{fig:cross}
+\end{figure}
+
+\section {Mutacja}
+
+Zaimplementowano 4 operatory mutacji:
+
+\begin{itemize}
+	\item Mutacja liści: wybrany liść jest zamieniany na inny losowy liść
+	\item Mutacja węzła wewnętrznego: wybrany węzeł nieterminalny jest zamieniany na odwrotny, tzn. AND na OR i odwrotnie 
+	\item Obcięcie drzewa: wybrany węzeł nieterminalny jest zamieniany na losowy liść
+	\item Wzrost drzewa: wybrany liść jest zamieniany na losowe poddrzewo
+\end{itemize}
+
+Wykorzystanie krzyżowania i mutacji jest następujące: W każdej generacji, póki nie jest zapełniona populacja dzieci, wybierana są na zasadzie turnieju 2 osobniki, które następnie są krzyżowane z pewnym prawdopodobieństwem. Każde powstałe  dziecko jest poddawane mutacji. Każdy operator mutacji działa niezależnie, z własną szansą na działanie na każdym węźle dziecka. Alternatywą użytą w AiK jest użycie jednego, losowego sposobu mutacji na całym drzewie. Zastosowane podejście umożliwia jednak większą kontrolę nad ewolucją drzewa, będąc jednak trudniejszą w dostrojeniu.
+
+\section {Podsumowanie algorytmu}
+
+Początkowa populacja jest wypełniana całkowicie losowymi osobnikami. Określona jest maksymalna wysokość drzewa które reprezentują, jednak tylko w początkowej populacji. W kolejnych generacjach limit ten może być przekraczany w wyniku krzyżowania i mutacji. Nagradzane jest jednak nieprzekraczanie podanego limitu, o co dba funkcja oceny osobnika.Jest to podejście zastosowane przez AiK. Następnie wszystkie osobniki są oceniane wykorzystując backtesting - zwrócony zysk w pipsach częściowych jest wykorzystywany w funkcji oceny. Kolejna populacja jest wypełniana, poprzez wybieranie kandydatów za pomocą turnieju. Niektóre wybrane osobniki są krzyżowane, każdy wchodzący do nowej populacji ma też szansę na mutację. Gdy nowa populacja się zapełni, cały proces rozpoczyna się od nowa aż do osiągnięcia warunku stopu wyznaczonego przez z góry określoną liczbę generacji.
+
+Całe uczenie przebiega na jednym zbiorze treningowym, najlepszy osobnik z ostatniej generacji jest wybierany do testowania na zbiorze testowym. 
+
+Istnieje więc 9 hiperparametrów wpływających na działanie algorytmu
+\begin{itemize}
+\item Rozmiar populacji
+\item Liczba generacji
+\item Maksymalna wysokość drzewa
+\item Wielkość turnieju
+\item Szansa na każdy z 4 operatorów mutacji
+\item Szansa na krzyżowanie
+\end{itemize}
+
+\chapter {Testowanie hiperparametrów}
+
+Aby zapewnić działanie algorytmu bliskie optymalnemu, konieczne jest ustalenie wartości hiperparametrów. Ze względu na fakt, że wszystkie mogą przyjmować szeroki zakres wartości, a dodatkowo mogą wpływać na siebie nawzajem, nie jest to łatwe zadanie. Testy przeprowadzano uruchamiając algorytm dziesięciokrotnie ze zmieniającymi się wartościami parametrów. Na początku parametry były zmieniane o duże wartości, które wraz z czasem były zmniejszane aby bardziej wyizolować parametry optymalne.
+
+Celem tego rozdziału jest również przedstawienie wpływu hiperparametrów na działanie algorytmu, co może być pomocne przy ponownej implementacji lub przy próbach ulepszenia działania.
+
+\section {Początkowe wyniki}
+Początkowe wyniki, z parametrami wybranymi intuicyjnie, są porównywalne do tych z literatury. Utworzone strategie mają dobrze dopasowują się do zbioru treningowego, otrzymując stały, dodatni wynik. Na zbiorze testowym ujawnia się jednak bardzo duże zróżnicowanie strategii. Wiele z nich jest stratnych, jednak co ciekawe średni zwrot jest pozytywny.
+Do przeprowadzenia badania i testów hiperparametrów wykorzystano okres od 1 stycznia 2016 roku do 15 stycznia, co obejmuje 1300 10-minutowych okresów. Jako zbiór testowy wykorzystano okres o takiej samej długości, występujący miesiąc później.
+
+Do otrzymania początkowych wyników wykorzystano następujące wartości parametrów:
+\begin{itemize}
+\item Rozmiar populacji = 200
+\item Liczba generacji = 100
+\item Maksymalna wysokość drzewa = 5
+\item Wielkość turnieju = 10\%
+\item Szansa na każdy z 4 operatorów mutacji = 5\%
+\item Szansa na krzyżowanie = 20\%
+\end{itemize}
+
+\begin{table}
+\center
+\caption{Początkowe wyniki na zbiorze treningowym}
+\label{wyniki1train}
+\begin{tabular}{|l|l|}
+  \hline
+  Zysk w pipsach& Odchylenie standardowe zysku\\
+  \hline
+2451.8 & 362.811 \\
+  \hline
+\end{tabular} 
+\end{table}
+
+\begin{table}
+\center
+\caption{Poczatkowe wyniki na zbiorze testowym}
+\label{wyniki1test}
+\begin{tabular}{|l|l|}
+  \hline
+  Zysk w pipsach& Odchylenie standardowe zysku\\
+  \hline
+810.7 & 4140.06 \\
+  \hline
+\end{tabular} 
+\end{table}
+
+\section{Krzyżowanie i mutacja}
+
+Operatory krzyżowania i mutacji są ze sobą silnie powiązane. W teorii spełniają tę samą funkcję, edytują osobniki w celu eksploracji i eksploatacji przestrzeni rozwiązań. Krzyżowanie odgrywa główną role w eksploatacji, ponieważ nie wprowadza żadnych nowych informacji do modelu - modyfikuje jedynie te strategie, które wcześniej powstały. Powinno więc poprzez łączenie już dosyć dobrze przystosowanych osobników, generować ich poprawione wersje. 
+
+Oba operatory mają jednak możliwości szybkiej i zdecydowanej zmiany osobnika tak, że jego przystosowanie zmienia się diametralnie. Już edycja jednego tylko liścia w drzewie strategii, może spowodować zmianę przystosowanie o tysiące pipsów. Wynika to z faktu, że wiele węzłów drzewa jest ze sobą powiązanych. Podczas gdy niektóre mogą być redundantne (na przykład połączone operatorem OR), to inne mają kluczowe znaczenie dla działania strategii. Na szczęście, nawet pogorszenie osobnika może pomóc wyjściu z lokalnego minimum poprzez wprowadzenie nowych genów.
 
 
+\begin{table}[h]
+\center
+\caption{Wyniki na zbiorze treningowym bez mutacji}
+\label{wynikiBezMutacji}
+\begin{tabular}{|l|l|}
+  \hline
+  Zysk w pipsach & Odchylenie standardowe zysku\\
+  \hline
+917.8 & 641.207 \\
+  \hline
+\end{tabular} 
+\end{table}
 
+Z dwóch operatorów mutacja jest ważniejsza. Podczas gdy sama mutacja bez krzyżowania osiąga podobne wyniki co przy zastosowaniu obu operatorów, to samo krzyżowanie nie ma takich samych możliwości dopasowania się do danych \ref{wynikiBezMutacji}. Wynika to z ograniczonych możliwości wprowadzania nowych informacji - mutacja jest jedynym operatorem, które może wprowadzić nowe dane w liściach, czyli takie, które wcześniej się jeszcze nie pojawiły w żadnej generacji.
 
+Co ciekawe, nie ma zauważalnej różnicy pomiędzy wynikami na zbiorze testowym. Oznacza to, że dobry wynik na zbiorze treningowym nie przekłada się dobrze na dobry wyniki na zbiorze testowym. Być może występuje zjawisko zbytniego dopasowania się do danych treningowym, a może oddzielne szeregi czasowe nie mają ze sobą tyle wspólnego, aby strategia wyuczona na jednym była skuteczna na drugim. Fakt, że na zbiorze testowym średnia strategia jest jednak dochodowa, sugeruje jednak że podobieństwa są, jednak niewyraźne. Co więcej, dobry wynik na jednym zbiorze testowym nie gwarantują dobrego wyniku na innym zbiorze testowym. Ze względu na te niejasności kolejne badania przeprowadzono porównując głowni wyniki na zbiorze treningowym.
+ 
+\begin{figure}[h]
+\caption{Dziłanie algorytmu z różnymi wartościami krzyżowania}
+\centering
+\label{wykresKrzyzowanie}
+\begin{tikzpicture}
 
+\begin{axis}[ylabel near ticks, xlabel near ticks, ylabel=zysk na zbiorze treningowym, xlabel=szansa na krzyżowanie]
+\addplot 
+plot [error bars/.cd, y dir = both, y explicit]
+table [col sep = semicolon, x index=0, y index=1, y error index=2] {crossingResults1.csv};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
 
+Testy jednak dowodzą, że krzyżowanie, mimo że nie tak kluczowe, wpływa na poprawę wyników. Na wykresie \ref{wykresKrzyzowanie}, można zauważyć tę zależność.
 
+Przebadano wszystkie operatory mutacji osobno. Z wykresów działania z różnymi wartościami mutacji wynika, że każdy ma swoją funkcję. Obecność trzech z nich bezpośrednio poprawia wynik, a oba operatory wpływające na wysokość drzewa są niezbędne do utrzymania pożądanej jego wysokości. Przedstawione wykresy przedstawiają działanie algorytmu z różnymi wartościami kolejnych operatorów mutacji, podczas gdy te aktualnie niebadane są ustawione na 5\%.
 
+\begin{figure}[h]
+\centering
+\caption{Działanie algorytmu z różnymi parametrami mutacji}
+\label{wykresyMutacja}
+\begin{tikzpicture}
+\begin{groupplot}[ group style={group size= 2 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.45\textwidth]
 
+\nextgroupplot[align=center, title={\scriptsize Działanie algorytmu z różnymi \\ \scriptsize szansami na mutację węzła wewnętrznego}, ylabel=zysk na zbiorze treningowym, xlabel=szansa na mutację]
+\addplot 
+plot [error bars/.cd, y dir = both, y explicit]
+table [col sep = semicolon, x index=0, y index=1, y error index=2] {mutation1Results.csv};
+ 
+\nextgroupplot[align=center, title={\scriptsize Działanie algorytmu z różnymi \\ \scriptsize szansami na mutację liścia}, ylabel=zysk na zbiorze treningowym, xlabel=szansa na mutację]
+\addplot 
+plot [error bars/.cd, y dir = both, y explicit]
+table [col sep = semicolon, x index=0, y index=1, y error index=2] {mutation4Results.csv};
 
+\nextgroupplot[align=center, title={\scriptsize Działanie algorytmu z różnymi \\ \scriptsize szansami na obcięcie drzewa}, ylabel=zysk na zbiorze treningowym, xlabel=szansa na mutację]
+\addplot 
+plot [error bars/.cd, y dir = both, y explicit]
+table [col sep = semicolon, x index=0, y index=1, y error index=2] {mutation2Results.csv};
 
+\nextgroupplot[align=center, title={\scriptsize Działanie algorytmu z różnymi \\ \scriptsize szansami na wzrost drzewa}, ylabel=zysk na zbiorze treningowym, xlabel=szansa na mutację]
+\addplot 
+plot [error bars/.cd, y dir = both, y explicit]
+table [col sep = semicolon, x index=0, y index=1, y error index=2] {mutation3Results.csv};
+\end{groupplot}
+\end{tikzpicture}
+\end{figure}
 
+Na wykresach \ref{wykresyMutacja} widoczna jest nieregularność. Wynika ona z faktu, że nawet wielokrotne powtórzone badania cechują się dużą zmiennością wyników. Widoczna jest jednak przydatność operatorów w dopasowywaniu osobników do danych treningowych. Na wykresach prezentujących wpływ mutacji liścia czy węzła wewnętrznego otrzymywane wyniki są ewidentnie niższe gdy dany operator nie jest używany. W przypadku kolejnych dwóch operatorów mutacji otrzymywane wyniki są niepewne. Operatory te mają jednak rolę w kontroli wysokości drzewa strategii. Widoczne to jest na wykresach prezentujących średnią wysokość drzewa w kolejnych generacjach \ref{wykresyWysokosc1}.
 
+\begin{figure}[h]
+\center
+\caption{Działanie operatorów modyfikujących wysokość drzewa}
+\label{wykresyWysokosc1}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size= 1 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.8\textwidth]
+\nextgroupplot[title=Działanie algorytmu bez operatora skracania drzewa dla podanej wysokości = 5, ylabel near ticks, xlabel near ticks,  ylabel=średnia wysokość drzewa strategii, xlabel=numer generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {treeSize1.csv};
 
+\nextgroupplot[title=Działanie algorytmu bez operatora zwiększania drzewa dla podanej wysokości = 5, ylabel near ticks, xlabel near ticks,  ylabel=średnia wysokość drzewa strategii, xlabel=numer generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {treeSize2.csv};
 
+\end{groupplot}
+\end{tikzpicture}
+\end{figure}
 
+\section {Wysokość drzewa}
+
+Wysokość drzewa ma ewidentny wpływ na wyniki na zbiorze treningowym. Na wykresach \ref{wykresWysokosc3} można zauważyć, że średnia wysokość drzewa wszystkich osobników w populacji jest odwrotnie zależna od ich średniej oceny. Podobnej zależności nie ma w stosunku do osobnika najlepszego, którego ocena stopniowo pnie się do góry mimo zmian w wysokości drzewa.
+
+Na wykresach \ref{wykresWysokosc3} można też zauważyć, że podczas gdy zastosowane ograniczenie wysokości drzewa dobrze ogranicza jego wartość maksymalną, to średnia wysokość może mieć tendencję do spadku. Oczywiście takie było założenie, zgodnie z literaturą mniejsze drzewa mają większe możliwości generalizacji. Spadek wysokości drzewa jest więc teoretycznie pozytywnym zjawiskiem, jednak nie występuje on zawsze - w niektórych przebiegach algorytmu wysokość drzewa utrzymuje się blisko wartości maksymalnej \ref{wykresWysokość4}.
+
+\begin{figure}[h]
+\caption {Zależność pomiędzy średnią oceną osobników a średnią ich wysokością}
+\label{wykresWysokosc3}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size= 1 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.8\textwidth]
+\nextgroupplot[title=Średnia ocena osobników wraz z liczbą generacji, ylabel=średni zysk na zbiorze treningowym, xlabel=numer generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {treeSize3.csv};
+
+\nextgroupplot[title=Średnia wysokość drzewa wraz z liczbą generacji, ylabel=średnia wysokość drzewa, xlabel=numer generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=4] {treeSize3.csv};
+\end{groupplot}
+\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Średnia wysokość drzewa utrzymująca się w pobliżu maksymalnej = 5}
+\centering
+\label{wykresWysokosc4}
+\begin{tikzpicture}
+\begin{axis}[ylabel near ticks, xlabel near ticks,  ylabel=średnia wysokość drzewa strategii, xlabel=numer generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=4] {treeSize3.csv};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
 
 
 

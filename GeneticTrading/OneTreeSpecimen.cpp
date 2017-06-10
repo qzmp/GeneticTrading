@@ -61,3 +61,8 @@ int OneTreeSpecimen::getSize()
 {
 	return strategyTree.getSize();
 }
+
+int OneTreeSpecimen::getHeight()
+{
+	return strategyTree.getHeight();
+}

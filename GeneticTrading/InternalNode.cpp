@@ -210,6 +210,13 @@ int InternalNode::getSize()
 	return 1 + left->getSize() + right->getSize();
 }
 
+int InternalNode::getHeight()
+{
+	int leftHeight = 1 + left->getHeight();
+	int rightHeight = 1 + right->getHeight();
+	return leftHeight > rightHeight ? leftHeight : rightHeight;
+}
+
 void InternalNode::writeLatex(stringstream & ss)
 {
 	isAndOperator ? ss << "[.AND" : ss << "[.OR";

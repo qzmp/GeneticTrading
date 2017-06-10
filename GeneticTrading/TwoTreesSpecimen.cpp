@@ -76,3 +76,8 @@ int TwoTreesSpecimen::getSize()
 	return 0;
 }
 
+int TwoTreesSpecimen::getHeight()
+{
+	return 0;
+}
+

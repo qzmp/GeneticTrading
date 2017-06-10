@@ -25,5 +25,6 @@ public:
 	virtual string toLatex() = 0;
 
 	virtual int getSize() = 0;
+	virtual int getHeight() = 0;
 };
 

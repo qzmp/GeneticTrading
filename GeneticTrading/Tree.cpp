@@ -99,6 +99,11 @@ int Tree::getSize()
 	return rootNode->getSize();
 }
 
+int Tree::getHeight()
+{
+	return rootNode->getHeight();
+}
+
 unique_ptr<Tree> Tree::crossLeft(const Tree& other)
 {
 	unique_ptr<Tree> child = make_unique<Tree>(Tree(*this));

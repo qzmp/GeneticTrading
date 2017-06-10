@@ -29,11 +29,14 @@ class DataSet
 
 	int findStartIndex(string & filename, DateTime & start);
 
+
 public:
 	DataSet();
+	DataSet(const DataSet& other);
 	~DataSet();
 
 	int loadData(string & filename, DateTime & start, DateTime & end, IndicatorHolder & indicatorObjects);
+	int loadTickData(string & filename);
 
 	int getSize();
 
@@ -45,6 +48,8 @@ public:
 
 	DateTime getStart();
 	DateTime getEnd();
+
+	string getName();
 
 };
 

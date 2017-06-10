@@ -34,6 +34,7 @@ public:
 	int getMaxHeight();
 
 	int getSize();
+	int getHeight();
 
 	unique_ptr<Tree> crossLeft(const Tree& other);
 	unique_ptr<Tree> crossRight(const Tree& other);

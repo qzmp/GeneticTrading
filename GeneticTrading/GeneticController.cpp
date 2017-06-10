@@ -4,7 +4,7 @@
 
 void GeneticController::generateNewPopulation(MutationChances &mt, IndicatorHolder& indicators, DataSet &dataSet, int treeHeight, int size)
 {
-	population = unique_ptr<Population>(new Population(&dataSet, size));
+	population = unique_ptr<Population>(new Population(size));
 	population->generateRandom(mt, indicators, treeHeight);
 	history = list<vector<double>>();
 }
@@ -29,7 +29,7 @@ void GeneticController::createFileStream(MutationChances &mt, DataSet &ds, int p
 
 void GeneticController::saveCurrentRatings()
 {
-	vector<double> h = { population->getAverageRating(), population->getBestRating(), population->getAvgSize() };
+	vector<double> h = { population->getAverageRating(), population->getBestRating(), population->getAvgSize(), population->getAvgHeight() };
 	history.push_back(h);
 }
 
@@ -37,11 +37,12 @@ void GeneticController::writeHistory()
 {
 	if (fileStream.is_open())
 	{
-		int i = 1;
+		int i = 0;
 		for (auto it = history.begin(); it != history.end(); it++)
 		{
 			fileStream << i << ";" << it->operator[](0) << ";" << it->operator[](1);
 			fileStream << ";" << it->operator[](2);
+			fileStream << ";" << it->operator[](3);
 			fileStream << "\n";
 			i++;
 		}
@@ -60,6 +61,7 @@ GeneticController::GeneticController(double tourneySize, double crossingChance, 
 GeneticController::GeneticController(const GeneticController & other) 
 	: GeneticController(other.tourneySize, other.crossingChance, other.mt, other.indicators, other.dataSet, other.treeHeight, other.popSize, other.generationCount)
 {
+	this->tourneySize = other.tourneySize;
 	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
 	createFileStream(mt, dataSet, popSize);
 }
@@ -75,7 +77,7 @@ unique_ptr<Specimen> GeneticController::startEvolution()
 		nextGeneration();
 	}
 	
-	population->rateAll();
+	population->rateAll(this->treeHeight, this->dataSet);
 	saveCurrentRatings();
 	writeHistory();
 	Backtester bt;
@@ -85,7 +87,7 @@ unique_ptr<Specimen> GeneticController::startEvolution()
 
 void GeneticController::nextGeneration()
 {
-	population->rateAll();
+	population->rateAll(this->treeHeight, this->dataSet);
 	saveCurrentRatings();
 	population.swap(population->commenceCrossing(tourneySize, crossingChance));
 	population->mutateAllSpecimen();
@@ -140,6 +142,13 @@ DataSet* GeneticController::getDataSet()
 
 void GeneticController::reset()
 {
+	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
+	createFileStream(mt, dataSet, popSize);
+}
+
+void GeneticController::setDataSet(DataSet & dataSet)
+{
+	this->dataSet = dataSet;
 	generateNewPopulation(mt, indicators, dataSet, treeHeight, popSize);
 	createFileStream(mt, dataSet, popSize);
 }

@@ -26,7 +26,7 @@ int Population::tourney(vector<int>& tourneyGroup)
 	return bestPos;
 }
 
-Population::Population(DataSet * dataSet, int maxSize) : dataSet(dataSet), ratings(maxSize)
+Population::Population(int maxSize) : ratings(maxSize)
 {
 	specimens.reserve(maxSize);
 }
@@ -54,20 +54,20 @@ unique_ptr<Specimen> Population::select(int tourneySize)
 	return specimens[tourney(randomizeTourneyGroup(tourneySize))]->clone();
 }
 
-void Population::rateAll()
+void Population::rateAll(int treeHeight, DataSet & dataSet)
 {
 	ratings = vector<double>(specimens.size());
 	Backtester::TransactionData transactionData;
 	for (int i = 0; i < specimens.size(); i++)
 	{
-		transactionData = backtester.backtest(*dataSet, specimens[i].get());
-		ratings[i] = transactionData.getTotalPipGain();
+		transactionData = backtester.backtest(dataSet, specimens[i].get());
+		ratings[i] = treeHeight * transactionData.getPipGainWithProvision(40) / max(treeHeight, specimens[i].get()->getHeight());
 	}
 }
 
 unique_ptr<Population> Population::commenceCrossing(int tourneySize, double crossingChance)
 {
-	unique_ptr<Population> newPopulation = make_unique<Population>(dataSet, specimens.size());
+	unique_ptr<Population> newPopulation = make_unique<Population>(specimens.size());
 	shared_ptr<Specimen> firstSpecimen, secondSpecimen;
 	for (int i = 0; i < specimens.size(); i += 2)
 	{
@@ -129,10 +129,10 @@ double Population::getAverageRating()
 	return accumulate(ratings.begin(), ratings.end(), 0.0) / ratings.size();
 }
 
-DataSet * Population::getDataSet()
-{
-	return dataSet;
-}
+//DataSet * Population::getDataSet()
+//{
+//	return dataSet;
+//}
 
 double Population::getAvgSize()
 {
@@ -141,5 +141,15 @@ double Population::getAvgSize()
 	{
 		sum += spec->getSize();
 	}
-	return sum / specimens.size();
+	return (double)sum / specimens.size();
+}
+
+double Population::getAvgHeight()
+{
+	int sum = 0;
+	for (auto& spec : specimens)
+	{
+		sum += spec->getHeight();
+	}
+	return (double)sum / specimens.size();
 }

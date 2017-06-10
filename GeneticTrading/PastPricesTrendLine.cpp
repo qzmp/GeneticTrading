@@ -7,7 +7,9 @@ vector<pair<int,double>> PastPricesTrendLine::findLocalOptima(list<double>& past
 	vector<pair<int,double>> result;
 
 	bool previousAscending = false;
+	bool previousDescending = false;
 	bool ascending = false;
+	bool descending = false;
 	double lastPrice;
 
 	list<double>::reverse_iterator rit;
@@ -16,22 +18,27 @@ vector<pair<int,double>> PastPricesTrendLine::findLocalOptima(list<double>& past
 	while (result.size() < 2 && rit != pastPrices.rend())
 	{
 		previousAscending = ascending;
-		if(rit != pastPrices.rbegin())
+		previousDescending = descending;
+		if (rit != pastPrices.rbegin())
+		{
 			ascending = *rit - lastPrice > 0;
+			descending = *rit - lastPrice < 0;
+		}
 		if (position > 2)
 		{
 			if (max)
 			{
-				if (!ascending && previousAscending)
+				if (descending && previousAscending || (!ascending && !descending && !previousAscending && !previousDescending))
 				{
 					result.emplace_back(position, *rit);
 				}
 			}
 			else
-				if (ascending && !previousAscending)
+				if (ascending && !previousAscending || (!ascending && !descending && !previousAscending && !previousDescending))
 				{
 					result.emplace_back(position, *rit);
 				}
+
 		}
 		lastPrice = *rit;
 		rit++;

@@ -11,7 +11,8 @@ public:
 	{
 		friend class Backtester;
 	private:
-		int totalPipGain;
+		int gains;
+		int losses;
 
 		list<double> buyPrices;
 		list<double> sellPrices;
@@ -20,10 +21,13 @@ public:
 		int badTransactionCount;
 
 	public:
-		TransactionData() : totalPipGain(0), goodTransactionCount(0), badTransactionCount() {};
+		TransactionData() : gains(0), losses(0), goodTransactionCount(0), badTransactionCount(0) {};
 		~TransactionData() {};
 
-		int getTotalPipGain();
+		int getPipGainWithProvision(int provision);
+		int getTotalPipGain();	
+		int getGains();
+		int getLosses();
 		int getTransactionCount();
 		int getGoodTransactionCount();
 		int getBadTransactionCount();
@@ -38,6 +42,7 @@ private:
 	bool sold;
 	int priceToPips(double price);
 	int processTick(double currentPrice, map<shared_ptr<Indicator>, double> & indicatorValues, const Specimen* strategy);
+	int provision;
 
 public:
 	
@@ -45,4 +50,5 @@ public:
 	~Backtester();
 
 	TransactionData & backtest(DataSet & dataSet, const Specimen* strategy);
+	TransactionData & backtestTickData(DataSet & dataSet, const Specimen* strategy);
 };

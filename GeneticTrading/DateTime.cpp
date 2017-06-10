@@ -59,6 +59,14 @@ DateTime::DateTime()
 {
 }
 
+DateTime::DateTime(int day, int month, int year, int hour, int minute, int second) : day(day), month(month), year(year), hour(hour), minute(minute), second(second)
+{
+}
+
+DateTime::DateTime(int day, int month, int year) :day(day), month(month), year(year), hour(0), minute(0), second(0)
+{
+}
+
 DateTime::DateTime(string DateTime)
 {
 	convertDateTime(DateTime);

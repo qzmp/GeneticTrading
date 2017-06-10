@@ -30,5 +30,6 @@ public:
 	string toLatex();
 
 	int getSize();
+	int getHeight();
 };
 

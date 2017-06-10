@@ -14,19 +14,34 @@ class Controller
 {
 private:
 	double countStandardDeviation(list<int>& values);
+	vector<double> countQuartiles(list<int> & values);
+	double countMedian(list<int> & values);
+
+	
+
 public:
 	Controller();
 	~Controller();
 
-	void testMutation(GeneticController gt, double min, double max, double step);
-	void testPopSize(GeneticController gt, double min, double max, double step);
-	void testGenCount(GeneticController gt, double min, double max, double step);
-	void testMaxTreeSize(GeneticController gt, double min, double max, double step);
-	void testCrossChance(GeneticController gt, double min, double max, double step);
-	void testTourneySize(GeneticController gt, double min, double max, double step);
-	void testParams(GeneticController& gt);
+	void testMutation(GeneticController gt, double min, double max, double step, DataSet & testingSet);
+	void testPopSize(GeneticController gt, double min, double max, double step, DataSet & testingSet);
+	void testGenCount(GeneticController gt, double min, double max, double step, DataSet & testingSet);
+	void testMaxTreeSize(GeneticController gt, double min, double max, double step, DataSet & testingSet);
+	void testCrossChance(GeneticController gt, double min, double max, double step, DataSet & testingSet);
+	void testTourneySize(GeneticController gt, double min, double max, double step, DataSet & testingSet);
+	void testParams(GeneticController& gt, DataSet & testingSet);
 
-	void runXTimes(GeneticController& gt, int count, ofstream& filestream, double testedValue);
+	vector<DataSet> getDataSets(IndicatorHolder & indicators);
+	void testDataSets(GeneticController & gt, vector<DataSet> & dataSets);
+	void testDataSet(GeneticController & gt, vector<DataSet> & dataSets, ofstream & filestream);
+
+	void runXTimes(GeneticController& gt, int count, ofstream& filestream, double testedValue, DataSet & testingSet);
+
+	void test2(GeneticController& gt, string& filePrefix, ofstream & summaryStream);
+	void runXTimes2(GeneticController & gt, int count, vector<DataSet> & testingSets, string & filePrefix, ofstream & summaryFile);
+
+	vector<vector<DataSet>> testingSets;
+	vector<DataSet> trainingSet;
 };
 
 int main();

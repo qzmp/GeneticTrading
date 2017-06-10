@@ -12,15 +12,13 @@ private:
 	vector<unique_ptr<Specimen>> specimens;
 	vector<double> ratings;
 
-	DataSet *dataSet;
-
 	Backtester backtester;
 	
 	vector<int> randomizeTourneyGroup(int size);
 	int tourney(vector<int>& tourneyGroup);
 
 public:
-	Population(DataSet *dataSet, int maxSize);
+	Population(int maxSize);
 	//Population(const Population &other);
 	~Population();
 
@@ -28,7 +26,7 @@ public:
 
 	unique_ptr<Specimen> select(int tourneySize);
 	
-	void rateAll();
+	void rateAll(int treeHeight, DataSet & dataSet);
 	unique_ptr<Population> commenceCrossing(int tourneySize, double crossingChance);
 	void mutateAllSpecimen();
 
@@ -38,9 +36,10 @@ public:
 	double getBestRating();
 	double getAverageRating();
 
-	DataSet* getDataSet();
+	//DataSet* getDataSet();
 	MutationChances* getMutationChances();
 
 	double getAvgSize();
+	double getAvgHeight();
 };
 
