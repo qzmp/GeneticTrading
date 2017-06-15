@@ -51,7 +51,7 @@ void Population::generateRandom(MutationChances & mt, IndicatorHolder& indicator
 
 unique_ptr<Specimen> Population::select(int tourneySize)
 {
-	return specimens[tourney(randomizeTourneyGroup(tourneySize))]->clone();
+	return specimens[tourney(randomizeTourneyGroup(tourneySize+1))]->clone();
 }
 
 void Population::rateAll(int treeHeight, DataSet & dataSet)

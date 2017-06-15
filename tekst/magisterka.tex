@@ -46,6 +46,7 @@
 \pgfplotsset{
         table/search path={results/},
     }
+\usepackage{pgfplotstable}
 
 \begin{document}
 
@@ -340,7 +341,7 @@ ROC opisuje zmianę ceny aktywa w czasie. Jest oscylatorem, co oznacza, że jest
 \label{fig:data}
 \end{figure}
 
-Wszystkie badanie przeprowadzono na Forexie, ze względu na wspomniane już zalety. Dodatkową motywacją było przetestowanie wariantu sprawdzonego już modelu na zupełnie innych danych. Dane w formacie .csv zostały pobrane z portalu Dukascopy \cite{data}. Ich początek jest widoczny na rysunku \ref{fig:data}. Można zauważyć, że w tabeli znajdują się ceny otwarcia, zamknięcia a także maksymalna i minimalna w danym okresie. 
+Wszystkie badanie przeprowadzono na Forexie, ze względu na wspomniane już zalety. Dodatkową motywacją było przetestowanie wariantu sprawdzonego już modelu na zupełnie innych danych. Dane w formacie .csv zostały pobrane z portalu Dukascopy \cite{data}. Ich początek jest widoczny na rysunku \ref{fig:data}. Można zauważyć, że w tabeli znajdują się ceny otwarcia, zamknięcia a także maksymalna i minimalna w danym okresie. W preprocessingu usunięto jedynie okresy, w których giełda była zamknięta. Normalizacja danych nie była potrzebna, bo wykorzystywane wskaźniki opierają się głównie na wzajemnym porównaniu.
 
 Bardzo ważnym aspektem praktycznie nie poruszonym w literaturze jest sposób, w jaki otrzymywany jest zysk na historycznych danych. Ta wartość jest podstawą do właściwej oceny osobnika i jest niezbędna do zbudowania działającego algorytmu. W zastosowanej implementacji wzorowano się na sposobie testowania z programu MetaTrader 5 opisanym w artykule \cite{metatrader}. Metatrader jest uniwersalną platformą do handu na różnych rynkach i udostępnia zaawansowane opcje konstruowanie jak i testowania robotów handlowych - czyli programów podejmujących autonomiczne decyzje o transakcjach. 
 
@@ -352,7 +353,7 @@ Zysk liczony jest w punktach zwanych pipsami częściowymi. Pips to określenie 
 
 Ważne w symulacji jest także wzięcie pod uwagę kosztów transakcji. W wykorzystywanych danych nie jest zapisany aktualny spread, który zależy od wybranego pośrednika, dlatego przyjęto stałą wartość równą 40 pipsom częściowym. Również wykorzystywana w w pracy BiM, przewyższa jego aktualną wartość wynoszącą około 12 pipsów częściowych. W literaturze wspomniane zostało jednak, że wyższe koszty transakcji podczas uczenia mogą powodować tworzenie bardziej ostrożnych strategii. 
 
-W ocenie osobnika uwzględnia się także aktualną wysokość drzewa. Poprzednie badania twierdziły, że nagradzanie prostrzych startagii, czyli takich reprezentowanych przez mniejsze drzewa poprawia ostateczne wyniki. Oczywiście jest wiele sposobów na branie pod uwagę tego czynniki. Zastosowano rozwiązanie z literatury:
+W ocenie osobnika uwzględnia się także aktualną wysokość drzewa. Poprzednie badania twierdziły, że nagradzanie prostszych strategii, czyli takich reprezentowanych przez mniejsze drzewa poprawia ostateczne wyniki. Oczywiście jest wiele sposobów na branie pod uwagę tego czynniki. Zastosowano rozwiązanie z literatury:
 
 \[P = \frac{H * Gain}{max(H, H_r)}\]
 Gdzie:
@@ -403,15 +404,58 @@ Istnieje więc 9 hiperparametrów wpływających na działanie algorytmu
 \item Szansa na krzyżowanie
 \end{itemize}
 
-\chapter {Testowanie hiperparametrów}
+\chapter {Wpływ operatorów na działanie algorytmu}
 
-Aby zapewnić działanie algorytmu bliskie optymalnemu, konieczne jest ustalenie wartości hiperparametrów. Ze względu na fakt, że wszystkie mogą przyjmować szeroki zakres wartości, a dodatkowo mogą wpływać na siebie nawzajem, nie jest to łatwe zadanie. Testy przeprowadzano uruchamiając algorytm dziesięciokrotnie ze zmieniającymi się wartościami parametrów. Na początku parametry były zmieniane o duże wartości, które wraz z czasem były zmniejszane aby bardziej wyizolować parametry optymalne.
+Aby zaproponować ewenutalne metody poprawy działanie algorytmu, konieczne jest przeprowadzenie badań ujawniających wpływ różnych operatorów na jego działanie. Częścią tego działanie jest dobór hiperparametrów. Hiperparametry wpływają na efektywność algorytmu, dlatego konieczne jest ustalenie ich wartości tak, aby zapewnić działanie algorytmu bliskie optymalnemu. Parametry mogą przyjmować szeroki zakres wartości, a dodatkowo mogą wpływać na siebie nawzajem. W standardowym problemie, takim jak kolorowanie grafu, mamy jednak tą zaletę, że możemy w każdym momencie łatwo zweryfikować działanie algorytmu, uruchamiając go na różnych danych treningowych. W przypadku układania strategii inwestycyjnej, nawet idealne działanie na danych treningowych nie wystarczy. Jak udowadniają przeprowadzone testy, często średni zysk na danych testowych jest odwrotnie zależny od zysku na danych treningowych. Oznacza to, że gorsze dopasowanie do danych treningowych jest później nagradzane. 
 
-Celem tego rozdziału jest również przedstawienie wpływu hiperparametrów na działanie algorytmu, co może być pomocne przy ponownej implementacji lub przy próbach ulepszenia działania.
+Testowanie działania na samych danych treningowych jest jednak również przydatne. Dzięki temu można ocenić działanie badanego operatora w trakcie ewolucji i jego wpływ na proces optymalizacji strategii.
+
+Strategia tworzona z wykorzystaniem danych treningowych za każdym razem będzie trochę inna. Trudno jest więc ocenić, która będzie miała największe możliwości generalizacji. Konieczne jest zatem wielokrotne uruchamianie algorytmu i uśrednianie wyników, żeby na ich podstawie podjąć decyzję.
+
+Przetestowano wpływ hiperparametrów na wyniki na zbiorach treningowych jak i testowych, w celu odkrycia wzorców, mogących posłużyć do ewentualnej poprawy działania algorytmu.
+
+\section {Wykorzystywane dane}
+
+Testując działanie algorytmu wykorzystano sześć szeregów czasowych. Każdy z nich obejmował około dwóch tygodni \ref{data}.
+Procedura testowania polegała na wyuczeniu strategii na jednym z szeregów (pierwszym, drugim lub trzecim) a następnie przetestowanie jej na 3 kolejnych szeregach. Oprócz uruchamiania algorytmu na różnych zbiorach, każde badanie powtarzano dwustukrotnie. Dopiero taka liczbe pozwalała na otrzymanie wystarczająco stałych wyników. Otrzymane wyniki były uśredniane, aby podjąć decyzję o działaniu algorytmu. 
+
+\begin{figure}[h]
+\centering
+\caption{Szeregi czasowe wykorzystywane przy testach}
+\label{data}
+\begin{tikzpicture}
+\begin{groupplot}[ group style={group size= 2 by 3, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.45\textwidth, no markers]
+
+\nextgroupplot[align=center, title={\scriptsize 1.1.2016 00:00:00 - 15.1.2016 00:00:00}, ylabel=cena zamknięcia, xlabel=liczba okresów]
+\addplot 
+table [col sep = semicolon,x index = 0, y index=4] {data1.csv};
+
+\nextgroupplot[align=center, title={\scriptsize 15.1.2016 00:00:00 - 1.2.2016 00:00:00},ylabel=cena zamknięcia, xlabel=liczba okresów]
+\addplot 
+table [col sep = semicolon,x index = 0, y index=4] {data2.csv};
+
+\nextgroupplot[align=center, title={\scriptsize 1.2.2016 00:00:00 - 15.2.2016 00:00:00}, ylabel=cena zamknięcia, xlabel=liczba okresów]
+\addplot 
+table [col sep = semicolon,x index = 0, y index=4] {data3.csv};
+
+\nextgroupplot[align=center, title={\scriptsize 15.2.2016 00:00:00 - 1.3.2016 00:00:00}, ylabel=cena zamknięcia, xlabel=liczba okresów]
+\addplot 
+table [col sep = semicolon,x index = 0, y index=4] {data4.csv};
+
+\nextgroupplot[align=center, title={\scriptsize 1.3.2016 00:00:00 - 15.3.2016 00:00:00}, ylabel=cena zamknięcia, xlabel=liczba okresów]
+\addplot 
+table [col sep = semicolon,x index = 0, y index=4] {data5.csv};
+
+\nextgroupplot[align=center, title={\scriptsize 15.3.2016 00:00:00 - 1.4.2016 00:00:00}, ylabel=cena zamknięcia, xlabel=liczba okresów]
+\addplot 
+table [col sep = semicolon,x index = 0, y index=4] {data6.csv};
+ 
+\end{groupplot}
+\end{tikzpicture}
+\end{figure}
 
 \section {Początkowe wyniki}
-Początkowe wyniki, z parametrami wybranymi intuicyjnie, są porównywalne do tych z literatury. Utworzone strategie mają dobrze dopasowują się do zbioru treningowego, otrzymując stały, dodatni wynik. Na zbiorze testowym ujawnia się jednak bardzo duże zróżnicowanie strategii. Wiele z nich jest stratnych, jednak co ciekawe średni zwrot jest pozytywny.
-Do przeprowadzenia badania i testów hiperparametrów wykorzystano okres od 1 stycznia 2016 roku do 15 stycznia, co obejmuje 1300 10-minutowych okresów. Jako zbiór testowy wykorzystano okres o takiej samej długości, występujący miesiąc później.
+Początkowe wyniki, z parametrami wybranymi intuicyjnie, są porównywalne do tych z literatury. Utworzone strategie dobrze dopasowują się do zbioru treningowego, otrzymując stały, dodatni wynik. Na zbiorze testowym ujawnia się jednak bardzo duże zróżnicowanie strategii. Wiele z nich jest stratnych, jednak średni zwrot jest pozytywny.
 
 Do otrzymania początkowych wyników wykorzystano następujące wartości parametrów:
 \begin{itemize}
@@ -423,38 +467,111 @@ Do otrzymania początkowych wyników wykorzystano następujące wartości parame
 \item Szansa na krzyżowanie = 20\%
 \end{itemize}
 
-\begin{table}
+\begin{table}[h]
 \center
-\caption{Początkowe wyniki na zbiorze treningowym}
+\caption{Początkowe wyniki na szeregach treningowych}
 \label{wyniki1train}
 \begin{tabular}{|l|l|}
   \hline
   Zysk w pipsach& Odchylenie standardowe zysku\\
   \hline
-2451.8 & 362.811 \\
+4258.9 & 705.8 \\
   \hline
 \end{tabular} 
 \end{table}
 
-\begin{table}
+\begin{table}[h]
 \center
-\caption{Poczatkowe wyniki na zbiorze testowym}
+\caption{Poczatkowe wyniki na szeregach testowych}
 \label{wyniki1test}
 \begin{tabular}{|l|l|}
   \hline
   Zysk w pipsach& Odchylenie standardowe zysku\\
   \hline
-810.7 & 4140.06 \\
+225.4 & 2067 \\
   \hline
 \end{tabular} 
 \end{table}
+
+\section {Wysokość drzewa}
+
+Ustalona wysokość drzewa ma bardzo istotny wpływ na działanie algorytmu. Jest kluczowa w ograniczaniu dopasowania do danych treningowych. Badania potwierdzają, że ta cecha w największym stopniu wpływa na osiągane wyniki na zbiorze testowym. 
+
+\subsection{Wysokość drzewa na danych treningowych}
+
+Wysokość drzewa ma ewidentny wpływ na wyniki na zbiorze treningowym. Na wykresach \ref{wykresWysokosc3} można zauważyć, że średnia wysokość drzewa wszystkich osobników w populacji jest odwrotnie zależna od ich średniej oceny. Podobnej zależności nie ma w stosunku do osobnika najlepszego, którego ocena stopniowo pnie się do góry mimo zmian w wysokości drzewa.
+
+Na wykresach \ref{wykresWysokosc3} można też zauważyć, że podczas gdy zastosowane ograniczenie wysokości drzewa dobrze ogranicza jego wartość maksymalną, to średnia wysokość może mieć tendencję do spadku. Oczywiście takie było założenie, zgodnie z literaturą mniejsze drzewa mają większe możliwości generalizacji. Spadek wysokości drzewa jest więc teoretycznie pozytywnym zjawiskiem, jednak nie występuje on zawsze - w niektórych przebiegach algorytmu wysokość drzewa utrzymuje się blisko wartości maksymalnej \ref{wykresWysokosc4}.
+
+\begin{figure}[h]
+\caption {Zależność pomiędzy średnią oceną osobników a średnią ich wysokością}
+\label{wykresWysokosc3}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size= 1 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.8\textwidth]
+\nextgroupplot[title=Średnia ocena osobników wraz z liczbą generacji, ylabel=średni zysk na zbiorze treningowym, xlabel=numer generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {treeSize3.csv};
+
+\nextgroupplot[title=Średnia wysokość drzewa wraz z liczbą generacji, ylabel=średnia wysokość drzewa, xlabel=numer generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=4] {treeSize3.csv};
+\end{groupplot}
+\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Średnia wysokość drzewa utrzymująca się w pobliżu maksymalnej = 5}
+\centering
+\label{wykresWysokosc4}
+\begin{tikzpicture}
+\begin{axis}[ylabel near ticks, xlabel near ticks,  ylabel=średnia wysokość drzewa strategii, xlabel=numer generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=4] {treeSize4.csv};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Średnia ocena osobników na danych treningowych z różnym parametrem wysokości drzewa}
+\centering
+\label{wykresWysokoscSummary1}
+\begin{tikzpicture}
+\begin{axis}[ylabel near ticks, xlabel near ticks,  ylabel=średnia ocena strategii, xlabel=ustalona wysokość drzewa]
+\addplot
+ [error bars/.cd, y dir = both, y explicit]
+table [col sep = semicolon, x index=0, y index=1,  y error index=2] {treeSizeSummaryTrain.csv};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+Ostatecznie, wykres \ref{wykresWysokoscSummary1} pokazuje, że im im większy parametr wysokości drzewa, tym lepszy jest wynik na zbiorze treningowym. Oznacza to, że tworzone są bardziej skomplikowane strategie, lepiej dopasowujące się do danych. Wynik ten kontrastuje z poprzednimi wykresami prezentującymi ocenę osobników w trakcie działania algorytmu. 
+
+Gorsza ocena średniego osobnika może więc wynikać z faktu, że strategie reprezentowana przez większe drzewo są bardziej skomplikowane, więc trudniej jest je dopasować do danych. Większe możliwości pozwalają jednak najlepszym osobnikom osiągnąć poziomy przystosowania niedostępne dla tych mniej skomplikowanych.
+
+\subsection{Wysokość drzewa na danych testowych}
+
+Na danych testowych widoczna jest zupełnie odwrotna zależność niż na danych treningowych \ref{wykresWysokoscSummary2}. Najlepsze wyniki osiągają proste strategie, zbudowane z drzewa o wysokości jedynie 2. Mimo prostoty, takie strategie mają większe możliwości generalizacji. To stwierdzenie pojawiło się już w literaturze. Zastanawiające są dobre wyniki przy wysokości drzewa równej 1. Jest to sytuacja, w której strategia składa się jedynie z dwóch wskaźników połączonych operatorem logicznym.
+
+Wyniki sugerują, że konieczne jest unikanie dopasowania do zbioru treningowego.
+
+\begin{figure}[h]
+\caption{Średnia ocena osobników na danych testowych z różnym parametrem wysokości drzewa}
+\centering
+\label{wykresWysokoscSummary2}
+\begin{tikzpicture}
+\begin{axis}[ylabel near ticks, xlabel near ticks,  ylabel=średnia ocena strategii, xlabel=ustalona wysokość drzewa]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {treeSizeSummaryTest.csv};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
 
 \section{Krzyżowanie i mutacja}
 
 Operatory krzyżowania i mutacji są ze sobą silnie powiązane. W teorii spełniają tę samą funkcję, edytują osobniki w celu eksploracji i eksploatacji przestrzeni rozwiązań. Krzyżowanie odgrywa główną role w eksploatacji, ponieważ nie wprowadza żadnych nowych informacji do modelu - modyfikuje jedynie te strategie, które wcześniej powstały. Powinno więc poprzez łączenie już dosyć dobrze przystosowanych osobników, generować ich poprawione wersje. 
 
-Oba operatory mają jednak możliwości szybkiej i zdecydowanej zmiany osobnika tak, że jego przystosowanie zmienia się diametralnie. Już edycja jednego tylko liścia w drzewie strategii, może spowodować zmianę przystosowanie o tysiące pipsów. Wynika to z faktu, że wiele węzłów drzewa jest ze sobą powiązanych. Podczas gdy niektóre mogą być redundantne (na przykład połączone operatorem OR), to inne mają kluczowe znaczenie dla działania strategii. Na szczęście, nawet pogorszenie osobnika może pomóc wyjściu z lokalnego minimum poprzez wprowadzenie nowych genów.
-
+Oba operatory mają jednak możliwości szybkiej i zdecydowanej zmiany osobnika tak, że jego przystosowanie zmienia się diametralnie. Już edycja jednego tylko liścia w drzewie strategii, może spowodować zmianę przystosowania o tysiące pipsów. Wynika to z faktu, że wiele węzłów drzewa jest ze sobą powiązanych. Podczas gdy niektóre mogą być redundantne (na przykład połączone operatorem OR), to inne mają kluczowe znaczenie dla działania strategii. Na szczęście, nawet pogorszenie osobnika może pomóc wyjściu z lokalnego minimum poprzez wprowadzenie nowych genów.
 
 \begin{table}[h]
 \center
@@ -464,17 +581,30 @@ Oba operatory mają jednak możliwości szybkiej i zdecydowanej zmiany osobnika 
   \hline
   Zysk w pipsach & Odchylenie standardowe zysku\\
   \hline
-917.8 & 641.207 \\
+2222.5 & 726.207 \\
   \hline
 \end{tabular} 
 \end{table}
 
-Z dwóch operatorów mutacja jest ważniejsza. Podczas gdy sama mutacja bez krzyżowania osiąga podobne wyniki co przy zastosowaniu obu operatorów, to samo krzyżowanie nie ma takich samych możliwości dopasowania się do danych \ref{wynikiBezMutacji}. Wynika to z ograniczonych możliwości wprowadzania nowych informacji - mutacja jest jedynym operatorem, które może wprowadzić nowe dane w liściach, czyli takie, które wcześniej się jeszcze nie pojawiły w żadnej generacji.
+\begin{table}[h]
+\center
+\caption{Wyniki na zbiorze testowym bez mutacji}
+\label{wynikiBezMutacjiTest}
+\begin{tabular}{|l|l|}
+  \hline
+  Zysk w pipsach & Odchylenie standardowe zysku\\
+  \hline
+367 & 2124.4 \\
+  \hline
+\end{tabular} 
+\end{table}
 
-Co ciekawe, nie ma zauważalnej różnicy pomiędzy wynikami na zbiorze testowym. Oznacza to, że dobry wynik na zbiorze treningowym nie przekłada się dobrze na dobry wyniki na zbiorze testowym. Być może występuje zjawisko zbytniego dopasowania się do danych treningowym, a może oddzielne szeregi czasowe nie mają ze sobą tyle wspólnego, aby strategia wyuczona na jednym była skuteczna na drugim. Fakt, że na zbiorze testowym średnia strategia jest jednak dochodowa, sugeruje jednak że podobieństwa są, jednak niewyraźne. Co więcej, dobry wynik na jednym zbiorze testowym nie gwarantują dobrego wyniku na innym zbiorze testowym. Ze względu na te niejasności kolejne badania przeprowadzono porównując głowni wyniki na zbiorze treningowym.
+Z krzyżowania i mutacji, mutacja jest ważniejsza. Podczas gdy sama mutacja bez krzyżowania osiąga podobne wyniki co przy zastosowaniu obu operatorów, to samo krzyżowanie nie ma takich samych możliwości dopasowania się do danych \ref{wynikiBezMutacji}. Wynika to z ograniczonych możliwości wprowadzania nowych informacji - mutacja jest jedynym operatorem, które może wprowadzić nowe dane w liściach, czyli takie, które wcześniej się jeszcze nie pojawiły w żadnej generacji.
+
+Co ciekawe, gorszy wynik na zbiorze treningowym zdaje się przekładać na lepszy wynik na zbiorze testowym. Być może występuje zjawisko zbytniego dopasowania się do danych treningowych, a może oddzielne szeregi czasowe nie mają ze sobą tyle wspólnego, aby strategia wyuczona na jednym była skuteczna na drugim. Fakt, że na zbiorze testowym średnia strategia jest jednak dochodowa, sugeruje jednak że podobieństwa są, jednak niewyraźne. Co więcej, dobry wynik na jednym zbiorze testowym nie gwarantują dobrego wyniku na innym zbiorze testowym.
  
 \begin{figure}[h]
-\caption{Dziłanie algorytmu z różnymi wartościami krzyżowania}
+\caption{Działanie algorytmu z różnymi wartościami krzyżowania na szeregach treningowych}
 \centering
 \label{wykresKrzyzowanie}
 \begin{tikzpicture}
@@ -487,13 +617,29 @@ table [col sep = semicolon, x index=0, y index=1, y error index=2] {crossingResu
 \end{tikzpicture}
 \end{figure}
 
-Testy jednak dowodzą, że krzyżowanie, mimo że nie tak kluczowe, wpływa na poprawę wyników. Na wykresie \ref{wykresKrzyzowanie}, można zauważyć tę zależność.
+\begin{figure}[h]
+\caption{Działanie algorytmu z różnymi wartościami krzyżowania na szeregach testowych, wysokość drzewa = 2}
+\centering
+\label{wykresKrzyzowanieTest}
+\begin{tikzpicture}
+
+\begin{axis}[ylabel near ticks, xlabel near ticks, ylabel=zysk na zbiorze testowym, xlabel=szansa na krzyżowanie]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {crossingResultsTest.csv};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+Testy jednak dowodzą, że krzyżowanie, mimo że nie tak kluczowe, wpływa na poprawę wyników na zbiorach treningowych. Na wykresie \ref{wykresKrzyzowanie}, można zauważyć tę zależność. 
+Wpływ krzyżowania na danych testowych można ocenić dopiero po ograniczeniu maksymalnej wysokości drzewa {wykresKrzyzowanieTest}. Widoczny jest pozytywny wpływ działania krzyżowania.
+
+\subsection{Mutacja na danych treningowych}
 
 Przebadano wszystkie operatory mutacji osobno. Z wykresów działania z różnymi wartościami mutacji wynika, że każdy ma swoją funkcję. Obecność trzech z nich bezpośrednio poprawia wynik, a oba operatory wpływające na wysokość drzewa są niezbędne do utrzymania pożądanej jego wysokości. Przedstawione wykresy przedstawiają działanie algorytmu z różnymi wartościami kolejnych operatorów mutacji, podczas gdy te aktualnie niebadane są ustawione na 5\%.
 
 \begin{figure}[h]
 \centering
-\caption{Działanie algorytmu z różnymi parametrami mutacji}
+\caption{Działanie algorytmu z różnymi parametrami mutacji na danych treningowych}
 \label{wykresyMutacja}
 \begin{tikzpicture}
 \begin{groupplot}[ group style={group size= 2 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.45\textwidth]
@@ -524,7 +670,7 @@ table [col sep = semicolon, x index=0, y index=1, y error index=2] {mutation3Res
 Na wykresach \ref{wykresyMutacja} widoczna jest nieregularność. Wynika ona z faktu, że nawet wielokrotne powtórzone badania cechują się dużą zmiennością wyników. Widoczna jest jednak przydatność operatorów w dopasowywaniu osobników do danych treningowych. Na wykresach prezentujących wpływ mutacji liścia czy węzła wewnętrznego otrzymywane wyniki są ewidentnie niższe gdy dany operator nie jest używany. W przypadku kolejnych dwóch operatorów mutacji otrzymywane wyniki są niepewne. Operatory te mają jednak rolę w kontroli wysokości drzewa strategii. Widoczne to jest na wykresach prezentujących średnią wysokość drzewa w kolejnych generacjach \ref{wykresyWysokosc1}.
 
 \begin{figure}[h]
-\center
+\centering
 \caption{Działanie operatorów modyfikujących wysokość drzewa}
 \label{wykresyWysokosc1}
 \begin{tikzpicture}
@@ -541,39 +687,116 @@ table [col sep = semicolon, x index=0, y index=1] {treeSize2.csv};
 \end{tikzpicture}
 \end{figure}
 
-\section {Wysokość drzewa}
+\subsection{Mutacja na danych testowych}
 
-Wysokość drzewa ma ewidentny wpływ na wyniki na zbiorze treningowym. Na wykresach \ref{wykresWysokosc3} można zauważyć, że średnia wysokość drzewa wszystkich osobników w populacji jest odwrotnie zależna od ich średniej oceny. Podobnej zależności nie ma w stosunku do osobnika najlepszego, którego ocena stopniowo pnie się do góry mimo zmian w wysokości drzewa.
-
-Na wykresach \ref{wykresWysokosc3} można też zauważyć, że podczas gdy zastosowane ograniczenie wysokości drzewa dobrze ogranicza jego wartość maksymalną, to średnia wysokość może mieć tendencję do spadku. Oczywiście takie było założenie, zgodnie z literaturą mniejsze drzewa mają większe możliwości generalizacji. Spadek wysokości drzewa jest więc teoretycznie pozytywnym zjawiskiem, jednak nie występuje on zawsze - w niektórych przebiegach algorytmu wysokość drzewa utrzymuje się blisko wartości maksymalnej \ref{wykresWysokość4}.
+Analizując dane testowe trudno ocenić dziłanie różnych operatorów mutacji. Powtarza się trend małych zmian w zysku i ciągłych duzych odchyleń standardowych. Odchylenia nie zostały przedstawione na wykresach, bo uczyniłyby je nieczytelnymi. Wynoszą około 2000 pipsów, podczas gdy średnie wartości jedynie około 200.
 
 \begin{figure}[h]
-\caption {Zależność pomiędzy średnią oceną osobników a średnią ich wysokością}
-\label{wykresWysokosc3}
+\centering
+\caption{Działanie algorytmu z różnymi parametrami mutacji na danych testowych}
+\label{wykresyMutacja}
 \begin{tikzpicture}
-\begin{groupplot}[group style={group size= 1 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.8\textwidth]
-\nextgroupplot[title=Średnia ocena osobników wraz z liczbą generacji, ylabel=średni zysk na zbiorze treningowym, xlabel=numer generacji]
-\addplot 
-table [col sep = semicolon, x index=0, y index=1] {treeSize3.csv};
+\begin{groupplot}[ group style={group size= 2 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.45\textwidth]
 
-\nextgroupplot[title=Średnia wysokość drzewa wraz z liczbą generacji, ylabel=średnia wysokość drzewa, xlabel=numer generacji]
+\nextgroupplot[align=center, title={\scriptsize Działanie algorytmu z różnymi \\ \scriptsize szansami na mutację węzła wewnętrznego}, ylabel=zysk na zbiorze testowym, xlabel=szansa na mutację]
 \addplot 
-table [col sep = semicolon, x index=0, y index=4] {treeSize3.csv};
+table [col sep = semicolon, x index=0, y index=1] {mutation1Results - test.csv};
+ 
+\nextgroupplot[align=center, title={\scriptsize Działanie algorytmu z różnymi \\ \scriptsize szansami na mutację liścia}, ylabel=zysk na zbiorze testowym, xlabel=szansa na mutację]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {mutation4Results - test.csv};
+
+\nextgroupplot[align=center, title={\scriptsize Działanie algorytmu z różnymi \\ \scriptsize szansami na obcięcie drzewa}, ylabel=zysk na zbiorze testowym, xlabel=szansa na mutację]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {mutation2Results - test.csv};
+
+\nextgroupplot[align=center, title={\scriptsize Działanie algorytmu z różnymi \\ \scriptsize szansami na wzrost drzewa}, ylabel=zysk na zbiorze testowym, xlabel=szansa na mutację]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {mutation3Results - test.csv};
+\end{groupplot}
+\end{tikzpicture}
+\end{figure}
+
+
+\section {Liczba generacji i liczba osobników w populacji}
+
+Analizując wykresy przedstawiające działanie algorytmu z różnymi wielkościami populacji czy liczbą generacji \ref{wykresyWielkosc1}, nasuwa się stwierdzenie, że aby osiągnąć najlepszy wynik na zbiorze testowym, powinno się ograniczać wyniki na zbiorze treningowym. Oba parametry maja podobne działanie - umożliwiają na eksploracje większej przestrzeni rozwiązań, zwiększając  potencjalną liczbę osobników w trakcje ewolucji. Ten zysk jest jednak obarczony kosztem - zwiększanie populacji lub liczby generacji liniowo zwiększa złożoność obliczeniową algorytmu. Nie jest to problem w przypadku pojedynczego użycia algorytmu, bo 100 generacji dla populacji 200 osobników przebiega w około 12 sekund. Zwiększający się czas wykonania może być jednak uciążliwy w przypadku wielokrotnych uruchomień w celu testowania.
+
+Wyniki na dla liczby generacji równej 5 prawie odpowiadają przypadkowi, w którym wybierany jest najlepszy osobnik z losowej populacji. Nie świadczy to dobrze o algorytmie, sugerując że całe jego skomplikowanie jest redundantne. Jednak dla wysokości drzewa ustalonej na 2, optymalnej według poprzednich testów, otrzymane wyniki uzasadniają użycie algorytmu genetycznego i lepiej odpowiadają literaturze \ref{wykresyWielkosc2}. Tym razem, prawdopodobnie ze względu na ograniczenie potencjalnego dopasowanie do danych treningowych, do pewnego stopnia korzystne jest umożliwienie dłuższej pracy algorytmu, jak i dostarczenie większej liczby osobników.
+
+\begin{figure}[h]
+\centering
+\caption{Działanie algorytmu z różną liczbą generacji i wielkości populacji dla wielkości drzewa = 5}
+\label{wykresyWielkosc1}
+\begin{tikzpicture}
+\begin{groupplot}[ group style={group size= 2 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.45\textwidth]
+
+\nextgroupplot[align=center, title={\scriptsize Różne wielkości populacji \\ \scriptsize na zbiorze treningowym}, ylabel=zysk na zbiorze treningowym, xlabel=wielkość populacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {popSize1.csv};
+ 
+\nextgroupplot[align=center, title={\scriptsize Różne wielkości populacji \\ \scriptsize na zbiorze testowym}, ylabel=zysk na zbiorze testowym, xlabel=wielkość populacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {popSize1Test.csv};
+
+\nextgroupplot[align=center, title={\scriptsize Różna liczba generacji \\ \scriptsize na zbiorze treningowym}, ylabel=zysk na zbiorze treningowym, xlabel=liczba generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {genCount1.csv};
+
+\nextgroupplot[align=center, title={\scriptsize Różna liczba generacji \\ \scriptsize na zbiorze testowym}, ylabel=zysk na zbiorze testowym, xlabel=liczba generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {genCount1Test.csv};
 \end{groupplot}
 \end{tikzpicture}
 \end{figure}
 
 \begin{figure}[h]
-\caption{Średnia wysokość drzewa utrzymująca się w pobliżu maksymalnej = 5}
 \centering
-\label{wykresWysokosc4}
+\caption{Działanie algorytmu z różną liczbą generacji i wielkości populacji dla wielkości drzewa = 2}
+\label{wykresyWielkosc2}
 \begin{tikzpicture}
-\begin{axis}[ylabel near ticks, xlabel near ticks,  ylabel=średnia wysokość drzewa strategii, xlabel=numer generacji]
+\begin{groupplot}[ group style={group size= 2 by 2, horizontal sep=3cm,  vertical sep=3cm}, ylabel near ticks, xlabel near ticks, xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=5}, width=.45\textwidth]
+
+\nextgroupplot[align=center, title={\scriptsize Różne wielkości populacji \\ \scriptsize na zbiorze treningowym}, ylabel=zysk na zbiorze treningowym, xlabel=wielkość populacji]
 \addplot 
-table [col sep = semicolon, x index=0, y index=4] {treeSize3.csv};
-\end{axis}
+table [col sep = semicolon, x index=0, y index=1] {popSize2.csv};
+ 
+\nextgroupplot[align=center, title={\scriptsize Różne wielkości populacji \\ \scriptsize na zbiorze testowym}, ylabel=zysk na zbiorze testowym, xlabel=wielkość populacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {popSize2Test.csv};
+
+\nextgroupplot[align=center, title={\scriptsize Różna liczba generacji \\ \scriptsize na zbiorze treningowym}, ylabel=zysk na zbiorze treningowym, xlabel=liczba generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {genCount2.csv};
+
+\nextgroupplot[align=center, title={\scriptsize Różna liczba generacji \\ \scriptsize na zbiorze testowym}, ylabel=zysk na zbiorze testowym, xlabel=liczba generacji]
+\addplot 
+table [col sep = semicolon, x index=0, y index=1] {genCount2Test.csv};
+\end{groupplot}
 \end{tikzpicture}
 \end{figure}
+
+\section {Wyniki po dostosowaniu hiperparametrów}
+
+\begin{table}[h]
+\pgfplotstabletypeset[
+    col sep=semicolon,
+    string type,
+    columns/0/.style={column name=Name, column type={|l}},
+    columns/surname/.style={column name=Surname, column type={|l}},
+    columns/age/.style={column name=Age, column type={|c|}},
+    every head row/.style={before row=\hline,after row=\hline},
+    every last row/.style={after row=\hline},
+    ]{summary1.csv}
+    \end{table}
+
+\chapter{Analiza działania i możliwości poprawy}
+
+
+
+
+
+
 
 
 

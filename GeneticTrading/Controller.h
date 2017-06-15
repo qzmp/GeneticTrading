@@ -40,6 +40,8 @@ public:
 	void test2(GeneticController& gt, string& filePrefix, ofstream & summaryStream);
 	void runXTimes2(GeneticController & gt, int count, vector<DataSet> & testingSets, string & filePrefix, ofstream & summaryFile);
 
+	void trainingSetSizeTest(GeneticController & gt, IndicatorHolder & indicators);
+
 	vector<vector<DataSet>> testingSets;
 	vector<DataSet> trainingSet;
 };

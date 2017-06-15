@@ -78,7 +78,7 @@ void Controller::testMutation(GeneticController gt, double min, double max, doub
 	double transactionSum = 0;
 	for (double i = min; i <= max; i += step)
 	{
-		MutationChances mc(0.05, 0.05, 0.05, i);
+		MutationChances mc(i);
 		gt.setMutationChances(mc);
 
 		string filePrefix = "results/mutationTesting/" + to_string(i);
@@ -188,12 +188,12 @@ void Controller::testTourneySize(GeneticController gt, double min, double max, d
 
 void Controller::testParams(GeneticController & gt, DataSet & testingSet)
 {
-	testPopSize(gt, 20, 400, 100, testingSet);
-	//testGenCount(gt, 5, 400, 100, testingSet);
+	//testPopSize(gt, 20, 500, 100, testingSet);
+	//testGenCount(gt, 5, 500, 100, testingSet);
 	//testTourneySize(gt, 0.01, 0.5, 0.1, testingSet);
 	//testCrossChance(gt, 0, 1, 0.2, testingSet);
-	//testMaxTreeSize(gt, 2, 10, 2, testingSet);
-	//testMutation(gt, 0, 0.1, 0.02, testingSet);
+	//testMaxTreeSize(gt, 3, 3, 2, testingSet);
+	testMutation(gt, 0, 0.1, 0.02, testingSet);
 }
 
 vector<DataSet> Controller::getDataSets(IndicatorHolder & indicators)
@@ -418,6 +418,8 @@ void Controller::runXTimes2(GeneticController & gt, int count, vector<DataSet> &
 			<< td.getGoodTransactionCount() << ";"
 			<< td.getBadTransactionCount() << ";;";
 
+		gains.push_back(td.getPipGainWithProvision(20));
+
 		for (int j = 0; j < testingSets.size(); j++)
 		{
 
@@ -440,6 +442,9 @@ void Controller::runXTimes2(GeneticController & gt, int count, vector<DataSet> &
 
 		gt.reset();
 	}
+	double trainingGainsSum = accumulate(begin(gains), end(gains), 0.0);
+
+	summaryFile << trainingGainsSum / count << ";" << countStandardDeviation(gains) << ";";
 	for (int i = 0; i < 3; i++) {
 
 		double noProvGainsSum = accumulate(begin(noProvGains[i]), end(noProvGains[i]), 0.0);
@@ -452,7 +457,7 @@ void Controller::runXTimes2(GeneticController & gt, int count, vector<DataSet> &
 
 		summaryFile << ";" << noProvGainsSum / count << ";" << testingGainsSum / count << ";" << countStandardDeviation(testingGains[i])
 			<< ";" << testingPosSum / count << ";" << testingNegSum / count
-			<< ";" << testPosTransactions[i] / count << ";" << testNegTransactions[i]
+			<< ";" << testPosTransactions[i] / count << ";" << testNegTransactions[i] / count
 			<< ";" << testingTransactionCountSum / count << ";" << countStandardDeviation(testingTransactionCounts[i])
 
 			<< ";" << *min_element(testingGains[i].begin(), testingGains[i].end())
@@ -461,6 +466,24 @@ void Controller::runXTimes2(GeneticController & gt, int count, vector<DataSet> &
 			<< ";";
 	}
 	
+}
+
+void Controller::trainingSetSizeTest(GeneticController & gt, IndicatorHolder & indicators)
+{
+	ofstream filestream;
+	filestream.imbue(locale());
+	string filename = "results/trainingSetSize.csv";
+	filestream.open(filename, ios::ate | ios_base::app);
+
+	for (int i = 8; i > 7; i--)
+	{
+		string filePrefix = to_string(13 - i);
+		DataSet data0;
+		data0.loadData(string("Data/EURUSD_Candlestick_10_m_BID_01.01.2007_10.12.2016.csv"), DateTime("15." + to_string(i) + ".2015 00:00:00"), DateTime("15.01.2016 00:00:00"), indicators);
+		gt.setDataSet(data0);
+		runXTimes2(gt, 200, testingSets[0], filePrefix, filestream);
+		filestream << endl;
+	}
 }
 
 int main()
@@ -517,13 +540,15 @@ int main()
 	
 	MutationChances *mc = new MutationChances(0.05, 0.05, 0.05, 0.05);
 	//MutationChances *mc = new MutationChances(0);
-	GeneticController gt(0.1, 0.2, *mc, indicators, data, 5, 200, 100);
+	GeneticController gt(0.1, 0.4, *mc, indicators, data, 4, 100, 100);
 
 	Controller ct;
 	ct.testingSets = { testingSet1, testingSet2, testingSet3 };
 	ct.trainingSet = { data0, data1, data2 };
 
-	ct.testParams(gt, data2);
+	//ct.testParams(gt, data2);
+
+	ct.trainingSetSizeTest(gt, indicators);
 
 	//ct.runXTimes2(gt, 250, testingSets);
 
